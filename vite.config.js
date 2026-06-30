@@ -11,7 +11,14 @@ export default defineConfig({
     build: {
         rollupOptions: {
             output: {
-                entryFileNames: 'assets/app.js',       // главный JS-файл
+                entryFileNames: (chunkInfo) => {
+                    // У Vite CSS-вход (app.css) тоже порождает "пустой" JS-чанк.
+                    // Реальным считаем только тот, что собран из resources/js/app.js.
+                    if (chunkInfo.facadeModuleId?.endsWith('.css')) {
+                        return 'assets/_css-entry.js';
+                    }
+                    return 'assets/app.js';
+                },
                 chunkFileNames: 'assets/[name].js',    // разделяемые чанки (если будут) тоже без хеша
                 assetFileNames: (assetInfo) => {
                     // CSS-файлы всегда называть app.css
