@@ -4,6 +4,7 @@
 
 @import './login.css';
 @import "./dashboard.css";
+@import "./add.css";
 
 /* ---------- Сброс и базовые настройки ---------- */
 *,
