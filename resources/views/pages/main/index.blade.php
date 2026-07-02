@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    @include('layouts.landing-head')
-</head>
+@include('layouts.public.landing-head')
 <body>
-
-@include('layouts.landing-header')
+@include('layouts.public.landing-header')
 
 <!-- ============================================================ -->
 <!--  ОСНОВНОЙ КОНТЕНТ                                             -->
@@ -23,7 +18,7 @@
                 <div class="mk-hero-landing__content">
                     <p class="mk-eyebrow">Дневник автомобиля</p>
                     <h1 class="mk-hero-landing__title">
-                        Вся история машины<br />
+                        Вся история машины<br/>
                         <span class="mk-hero-landing__title-highlight">в одном месте</span>
                     </h1>
                     <p class="mk-hero-landing__sub">
@@ -45,11 +40,12 @@
                     <div class="mk-mockup-card">
                         <div class="mk-mockup-card__media">
                             <svg viewBox="0 0 120 72" fill="none" aria-hidden="true">
-                                <rect x="10" y="24" width="100" height="32" rx="6" fill="#D4DCE8" opacity=".35" />
-                                <rect x="16" y="28" width="88" height="24" rx="4" fill="#E5EAF2" opacity=".5" />
-                                <path d="M28 44h64M32 36h56M36 52h48" stroke="#D4DCE8" stroke-width="2" stroke-linecap="round" opacity=".4" />
-                                <circle cx="44" cy="44" r="8" fill="#D4DCE8" opacity=".25" />
-                                <circle cx="76" cy="44" r="8" fill="#D4DCE8" opacity=".25" />
+                                <rect x="10" y="24" width="100" height="32" rx="6" fill="#D4DCE8" opacity=".35"/>
+                                <rect x="16" y="28" width="88" height="24" rx="4" fill="#E5EAF2" opacity=".5"/>
+                                <path d="M28 44h64M32 36h56M36 52h48" stroke="#D4DCE8" stroke-width="2"
+                                      stroke-linecap="round" opacity=".4"/>
+                                <circle cx="44" cy="44" r="8" fill="#D4DCE8" opacity=".25"/>
+                                <circle cx="76" cy="44" r="8" fill="#D4DCE8" opacity=".25"/>
                             </svg>
                             <span class="mk-mockup-card__plate">А 777 ММ</span>
                         </div>
@@ -89,12 +85,14 @@
             </div>
             <div class="mk-value-grid">
                 <article class="mk-value-card">
-                    <div class="mk-value-card__icon" style="--icon-bg: var(--mk-c-service-soft); --icon-color: var(--mk-c-service);">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                            <path d="M2 17l10 5 10-5" />
-                            <path d="M2 12l10 5 10-5" />
-                            <path d="M12 22v-10" />
+                    <div class="mk-value-card__icon"
+                         style="--icon-bg: var(--mk-c-service-soft); --icon-color: var(--mk-c-service);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                            <path d="M2 17l10 5 10-5"/>
+                            <path d="M2 12l10 5 10-5"/>
+                            <path d="M12 22v-10"/>
                         </svg>
                     </div>
                     <h3 class="mk-value-card__title">Записи ТО</h3>
@@ -105,12 +103,14 @@
                 </article>
 
                 <article class="mk-value-card">
-                    <div class="mk-value-card__icon" style="--icon-bg: var(--mk-c-fuel-soft); --icon-color: var(--mk-c-fuel);">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="2" y="6" width="16" height="14" rx="2" />
-                            <path d="M18 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2" />
-                            <path d="M8 6V4a1 1 0 011-1h4a1 1 0 011 1v2" />
-                            <path d="M10 12l2 2 4-4" />
+                    <div class="mk-value-card__icon"
+                         style="--icon-bg: var(--mk-c-fuel-soft); --icon-color: var(--mk-c-fuel);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="6" width="16" height="14" rx="2"/>
+                            <path d="M18 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2"/>
+                            <path d="M8 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/>
+                            <path d="M10 12l2 2 4-4"/>
                         </svg>
                     </div>
                     <h3 class="mk-value-card__title">Контроль расходов</h3>
@@ -121,18 +121,20 @@
                 </article>
 
                 <article class="mk-value-card">
-                    <div class="mk-value-card__icon" style="--icon-bg: var(--mk-primary-soft); --icon-color: var(--mk-primary);">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10" />
-                            <polyline points="12 6 12 12 16 14" />
-                            <path d="M12 2v2" />
-                            <path d="M12 20v2" />
-                            <path d="M4 12H2" />
-                            <path d="M22 12h-2" />
-                            <path d="M19.07 4.93l-1.41 1.41" />
-                            <path d="M6.34 17.66l-1.41 1.41" />
-                            <path d="M17.66 6.34l1.41-1.41" />
-                            <path d="M6.34 6.34L4.93 4.93" />
+                    <div class="mk-value-card__icon"
+                         style="--icon-bg: var(--mk-primary-soft); --icon-color: var(--mk-primary);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                            <path d="M12 2v2"/>
+                            <path d="M12 20v2"/>
+                            <path d="M4 12H2"/>
+                            <path d="M22 12h-2"/>
+                            <path d="M19.07 4.93l-1.41 1.41"/>
+                            <path d="M6.34 17.66l-1.41 1.41"/>
+                            <path d="M17.66 6.34l1.41-1.41"/>
+                            <path d="M6.34 6.34L4.93 4.93"/>
                         </svg>
                     </div>
                     <h3 class="mk-value-card__title">Напоминания</h3>
@@ -200,7 +202,7 @@
                 <div class="mk-cta-banner__content">
                     <p class="mk-eyebrow mk-eyebrow--light">Начните прямо сейчас</p>
                     <h2 class="mk-cta-banner__title">
-                        Управляйте историей автомобиля<br />с лёгкостью
+                        Управляйте историей автомобиля<br/>с лёгкостью
                     </h2>
                     <p class="mk-cta-banner__sub">
                         MOTORKEEP — ваш личный дневник для всех машин.
@@ -212,12 +214,15 @@
                 </div>
                 <div class="mk-cta-banner__visual" aria-hidden="true">
                     <svg viewBox="0 0 120 80" fill="none">
-                        <rect x="8" y="18" width="104" height="44" rx="8" fill="rgba(255,255,255,.12)" />
-                        <rect x="16" y="24" width="88" height="32" rx="6" fill="rgba(255,255,255,.08)" />
-                        <path d="M28 40h64M34 32h52M38 48h44" stroke="rgba(255,255,255,.15)" stroke-width="2" stroke-linecap="round" />
-                        <circle cx="46" cy="40" r="8" stroke="rgba(255,255,255,.2)" stroke-width="1.5" />
-                        <circle cx="74" cy="40" r="8" stroke="rgba(255,255,255,.2)" stroke-width="1.5" />
-                        <text x="40" y="72" font-family="Space Grotesk" font-size="18" font-weight="700" fill="rgba(255,255,255,.5)">86 420 км</text>
+                        <rect x="8" y="18" width="104" height="44" rx="8" fill="rgba(255,255,255,.12)"/>
+                        <rect x="16" y="24" width="88" height="32" rx="6" fill="rgba(255,255,255,.08)"/>
+                        <path d="M28 40h64M34 32h52M38 48h44" stroke="rgba(255,255,255,.15)" stroke-width="2"
+                              stroke-linecap="round"/>
+                        <circle cx="46" cy="40" r="8" stroke="rgba(255,255,255,.2)" stroke-width="1.5"/>
+                        <circle cx="74" cy="40" r="8" stroke="rgba(255,255,255,.2)" stroke-width="1.5"/>
+                        <text x="40" y="72" font-family="Space Grotesk" font-size="18" font-weight="700"
+                              fill="rgba(255,255,255,.5)">86 420 км
+                        </text>
                     </svg>
                 </div>
             </div>
@@ -226,7 +231,7 @@
 
 </main>
 
-@include('layouts.landing-footer')
+@include('layouts.public.landing-footer')
 
 </body>
 </html>

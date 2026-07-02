@@ -1,66 +1,11 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    @include('layouts.landing-head')
-</head>
+@include('layouts.public.landing-head')
 <body>
 
-<!-- ======== СКРИМ ======== -->
 <div class="mk-scrim" aria-hidden="true"></div>
 
-<!-- ======== САЙДБАР ======== -->
-<aside class="mk-sidebar" role="navigation" aria-label="Главное меню">
-    <div class="mk-sidebar__brand">
-        <a href="/" class="mk-logo" aria-label="MOTORKEEP — на главную">
-            <span class="mk-logo__mark"><i class="bi bi-car-front-fill"></i></span>
-            <span class="mk-logo__text">MOTOR<span class="mk-logo__text-accent">KEEP</span></span>
-        </a>
-    </div>
-    <nav class="mk-sidebar__nav">
-        <div class="mk-navlabel">Меню</div>
-        <a href="garage.html" class="mk-navitem mk-navitem--active" data-tip="Гараж">
-            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            <span class="lbl">Гараж</span>
-        </a>
-        <a href="#" class="mk-navitem" data-tip="Автомобили" data-section="cars">
-            <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="8" cy="18" r="2"/><circle cx="16" cy="18" r="2"/><path d="M2 10h20"/></svg>
-            <span class="lbl">Автомобили</span>
-        </a>
-        <a href="#" class="mk-navitem" data-tip="Статистика" data-section="stats">
-            <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-            <span class="lbl">Статистика</span>
-        </a>
-        <div class="mk-navlabel">Гараж</div>
-        <a href="#" class="mk-navitem" data-tip="Напоминания" data-section="reminders">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            <span class="lbl">Напоминания</span>
-            <span class="pill">3</span>
-        </a>
-        <a href="#" class="mk-navitem" data-tip="Расходы" data-section="expenses">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
-            <span class="lbl">Расходы</span>
-        </a>
-    </nav>
-    <div class="mk-sidebar__foot">
-        <a href="#" class="mk-navitem" data-tip="Настройки" data-section="settings">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-            <span class="lbl">Настройки</span>
-        </a>
-        <button class="mk-collapse" aria-label="Свернуть сайдбар">
-            <svg viewBox="0 0 24 24" width="20" height="20"><polyline points="15 18 9 12 15 6"/></svg>
-            <span>Свернуть</span>
-        </button>
-        <!-- Кнопка Выйти -->
-        <button class="mk-navitem mk-logout" data-tip="Выйти">
-            <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-            <span class="lbl">Выйти</span>
-        </button>
-    </div>
-</aside>
-
+@include('layouts.private.sidebar')
 <!-- ======== ОСНОВНАЯ ОБОЛОЧКА ======== -->
 <div class="mk-shell">
-
     <!-- ======== ХЕДЕР ======== -->
     <header class="mk-header" role="banner">
         <div class="mk-header__inner">
@@ -75,7 +20,10 @@
                 <!-- КОЛОКОЛЬЧИК с popover -->
                 <div class="mk-popover-wrapper">
                     <button class="mk-iconbtn js-notifications" aria-label="Уведомления" id="notif-btn">
-                        <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+                        <svg viewBox="0 0 24 24">
+                            <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 01-3.46 0"/>
+                        </svg>
                         <span class="dot" aria-hidden="true"></span>
                     </button>
                     <div class="mk-popover mk-popover--notifications" id="notif-popover">
@@ -161,7 +109,10 @@
                     <p class="mk-garage-head__sub">3 автомобиля · 42 000 ₽ расходов за месяц</p>
                 </div>
                 <a href="#" class="mk-btn mk-btn--primary" id="add-car-btn">
-                    <svg viewBox="0 0 24 24" width="18" height="18"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    <svg viewBox="0 0 24 24" width="18" height="18">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
                     Добавить авто
                 </a>
             </div>
@@ -169,9 +120,13 @@
             <!-- Блок общей информации (сводка) -->
             <section class="mk-garage-summary">
                 <div class="mk-garage-summary__grid">
-                    <div class="mk-garage-summary__card js-summary-card" data-summary="to" style="--card-color: var(--mk-c-service); --card-bg: var(--mk-c-service-soft);">
+                    <div class="mk-garage-summary__card js-summary-card" data-summary="to"
+                         style="--card-color: var(--mk-c-service); --card-bg: var(--mk-c-service-soft);">
                         <div class="mk-garage-summary__icon">
-                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            <svg viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
                         </div>
                         <div class="mk-garage-summary__content">
                             <span class="mk-garage-summary__label">Предстоящие ТО</span>
@@ -179,9 +134,13 @@
                             <span class="mk-garage-summary__meta">BMW 320i — через 1 200 км</span>
                         </div>
                     </div>
-                    <div class="mk-garage-summary__card js-summary-card" data-summary="tax" style="--card-color: var(--mk-warning); --card-bg: #FEF2E0;">
+                    <div class="mk-garage-summary__card js-summary-card" data-summary="tax"
+                         style="--card-color: var(--mk-warning); --card-bg: #FEF2E0;">
                         <div class="mk-garage-summary__icon">
-                            <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+                            <svg viewBox="0 0 24 24">
+                                <rect x="2" y="7" width="20" height="14" rx="2"/>
+                                <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/>
+                            </svg>
                         </div>
                         <div class="mk-garage-summary__content">
                             <span class="mk-garage-summary__label">Налоги и страховка</span>
@@ -189,9 +148,13 @@
                             <span class="mk-garage-summary__meta">ОСАГО — до 15.08.2026</span>
                         </div>
                     </div>
-                    <div class="mk-garage-summary__card js-summary-card" data-summary="notes" style="--card-color: var(--mk-c-note); --card-bg: var(--mk-c-note-soft);">
+                    <div class="mk-garage-summary__card js-summary-card" data-summary="notes"
+                         style="--card-color: var(--mk-c-note); --card-bg: var(--mk-c-note-soft);">
                         <div class="mk-garage-summary__icon">
-                            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="12 8 12 12 14 14"/></svg>
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                <polyline points="12 8 12 12 14 14"/>
+                            </svg>
                         </div>
                         <div class="mk-garage-summary__content">
                             <span class="mk-garage-summary__label">Напоминания</span>
@@ -199,9 +162,14 @@
                             <span class="mk-garage-summary__meta">Замена свечей, шин, масла</span>
                         </div>
                     </div>
-                    <div class="mk-garage-summary__card js-summary-card" data-summary="costs" style="--card-color: var(--mk-c-fuel); --card-bg: var(--mk-c-fuel-soft);">
+                    <div class="mk-garage-summary__card js-summary-card" data-summary="costs"
+                         style="--card-color: var(--mk-c-fuel); --card-bg: var(--mk-c-fuel-soft);">
                         <div class="mk-garage-summary__icon">
-                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+                            <svg viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M8 12h8"/>
+                                <path d="M12 8v8"/>
+                            </svg>
                         </div>
                         <div class="mk-garage-summary__content">
                             <span class="mk-garage-summary__label">Расходы за месяц</span>
@@ -216,20 +184,43 @@
             <section class="mk-quick-actions">
                 <h2 class="mk-quick-actions__title">Быстрые действия</h2>
                 <div class="mk-quick-actions__grid">
-                    <button class="mk-quick-action" data-type="service" style="--action-color: var(--mk-c-service); --action-bg: var(--mk-c-service-soft);">
-                        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                    <button class="mk-quick-action" data-type="service"
+                            style="--action-color: var(--mk-c-service); --action-bg: var(--mk-c-service-soft);">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="12" y1="18" x2="12" y2="12"/>
+                            <line x1="9" y1="15" x2="15" y2="15"/>
+                        </svg>
                         <span>ТО</span>
                     </button>
-                    <button class="mk-quick-action" data-type="fuel" style="--action-color: var(--mk-c-fuel); --action-bg: var(--mk-c-fuel-soft);">
-                        <svg viewBox="0 0 24 24"><rect x="2" y="6" width="16" height="14" rx="2"/><path d="M18 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2"/><path d="M8 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/><path d="M10 12l2 2 4-4"/></svg>
+                    <button class="mk-quick-action" data-type="fuel"
+                            style="--action-color: var(--mk-c-fuel); --action-bg: var(--mk-c-fuel-soft);">
+                        <svg viewBox="0 0 24 24">
+                            <rect x="2" y="6" width="16" height="14" rx="2"/>
+                            <path d="M18 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2"/>
+                            <path d="M8 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/>
+                            <path d="M10 12l2 2 4-4"/>
+                        </svg>
                         <span>Заправка</span>
                     </button>
-                    <button class="mk-quick-action" data-type="repair" style="--action-color: var(--mk-c-repair); --action-bg: var(--mk-c-repair-soft);">
-                        <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    <button class="mk-quick-action" data-type="repair"
+                            style="--action-color: var(--mk-c-repair); --action-bg: var(--mk-c-repair-soft);">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
                         <span>Ремонт</span>
                     </button>
-                    <button class="mk-quick-action" data-type="note" style="--action-color: var(--mk-c-note); --action-bg: var(--mk-c-note-soft);">
-                        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    <button class="mk-quick-action" data-type="note"
+                            style="--action-color: var(--mk-c-note); --action-bg: var(--mk-c-note-soft);">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10 9 9 9 8 9"/>
+                        </svg>
                         <span>Заметка</span>
                     </button>
                 </div>
@@ -242,7 +233,8 @@
                         <svg viewBox="0 0 120 72" fill="none" aria-hidden="true">
                             <rect x="10" y="24" width="100" height="32" rx="6" fill="#D4DCE8" opacity=".35"/>
                             <rect x="16" y="28" width="88" height="24" rx="4" fill="#E5EAF2" opacity=".5"/>
-                            <path d="M28 44h64M32 36h56M36 52h48" stroke="#D4DCE8" stroke-width="2" stroke-linecap="round" opacity=".4"/>
+                            <path d="M28 44h64M32 36h56M36 52h48" stroke="#D4DCE8" stroke-width="2"
+                                  stroke-linecap="round" opacity=".4"/>
                             <circle cx="44" cy="44" r="8" fill="#D4DCE8" opacity=".25"/>
                             <circle cx="76" cy="44" r="8" fill="#D4DCE8" opacity=".25"/>
                         </svg>
@@ -256,9 +248,12 @@
                             <span class="mk-odo__track" aria-hidden="true"></span>
                         </div>
                         <div class="mk-garage-card__stats">
-                            <div><span class="mk-garage-card__stat-label">Расходы за год</span><span class="mk-garage-card__stat-value">214 600 ₽</span></div>
-                            <div><span class="mk-garage-card__stat-label">Записей</span><span class="mk-garage-card__stat-value">12</span></div>
-                            <div><span class="mk-garage-card__stat-label">До ТО</span><span class="mk-garage-card__stat-value">1 200 км</span></div>
+                            <div><span class="mk-garage-card__stat-label">Расходы за год</span><span
+                                    class="mk-garage-card__stat-value">214 600 ₽</span></div>
+                            <div><span class="mk-garage-card__stat-label">Записей</span><span
+                                    class="mk-garage-card__stat-value">12</span></div>
+                            <div><span class="mk-garage-card__stat-label">До ТО</span><span
+                                    class="mk-garage-card__stat-value">1 200 км</span></div>
                         </div>
                     </div>
                 </a>
@@ -268,7 +263,8 @@
                         <svg viewBox="0 0 120 72" fill="none" aria-hidden="true">
                             <rect x="10" y="24" width="100" height="32" rx="6" fill="#D4DCE8" opacity=".35"/>
                             <rect x="16" y="28" width="88" height="24" rx="4" fill="#E5EAF2" opacity=".5"/>
-                            <path d="M28 44h64M32 36h56M36 52h48" stroke="#D4DCE8" stroke-width="2" stroke-linecap="round" opacity=".4"/>
+                            <path d="M28 44h64M32 36h56M36 52h48" stroke="#D4DCE8" stroke-width="2"
+                                  stroke-linecap="round" opacity=".4"/>
                             <circle cx="44" cy="44" r="8" fill="#D4DCE8" opacity=".25"/>
                             <circle cx="76" cy="44" r="8" fill="#D4DCE8" opacity=".25"/>
                         </svg>
@@ -282,9 +278,12 @@
                             <span class="mk-odo__track" aria-hidden="true"></span>
                         </div>
                         <div class="mk-garage-card__stats">
-                            <div><span class="mk-garage-card__stat-label">Расходы за год</span><span class="mk-garage-card__stat-value">98 300 ₽</span></div>
-                            <div><span class="mk-garage-card__stat-label">Записей</span><span class="mk-garage-card__stat-value">8</span></div>
-                            <div><span class="mk-garage-card__stat-label">До ТО</span><span class="mk-garage-card__stat-value">3 800 км</span></div>
+                            <div><span class="mk-garage-card__stat-label">Расходы за год</span><span
+                                    class="mk-garage-card__stat-value">98 300 ₽</span></div>
+                            <div><span class="mk-garage-card__stat-label">Записей</span><span
+                                    class="mk-garage-card__stat-value">8</span></div>
+                            <div><span class="mk-garage-card__stat-label">До ТО</span><span
+                                    class="mk-garage-card__stat-value">3 800 км</span></div>
                         </div>
                     </div>
                 </a>
@@ -294,7 +293,8 @@
                         <svg viewBox="0 0 120 72" fill="none" aria-hidden="true">
                             <rect x="10" y="24" width="100" height="32" rx="6" fill="#D4DCE8" opacity=".35"/>
                             <rect x="16" y="28" width="88" height="24" rx="4" fill="#E5EAF2" opacity=".5"/>
-                            <path d="M28 44h64M32 36h56M36 52h48" stroke="#D4DCE8" stroke-width="2" stroke-linecap="round" opacity=".4"/>
+                            <path d="M28 44h64M32 36h56M36 52h48" stroke="#D4DCE8" stroke-width="2"
+                                  stroke-linecap="round" opacity=".4"/>
                             <circle cx="44" cy="44" r="8" fill="#D4DCE8" opacity=".25"/>
                             <circle cx="76" cy="44" r="8" fill="#D4DCE8" opacity=".25"/>
                         </svg>
@@ -308,16 +308,22 @@
                             <span class="mk-odo__track" aria-hidden="true"></span>
                         </div>
                         <div class="mk-garage-card__stats">
-                            <div><span class="mk-garage-card__stat-label">Расходы за год</span><span class="mk-garage-card__stat-value">32 400 ₽</span></div>
-                            <div><span class="mk-garage-card__stat-label">Записей</span><span class="mk-garage-card__stat-value">5</span></div>
-                            <div><span class="mk-garage-card__stat-label">До ТО</span><span class="mk-garage-card__stat-value">2 200 км</span></div>
+                            <div><span class="mk-garage-card__stat-label">Расходы за год</span><span
+                                    class="mk-garage-card__stat-value">32 400 ₽</span></div>
+                            <div><span class="mk-garage-card__stat-label">Записей</span><span
+                                    class="mk-garage-card__stat-value">5</span></div>
+                            <div><span class="mk-garage-card__stat-label">До ТО</span><span
+                                    class="mk-garage-card__stat-value">2 200 км</span></div>
                         </div>
                     </div>
                 </a>
 
                 <a href="#" class="mk-garage-card mk-garage-card--add" id="add-car-card">
                     <div class="mk-garage-card__add-icon">
-                        <svg viewBox="0 0 24 24" width="48" height="48"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        <svg viewBox="0 0 24 24" width="48" height="48">
+                            <line x1="12" y1="5" x2="12" y2="19"/>
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
                     </div>
                     <span class="mk-garage-card__add-text">Добавить автомобиль</span>
                 </a>
@@ -332,7 +338,8 @@
                             <h2>Последние действия</h2>
                             <span class="count">6</span>
                             <div class="spacer"></div>
-                            <a href="#" class="mk-btn mk-btn--ghost mk-btn--sm js-show-all" data-target="activity">Все</a>
+                            <a href="#" class="mk-btn mk-btn--ghost mk-btn--sm js-show-all"
+                               data-target="activity">Все</a>
                         </div>
                         <div class="mk-activity-list" id="activity-list">
                             <div class="mk-activity-item mk-activity-item--add">
@@ -348,12 +355,14 @@
                             <div class="mk-activity-item mk-activity-item--delete">
                                 <span class="mk-activity-item__time">Вчера, 18:40</span>
                                 <span class="mk-activity-item__badge">Удаление</span>
-                                <span class="mk-activity-item__text">Запись о заправке для <strong>Lada Vesta</strong></span>
+                                <span
+                                    class="mk-activity-item__text">Запись о заправке для <strong>Lada Vesta</strong></span>
                             </div>
                             <div class="mk-activity-item mk-activity-item--add">
                                 <span class="mk-activity-item__time">Вчера, 09:12</span>
                                 <span class="mk-activity-item__badge">Добавление</span>
-                                <span class="mk-activity-item__text">Запись «Ремонт» для <strong>BMW 320i</strong></span>
+                                <span
+                                    class="mk-activity-item__text">Запись «Ремонт» для <strong>BMW 320i</strong></span>
                             </div>
                             <div class="mk-activity-item mk-activity-item--add">
                                 <span class="mk-activity-item__time">20.06.2026, 16:03</span>
@@ -374,7 +383,8 @@
                             <h2>Напоминания</h2>
                             <span class="count" id="reminder-count">3</span>
                             <div class="spacer"></div>
-                            <a href="#" class="mk-btn mk-btn--ghost mk-btn--sm js-show-all" data-target="reminders">Все</a>
+                            <a href="#" class="mk-btn mk-btn--ghost mk-btn--sm js-show-all"
+                               data-target="reminders">Все</a>
                         </div>
                         <div class="mk-reminder-list" id="reminder-list">
                             <div class="mk-reminder-item mk-reminder-item--urgent" data-id="1">
@@ -415,26 +425,7 @@
         </div>
     </main>
 
-    <!-- ======== ФУТЕР ======== -->
-    <footer class="mk-footer" role="contentinfo">
-        <div class="mk-container">
-            <div class="mk-footer__inner">
-                <div class="mk-footer__brand">
-                    <a href="/" class="mk-logo mk-logo--sm" aria-label="MOTORKEEP — на главную">
-                        <span class="mk-logo__mark"><i class="bi bi-car-front-fill"></i></span>
-                        <span class="mk-logo__text">MOTOR<span class="mk-logo__text-accent">KEEP</span></span>
-                    </a>
-                    <span class="mk-footer__copy">© 2026</span>
-                </div>
-                <nav class="mk-footer__links" aria-label="Нижняя навигация">
-                    <a href="#help">Помощь</a>
-                    <a href="#privacy">Конфиденциальность</a>
-                    <a href="#contacts">Контакты</a>
-                </nav>
-            </div>
-        </div>
-    </footer>
-
+    @include('layouts.private.footer')
 </div> <!-- /.mk-shell -->
 
 <!-- ======== МОДАЛКА ======== -->
