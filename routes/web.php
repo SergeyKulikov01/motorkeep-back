@@ -9,6 +9,9 @@ Route::get('/', function () {
 Route::get('/policy/', function () {
     return view('pages.main.policy.index');
 });
+Route::get('/contacts/', function () {
+    return view('pages.main.contacts.index');
+});
 
 Route::get('/dashboard', function () {
     return view('pages.dashboard.index');
