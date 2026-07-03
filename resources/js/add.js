@@ -2,56 +2,19 @@
 (function () {
     'use strict';
 
-    // ---------- САЙДБАР ----------
-    const sidebar = document.querySelector('.mk-sidebar');
-    const collapseBtn = document.querySelector('.mk-collapse');
-    const body = document.body;
-
-    const savedCollapsed = localStorage.getItem('mk-collapsed');
-    if (savedCollapsed === 'true' && sidebar) {
-        body.classList.add('is-collapsed');
-    }
-
-    if (collapseBtn) {
-        collapseBtn.addEventListener('click', function () {
-            const isCollapsed = body.classList.toggle('is-collapsed');
-            localStorage.setItem('mk-collapsed', isCollapsed);
-        });
-    }
-
-    // Мобильный бургер
-    const burger = document.querySelector('.mk-burger');
-    const scrim = document.querySelector('.mk-scrim');
-
-    function openNav() {
-        body.classList.add('nav-open');
-        document.addEventListener('keydown', handleEsc);
-    }
-    function closeNav() {
-        body.classList.remove('nav-open');
-        document.removeEventListener('keydown', handleEsc);
-    }
-    function handleEsc(e) {
-        if (e.key === 'Escape') closeNav();
-    }
-
-    if (burger) {
-        burger.addEventListener('click', function () {
-            if (body.classList.contains('nav-open')) closeNav();
-            else openNav();
-        });
-    }
-    if (scrim) scrim.addEventListener('click', closeNav);
-
-    document.querySelectorAll('.mk-sidebar .mk-navitem').forEach(item => {
-        item.addEventListener('click', function () {
-            if (window.innerWidth <= 900) closeNav();
-        });
-    });
+    // Сворачивание сайдбара и мобильный бургер уже обрабатываются
+    // общим app.js (он подключается на всех страницах, включая эту).
 
     // ---------- ЦВЕТОВОЙ ПРЕВЬЮ ----------
     const colorSelect = document.getElementById('car-color');
     const colorPreview = document.getElementById('color-preview');
+    const form = document.getElementById('add-car-form');
+
+    // Скрипт грузится на всех страницах через общий app.js —
+    // выполняем логику только там, где есть форма добавления авто.
+    if (!colorSelect || !form) {
+        return;
+    }
 
     colorSelect.addEventListener('change', function () {
         const val = this.value;
@@ -65,8 +28,6 @@
     });
 
     // ---------- ФОРМА ----------
-    const form = document.getElementById('add-car-form');
-
     // Поля
     const brand = document.getElementById('car-brand');
     const model = document.getElementById('car-model');

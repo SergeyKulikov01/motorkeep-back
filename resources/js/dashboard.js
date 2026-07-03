@@ -62,12 +62,14 @@
     }
 
     if (closeBtn) closeBtn.addEventListener('click', closeModal);
-    overlay.addEventListener('click', function (e) {
-        if (e.target === overlay) closeModal();
-    });
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && overlay.classList.contains('mk-overlay--open')) closeModal();
-    });
+    if (overlay) {
+        overlay.addEventListener('click', function (e) {
+            if (e.target === overlay) closeModal();
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && overlay.classList.contains('mk-overlay--open')) closeModal();
+        });
+    }
 
     // "Все" ссылки
     document.querySelectorAll('.js-show-all').forEach(btn => {
@@ -143,54 +145,56 @@
         reminderCount.textContent = items.length;
     }
 
-    reminderList.addEventListener('click', function (e) {
-        const target = e.target.closest('button');
-        if (!target) return;
-        const item = target.closest('.mk-reminder-item');
-        if (!item) return;
+    if (reminderList) {
+        reminderList.addEventListener('click', function (e) {
+            const target = e.target.closest('button');
+            if (!target) return;
+            const item = target.closest('.mk-reminder-item');
+            if (!item) return;
 
-        if (target.classList.contains('mk-reminder-item__done')) {
-            item.classList.toggle('mk-reminder-item--done');
-            const title = item.querySelector('.mk-reminder-item__title')?.textContent || 'Напоминание';
-            if (item.classList.contains('mk-reminder-item--done')) {
-                if (typeof window.showToast === 'function') {
-                    window.showToast(`✅ "${title}" выполнено!`, 'success');
-                }
-            } else {
-                if (typeof window.showToast === 'function') {
-                    window.showToast(`↩️ "${title}" возвращено в список`, 'info');
-                }
-            }
-            updateReminderCount();
-            return;
-        }
-
-        if (target.classList.contains('mk-reminder-item__postpone')) {
-            const meta = item.querySelector('.mk-reminder-item__meta');
-            if (meta) {
-                const match = meta.textContent.match(/\d{2}\.\d{2}\.\d{4}/);
-                if (match) {
-                    const dateParts = match[0].split('.');
-                    const dateObj = new Date(parseInt(dateParts[2]), parseInt(dateParts[1])-1, parseInt(dateParts[0]));
-                    dateObj.setDate(dateObj.getDate() + 1);
-                    const newDate = String(dateObj.getDate()).padStart(2,'0')+'.'+String(dateObj.getMonth()+1).padStart(2,'0')+'.'+dateObj.getFullYear();
-                    meta.textContent = meta.textContent.replace(/\d{2}\.\d{2}\.\d{4}/, newDate);
+            if (target.classList.contains('mk-reminder-item__done')) {
+                item.classList.toggle('mk-reminder-item--done');
+                const title = item.querySelector('.mk-reminder-item__title')?.textContent || 'Напоминание';
+                if (item.classList.contains('mk-reminder-item--done')) {
                     if (typeof window.showToast === 'function') {
-                        window.showToast(`⏩ Дата перенесена на ${newDate}`, 'warning');
+                        window.showToast(`✅ "${title}" выполнено!`, 'success');
                     }
                 } else {
-                    const now = new Date();
-                    now.setDate(now.getDate() + 1);
-                    const newDate = String(now.getDate()).padStart(2,'0')+'.'+String(now.getMonth()+1).padStart(2,'0')+'.'+now.getFullYear();
-                    meta.textContent += ` (перенесено на ${newDate})`;
                     if (typeof window.showToast === 'function') {
-                        window.showToast(`⏩ Дата перенесена на ${newDate}`, 'warning');
+                        window.showToast(`↩️ "${title}" возвращено в список`, 'info');
+                    }
+                }
+                updateReminderCount();
+                return;
+            }
+
+            if (target.classList.contains('mk-reminder-item__postpone')) {
+                const meta = item.querySelector('.mk-reminder-item__meta');
+                if (meta) {
+                    const match = meta.textContent.match(/\d{2}\.\d{2}\.\d{4}/);
+                    if (match) {
+                        const dateParts = match[0].split('.');
+                        const dateObj = new Date(parseInt(dateParts[2]), parseInt(dateParts[1])-1, parseInt(dateParts[0]));
+                        dateObj.setDate(dateObj.getDate() + 1);
+                        const newDate = String(dateObj.getDate()).padStart(2,'0')+'.'+String(dateObj.getMonth()+1).padStart(2,'0')+'.'+dateObj.getFullYear();
+                        meta.textContent = meta.textContent.replace(/\d{2}\.\d{2}\.\d{4}/, newDate);
+                        if (typeof window.showToast === 'function') {
+                            window.showToast(`⏩ Дата перенесена на ${newDate}`, 'warning');
+                        }
+                    } else {
+                        const now = new Date();
+                        now.setDate(now.getDate() + 1);
+                        const newDate = String(now.getDate()).padStart(2,'0')+'.'+String(now.getMonth()+1).padStart(2,'0')+'.'+now.getFullYear();
+                        meta.textContent += ` (перенесено на ${newDate})`;
+                        if (typeof window.showToast === 'function') {
+                            window.showToast(`⏩ Дата перенесена на ${newDate}`, 'warning');
+                        }
                     }
                 }
             }
-        }
-    });
-    updateReminderCount();
+        });
+        updateReminderCount();
+    }
 
     // ---------- ТОСТЫ ----------
     if (typeof window.showToast !== 'function') {

@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('pages.main.index');
 });
+Route::get('/policy/', function () {
+    return view('pages.main.policy.index');
+});
 
 Route::get('/dashboard', function () {
     return view('pages.dashboard.index');
