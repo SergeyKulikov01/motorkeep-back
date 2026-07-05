@@ -791,7 +791,7 @@ code, .mk-mono, .mk-hero__plate, [data-mono] {
 .mk-popover__divider {
     height: 1px;
     background: var(--mk-border);
-    margin: 4px 0;
+    margin: 2px 0;
 }
 .mk-popover__footer {
     padding: 8px 16px;

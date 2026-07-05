@@ -196,27 +196,7 @@
         updateReminderCount();
     }
 
-    // ---------- ТОСТЫ ----------
-    if (typeof window.showToast !== 'function') {
-        window.showToast = function (message, type) {
-            const container = document.querySelector('.mk-toast-container');
-            if (!container) return;
-            const toast = document.createElement('div');
-            toast.className = 'mk-toast';
-            const dot = document.createElement('span');
-            dot.className = 'mk-toast__dot';
-            dot.style.background = type === 'success' ? 'var(--mk-success)' : type === 'warning' ? 'var(--mk-warning)' : 'var(--mk-primary)';
-            toast.appendChild(dot);
-            toast.appendChild(document.createTextNode(message));
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateY(20px)';
-                toast.style.transition = 'opacity 300ms, transform 300ms';
-                setTimeout(() => toast.remove(), 300);
-            }, 3500);
-        };
-    }
+    // Тосты показываются через общую window.showToast из app.js.
 
     console.log('Гараж инициализирован');
 })();

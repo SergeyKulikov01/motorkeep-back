@@ -74,23 +74,23 @@
                 <!-- АВАТАР с popover -->
                 <div class="mk-popover-wrapper">
                     <button class="mk-userchip" aria-label="Профиль пользователя" id="profile-btn">
-                        <span class="mk-userchip__avatar">И</span>
-                        <span class="mk-userchip__name">Иван</span>
+                        <span class="mk-userchip__avatar">{{ mb_strtoupper(mb_substr(Auth::user()->name, 0, 1)) }}</span>
+                        <span class="mk-userchip__name">{{ Auth::user()->name }}</span>
                     </button>
                     <div class="mk-popover mk-popover--profile" id="profile-popover">
                         <div class="mk-popover__profile-header">
-                            <div class="mk-popover__avatar">И</div>
+                            <div class="mk-popover__avatar">{{ mb_strtoupper(mb_substr(Auth::user()->name, 0, 1)) }}</div>
                             <div>
-                                <div class="mk-popover__profile-name">Иван Петров</div>
-                                <div class="mk-popover__profile-email">ivan@example.com</div>
+                                <div class="mk-popover__profile-name">{{ Auth::user()->name }} {{ Auth::user()->last_name }}</div>
+                                <div class="mk-popover__profile-email">{{ Auth::user()->email }}</div>
                             </div>
                         </div>
                         <ul class="mk-popover__list">
-                            <li><a href="#profile">👤 Мой профиль</a></li>
-                            <li><a href="#settings">⚙️ Настройки</a></li>
-                            <li><a href="#billing">💳 Платежи</a></li>
+                            <li><a href="#profile">Мой профиль</a></li>
+                            <li><a href="#settings">Настройки</a></li>
+                            <li><a href="#billing">Платежи</a></li>
                             <li class="mk-popover__divider"></li>
-                            <li><a href="#logout" style="color: var(--mk-danger);">🚪 Выйти</a></li>
+                            <li><a href="#logout" style="color: var(--mk-danger);">Выйти</a></li>
                         </ul>
                     </div>
                 </div>

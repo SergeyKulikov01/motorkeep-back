@@ -1,7 +1,13 @@
 <?php
 
+use App\Http\Controllers\ApiController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+
+Route::controller(ApiController::class)->prefix('api')->group(function () {
+    Route::get('getBrands', 'getBrandList');
+    Route::get('getModels', 'getModelsList');
+});
 
 Route::get('/', function () {
     return view('pages.main.index');
