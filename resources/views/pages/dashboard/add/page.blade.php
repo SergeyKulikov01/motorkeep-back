@@ -85,13 +85,9 @@
                                 <label for="car-body" class="mk-field__label">Тип кузова</label>
                                 <select id="car-body" class="mk-field__input">
                                     <option value="">Выберите тип</option>
-                                    <option value="sedan">Седан</option>
-                                    <option value="hatchback">Хэтчбек</option>
-                                    <option value="suv">Внедорожник</option>
-                                    <option value="coupe">Купе</option>
-                                    <option value="wagon">Универсал</option>
-                                    <option value="minivan">Минивэн</option>
-                                    <option value="pickup">Пикап</option>
+                                    @foreach ($body as $bodyType)
+                                        <option value="{{ $bodyType->type }}">{{ $bodyType->name }}</option>
+                                    @endforeach
                                 </select>
                                 <div class="mk-field__error" id="car-body-error"></div>
                             </div>
