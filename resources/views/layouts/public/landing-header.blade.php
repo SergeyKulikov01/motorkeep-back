@@ -22,8 +22,11 @@
 
         <!-- Кнопки входа / регистрации -->
         <div class="mk-landing-actions">
-            <a href="#login" class="mk-btn mk-btn--ghost mk-btn--sm">Войти</a>
-            <a href="#register" class="mk-btn mk-btn--primary mk-btn--sm">Начать</a>
+            @if (Auth::check())
+                <a href="{{ route('dashboard') }}" class="mk-btn mk-btn--primary mk-btn--sm">Панель управления</a>
+            @else
+                <a href="{{ route('login') }}" class="mk-btn mk-btn--primary mk-btn--sm">Вход</a>
+            @endif
         </div>
 
         <!-- Бургер (мобайл) -->
