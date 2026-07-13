@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\NewCarController;
@@ -22,9 +23,7 @@ Route::get('/contacts/', function () {
     return view('pages.main.contacts.index');
 });
 
-Route::get('/dashboard', function () {
-    return view('pages.dashboard.index');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class,'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/dashboard/add',[NewCarController::class,'index'])->middleware(['auth', 'verified'])->name('dashboard.add');
 

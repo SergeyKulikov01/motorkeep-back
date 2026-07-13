@@ -2017,6 +2017,34 @@ body.is-collapsed .mk-sidebar .mk-collapse span {
     white-space: nowrap;
     border: 0;
 }
+
+/* Блок функционала, который ещё не реализован: размывает контент и блокирует клики */
+.mk-wip {
+    position: relative;
+    pointer-events: none;
+    user-select: none;
+}
+
+.mk-wip > * {
+    filter: blur(4px);
+}
+
+.mk-wip::after {
+    content: 'Скоро';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mk-font-display);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .02em;
+    color: var(--mk-ink-2);
+    background: rgba(255, 255, 255, .35);
+    border-radius: inherit;
+    z-index: 1;
+}
 /* ============================================================
    НОВЫЕ / ОБНОВЛЁННЫЕ СТИЛИ для лендинга
    ============================================================ */
