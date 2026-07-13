@@ -583,7 +583,6 @@ code, .mk-mono, .mk-hero__plate, [data-mono] {
 .mk-field__input--numeric {
     font-family: var(--mk-font-display);
     font-variant-numeric: tabular-nums;
-    text-align: right;
 }
 .mk-field__input--mono { font-family: var(--mk-font-mono); }
 .mk-field__hint { font-size: 12px; color: var(--mk-ink-3); }

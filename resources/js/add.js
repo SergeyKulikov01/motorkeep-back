@@ -101,10 +101,10 @@
     // ---------- ЦВЕТОВОЙ ПРЕВЬЮ ----------
     function initColorPreview(colorSelect, colorPreview) {
         colorSelect.addEventListener('change', function () {
-            const val = this.value;
-            if (val) {
-                colorPreview.style.background = val;
-                colorPreview.style.borderColor = val;
+            const hex = this.options[this.selectedIndex].dataset.hex;
+            if (hex) {
+                colorPreview.style.background = hex;
+                colorPreview.style.borderColor = hex;
             } else {
                 colorPreview.style.background = '#ccc';
                 colorPreview.style.borderColor = 'var(--mk-border)';
@@ -403,22 +403,51 @@
         };
     }
 
-    function submitCarData(form, carData) {
-        console.log('Отправка данных:', carData);
+    function getCsrfToken() {
+        const meta = document.querySelector('meta[name="csrf-token"]');
+        return meta ? meta.content : '';
+    }
 
-        // Имитация отправки
+    function submitCarData(form, carData) {
         const btn = form.querySelector('button[type="submit"]');
+        const originalText = btn.textContent;
         btn.disabled = true;
         btn.textContent = 'Сохранение...';
 
-        setTimeout(() => {
-            if (typeof window.showToast === 'function') {
-                window.showToast('Автомобиль успешно добавлен!', 'success');
-            }
-            setTimeout(() => {
-                window.location.href = 'garage.html';
-            }, 1500);
-        }, 1500);
+        fetch('/api/car', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': getCsrfToken()
+            },
+            body: JSON.stringify(carData)
+        })
+            .then(function (res) {
+                return res.json().catch(function () { return {}; }).then(function (data) {
+                    return { ok: res.ok, data: data };
+                });
+            })
+            .then(function (result) {
+                if (!result.ok || !result.data.success) {
+                    return Promise.reject(result.data);
+                }
+
+                if (typeof window.showToast === 'function') {
+                    window.showToast('Автомобиль успешно добавлен!', 'success');
+                }
+                setTimeout(function () {
+                    window.location.href = '/dashboard';
+                }, 1500);
+            })
+            .catch(function () {
+                if (typeof window.showToast === 'function') {
+                    window.showToast('Не удалось сохранить автомобиль. Попробуйте ещё раз.', 'error');
+                }
+                btn.disabled = false;
+                btn.textContent = originalText;
+            });
     }
 
     // ---------- ОТПРАВКА ФОРМЫ ----------

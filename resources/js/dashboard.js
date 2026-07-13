@@ -90,22 +90,6 @@
             openModal(title, contentId);
         });
     });
-
-    // ---------- ДОБАВИТЬ АВТО ----------
-    const addBtn = document.getElementById('add-car-btn');
-    const addCard = document.getElementById('add-car-card');
-
-    function handleAddCar(e) {
-        e.preventDefault();
-        if (typeof window.showToast === 'function') {
-            window.showToast('Открывается форма добавления...', 'info');
-        } else {
-            alert('Открыть форму добавления автомобиля');
-        }
-    }
-    if (addBtn) addBtn.addEventListener('click', handleAddCar);
-    if (addCard) addCard.addEventListener('click', handleAddCar);
-
     // ---------- КАРТОЧКИ СВОДКИ ----------
     document.querySelectorAll('.js-summary-card').forEach(card => {
         card.addEventListener('click', function () {

@@ -101,7 +101,6 @@
 }
 
 .mk-field__input--numeric {
-    text-align: right;
     font-family: var(--mk-font-display);
 }
 

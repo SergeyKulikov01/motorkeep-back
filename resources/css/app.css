@@ -885,7 +885,6 @@ code,
 .mk-field__input--numeric {
     font-family: var(--mk-font-display);
     font-variant-numeric: tabular-nums;
-    text-align: right;
 }
 
 .mk-field__input--mono {

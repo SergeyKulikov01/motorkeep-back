@@ -10,6 +10,7 @@ Route::controller(ApiController::class)->prefix('api')->group(function () {
     Route::get('getBrands', 'getBrandList');
     Route::get('getModels', 'getModelsList');
 });
+Route::post('/car',[NewCarController::class,'addCar'])->prefix('api')->middleware(['auth', 'verified'])->name('addCar');
 
 Route::get('/', function () {
     return view('pages.main.index');

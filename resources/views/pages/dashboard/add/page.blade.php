@@ -12,30 +12,7 @@
 @include('layouts.private.sidebar')
 
 <div class="mk-shell">
-    <header class="mk-header" role="banner">
-        <div class="mk-header__inner">
-            <button class="mk-burger" aria-label="Открыть меню">
-                <span></span><span></span><span></span>
-            </button>
-            <div class="mk-header__title">
-                Добавить авто
-                <span class="mk-header__crumb">/ новый автомобиль</span>
-            </div>
-            <div class="mk-header__right">
-                <button class="mk-iconbtn" aria-label="Уведомления">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                        <path d="M13.73 21a2 2 0 01-3.46 0"/>
-                    </svg>
-                    <span class="dot" aria-hidden="true"></span>
-                </button>
-                <button class="mk-userchip" aria-label="Профиль пользователя">
-                    <span class="mk-userchip__avatar">{{ mb_strtoupper(mb_substr(Auth::user()->name, 0, 1)) }}</span>
-                    <span class="mk-userchip__name">{{ Auth::user()->name }}</span>
-                </button>
-            </div>
-        </div>
-    </header>
+    @include('layouts.private.header')
     <main class="mk-main" role="main">
         <div class="mk-container mk-container--form">
             <div class="mk-form-card">
@@ -86,7 +63,7 @@
                                 <select id="car-body" class="mk-field__input">
                                     <option value="">Выберите тип</option>
                                     @foreach ($body as $bodyType)
-                                        <option value="{{ $bodyType->type }}">{{ $bodyType->name }}</option>
+                                        <option value="{{ $bodyType->id }}">{{ $bodyType->name }}</option>
                                     @endforeach
                                 </select>
                                 <div class="mk-field__error" id="car-body-error"></div>
@@ -98,20 +75,9 @@
                                 <div class="mk-color-select">
                                     <select id="car-color" class="mk-field__input">
                                         <option value="">Выберите цвет</option>
-                                        <option value="#FFFFFF">Белый</option>
-                                        <option value="#000000">Чёрный</option>
-                                        <option value="#C0C0C0">Серебристый</option>
-                                        <option value="#808080">Серый</option>
-                                        <option value="#0000FF">Синий</option>
-                                        <option value="#FF0000">Красный</option>
-                                        <option value="#008000">Зелёный</option>
-                                        <option value="#FFD700">Жёлтый</option>
-                                        <option value="#FFA500">Оранжевый</option>
-                                        <option value="#8B4513">Коричневый</option>
-                                        <option value="#800080">Фиолетовый</option>
-                                        <option value="#FFC0CB">Розовый</option>
-                                        <option value="#FFD700">Золотой</option>
-                                        <option value="#F5DEB3">Бежевый</option>
+                                        @foreach ($colors as $color)
+                                            <option value="{{ $color->id }}" data-hex="{{ $color->hex }}">{{ $color->name }}</option>
+                                        @endforeach
                                     </select>
                                     <span class="mk-color-preview" id="color-preview" style="background:#ccc;"></span>
                                 </div>
@@ -227,7 +193,7 @@
 
     @include('layouts.private.footer')
 
-</div> <!-- /.mk-shell -->
+</div>
 
 <!-- ======== ТОСТЫ ======== -->
 <div class="mk-toast-container" aria-live="polite"></div>
