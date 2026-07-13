@@ -11,45 +11,15 @@
 <!-- ======== САЙДБАР ======== -->
 @include('layouts.private.sidebar')
 
-<!-- ======== ОСНОВНАЯ ОБОЛОЧКА ======== -->
 <div class="mk-shell">
-
-    <!-- ======== ХЕДЕР ======== -->
-    <header class="mk-header" role="banner">
-        <div class="mk-header__inner">
-            <button class="mk-burger" aria-label="Открыть меню">
-                <span></span><span></span><span></span>
-            </button>
-            <div class="mk-header__title">
-                Добавить авто
-                <span class="mk-header__crumb">/ новый автомобиль</span>
-            </div>
-            <div class="mk-header__right">
-                <button class="mk-iconbtn" aria-label="Уведомления">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                        <path d="M13.73 21a2 2 0 01-3.46 0"/>
-                    </svg>
-                    <span class="dot" aria-hidden="true"></span>
-                </button>
-                <button class="mk-userchip" aria-label="Профиль пользователя">
-                    <span class="mk-userchip__avatar">И</span>
-                    <span class="mk-userchip__name">Иван</span>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- ======== ОСНОВНОЙ КОНТЕНТ ======== -->
+    @include('layouts.private.header', ['pageTitle' => 'Мой гараж', 'pageCrumb' => '/ новый автомобиль'])
     <main class="mk-main" role="main">
         <div class="mk-container mk-container--form">
-
             <div class="mk-form-card">
                 <div class="mk-form-card__head">
                     <h1 class="mk-form-card__title">Новый автомобиль</h1>
                     <p class="mk-form-card__sub">Заполните данные — и машина появится в вашем гараже</p>
                 </div>
-
                 <form class="mk-form" id="add-car-form" novalidate>
 
                     <!-- Секция 1: Основная информация -->
@@ -58,157 +28,26 @@
                         <div class="mk-form__grid">
                             <div class="mk-field">
                                 <label for="car-brand" class="mk-field__label">Марка *</label>
-                                <input type="text" id="car-brand" class="mk-field__input" list="brand-list"
-                                       placeholder="Начните вводить марку" autocomplete="off" required/>
-                                <datalist id="brand-list">
-                                    <option value="Acura">
-                                    <option value="Alfa Romeo">
-                                    <option value="Aston Martin">
-                                    <option value="Audi">
-                                    <option value="Bentley">
-                                    <option value="BMW">
-                                    <option value="Bugatti">
-                                    <option value="Cadillac">
-                                    <option value="Chevrolet">
-                                    <option value="Chrysler">
-                                    <option value="Citroën">
-                                    <option value="Dodge">
-                                    <option value="Ferrari">
-                                    <option value="Fiat">
-                                    <option value="Ford">
-                                    <option value="Honda">
-                                    <option value="Hyundai">
-                                    <option value="Infiniti">
-                                    <option value="Jaguar">
-                                    <option value="Jeep">
-                                    <option value="Kia">
-                                    <option value="Lamborghini">
-                                    <option value="Land Rover">
-                                    <option value="Lexus">
-                                    <option value="Maserati">
-                                    <option value="Mazda">
-                                    <option value="McLaren">
-                                    <option value="Mercedes-Benz">
-                                    <option value="Mini">
-                                    <option value="Mitsubishi">
-                                    <option value="Nissan">
-                                    <option value="Opel">
-                                    <option value="Peugeot">
-                                    <option value="Porsche">
-                                    <option value="Renault">
-                                    <option value="Rolls-Royce">
-                                    <option value="Saab">
-                                    <option value="Seat">
-                                    <option value="Skoda">
-                                    <option value="Smart">
-                                    <option value="Subaru">
-                                    <option value="Suzuki">
-                                    <option value="Tesla">
-                                    <option value="Toyota">
-                                    <option value="Volkswagen">
-                                    <option value="Volvo">
-                                    <option value="Lada">
-                                    <option value="ГАЗ">
-                                    <option value="УАЗ">
-                                    <option value="ВАЗ">
-                                </datalist>
+                                <div class="mk-combobox" id="brand-combobox">
+                                    <input type="text" id="car-brand" class="mk-field__input mk-combobox__input"
+                                           placeholder="Начните вводить марку" autocomplete="off"
+                                           role="combobox" aria-expanded="false" aria-autocomplete="list"
+                                           aria-controls="brand-combobox-list" required/>
+                                    <input type="hidden" id="car-brand-id" name="car-brand-id">
+                                    <ul class="mk-combobox__list" id="brand-combobox-list" role="listbox"></ul>
+                                </div>
                                 <div class="mk-field__error" id="car-brand-error"></div>
                             </div>
                             <div class="mk-field">
                                 <label for="car-model" class="mk-field__label">Модель *</label>
-                                <input type="text" id="car-model" class="mk-field__input" list="model-list"
-                                       placeholder="Например: 320i" autocomplete="off" required/>
-                                <datalist id="model-list">
-                                    <option value="1 серия">
-                                    <option value="2 серия">
-                                    <option value="3 серия">
-                                    <option value="4 серия">
-                                    <option value="5 серия">
-                                    <option value="6 серия">
-                                    <option value="7 серия">
-                                    <option value="8 серия">
-                                    <option value="X1">
-                                    <option value="X2">
-                                    <option value="X3">
-                                    <option value="X4">
-                                    <option value="X5">
-                                    <option value="X6">
-                                    <option value="X7">
-                                    <option value="i3">
-                                    <option value="i4">
-                                    <option value="i5">
-                                    <option value="i7">
-                                    <option value="iX">
-                                    <option value="A1">
-                                    <option value="A2">
-                                    <option value="A3">
-                                    <option value="A4">
-                                    <option value="A5">
-                                    <option value="A6">
-                                    <option value="A7">
-                                    <option value="A8">
-                                    <option value="Q2">
-                                    <option value="Q3">
-                                    <option value="Q4">
-                                    <option value="Q5">
-                                    <option value="Q6">
-                                    <option value="Q7">
-                                    <option value="Q8">
-                                    <option value="e-tron">
-                                    <option value="e-tron GT">
-                                    <option value="Corolla">
-                                    <option value="Camry">
-                                    <option value="Prius">
-                                    <option value="RAV4">
-                                    <option value="Highlander">
-                                    <option value="Land Cruiser">
-                                    <option value="Hilux">
-                                    <option value="C-HR">
-                                    <option value="Yaris">
-                                    <option value="Auris">
-                                    <option value="Civic">
-                                    <option value="Accord">
-                                    <option value="CR-V">
-                                    <option value="HR-V">
-                                    <option value="Pilot">
-                                    <option value="Odyssey">
-                                    <option value="Fit">
-                                    <option value="Focus">
-                                    <option value="Fiesta">
-                                    <option value="Mondeo">
-                                    <option value="Kuga">
-                                    <option value="Mustang">
-                                    <option value="Explorer">
-                                    <option value="Ranger">
-                                    <option value="Golf">
-                                    <option value="Passat">
-                                    <option value="Tiguan">
-                                    <option value="Touareg">
-                                    <option value="Polo">
-                                    <option value="Jetta">
-                                    <option value="Arteon">
-                                    <option value="ID.3">
-                                    <option value="ID.4">
-                                    <option value="Octavia">
-                                    <option value="Superb">
-                                    <option value="Kodiaq">
-                                    <option value="Fabia">
-                                    <option value="Rio">
-                                    <option value="Sportage">
-                                    <option value="Ceed">
-                                    <option value="Sorento">
-                                    <option value="Solaris">
-                                    <option value="Elantra">
-                                    <option value="Tucson">
-                                    <option value="Santa Fe">
-                                    <option value="Granta">
-                                    <option value="Vesta">
-                                    <option value="Priora">
-                                    <option value="Niva">
-                                    <option value="Patriot">
-                                    <option value="Hunter">
-                                    <option value="Bukhanka">
-                                </datalist>
+                                <div class="mk-combobox" id="model-combobox">
+                                    <input type="text" id="car-model" class="mk-field__input mk-combobox__input"
+                                           placeholder="Сначала выберите марку" autocomplete="off" disabled
+                                           role="combobox" aria-expanded="false" aria-autocomplete="list"
+                                           aria-controls="model-combobox-list" required/>
+                                    <input type="hidden" id="car-model-id" name="car-model-id">
+                                    <ul class="mk-combobox__list" id="model-combobox-list" role="listbox"></ul>
+                                </div>
                                 <div class="mk-field__error" id="car-model-error"></div>
                             </div>
                         </div>
@@ -223,13 +62,9 @@
                                 <label for="car-body" class="mk-field__label">Тип кузова</label>
                                 <select id="car-body" class="mk-field__input">
                                     <option value="">Выберите тип</option>
-                                    <option value="sedan">Седан</option>
-                                    <option value="hatchback">Хэтчбек</option>
-                                    <option value="suv">Внедорожник</option>
-                                    <option value="coupe">Купе</option>
-                                    <option value="wagon">Универсал</option>
-                                    <option value="minivan">Минивэн</option>
-                                    <option value="pickup">Пикап</option>
+                                    @foreach ($body as $bodyType)
+                                        <option value="{{ $bodyType->id }}">{{ $bodyType->name }}</option>
+                                    @endforeach
                                 </select>
                                 <div class="mk-field__error" id="car-body-error"></div>
                             </div>
@@ -240,20 +75,9 @@
                                 <div class="mk-color-select">
                                     <select id="car-color" class="mk-field__input">
                                         <option value="">Выберите цвет</option>
-                                        <option value="#FFFFFF">Белый</option>
-                                        <option value="#000000">Чёрный</option>
-                                        <option value="#C0C0C0">Серебристый</option>
-                                        <option value="#808080">Серый</option>
-                                        <option value="#0000FF">Синий</option>
-                                        <option value="#FF0000">Красный</option>
-                                        <option value="#008000">Зелёный</option>
-                                        <option value="#FFD700">Жёлтый</option>
-                                        <option value="#FFA500">Оранжевый</option>
-                                        <option value="#8B4513">Коричневый</option>
-                                        <option value="#800080">Фиолетовый</option>
-                                        <option value="#FFC0CB">Розовый</option>
-                                        <option value="#FFD700">Золотой</option>
-                                        <option value="#F5DEB3">Бежевый</option>
+                                        @foreach ($colors as $color)
+                                            <option value="{{ $color->id }}" data-hex="{{ $color->hex }}">{{ $color->name }}</option>
+                                        @endforeach
                                     </select>
                                     <span class="mk-color-preview" id="color-preview" style="background:#ccc;"></span>
                                 </div>
@@ -369,7 +193,7 @@
 
     @include('layouts.private.footer')
 
-</div> <!-- /.mk-shell -->
+</div>
 
 <!-- ======== ТОСТЫ ======== -->
 <div class="mk-toast-container" aria-live="polite"></div>

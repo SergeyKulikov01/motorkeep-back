@@ -125,16 +125,25 @@ import './add.js';
         }
     });
 
-    // ---------- ТОСТЫ (заглушка) ----------
+    // ---------- ТОСТЫ ----------
+    // Единственная реализация на всё приложение — login.js, dashboard.js
+    // и add.js вызывают window.showToast, не определяя свою копию.
     window.showToast = function (message, type) {
         const container = document.querySelector('.mk-toast-container');
         if (!container) return;
+
+        const colors = {
+            success: 'var(--mk-success)',
+            error: 'var(--mk-danger)',
+            warning: 'var(--mk-warning)',
+            info: 'var(--mk-primary)'
+        };
 
         const toast = document.createElement('div');
         toast.className = 'mk-toast';
         const dot = document.createElement('span');
         dot.className = 'mk-toast__dot';
-        dot.style.background = type === 'success' ? 'var(--mk-success)' : type === 'warning' ? 'var(--mk-warning)' : 'var(--mk-primary)';
+        dot.style.background = colors[type] || colors.info;
         toast.appendChild(dot);
         toast.appendChild(document.createTextNode(message));
 

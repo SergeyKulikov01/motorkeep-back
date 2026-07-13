@@ -129,7 +129,7 @@
 
         // Имитация регистрации
         console.log('Регистрация:', name.value, email.value, password.value);
-        showToast('Аккаунт создан!', 'success');
+        window.showToast('Аккаунт создан!', 'success');
         setTimeout(() => {
             window.location.href = '/garage';
         }, 1500);
@@ -140,31 +140,5 @@
 
     // Дополнительно: если нажать Enter в поле пароля — отправка формы
     // (уже работает за счёт type="submit")
-
-    // Функция показа тоста (использует глобальную, если есть)
-    function showToast(message, type) {
-        // Если есть глобальная функция из script.js
-        if (typeof window.showToast === 'function') {
-            window.showToast(message, type);
-        } else {
-            // fallback
-            const container = document.querySelector('.mk-toast-container');
-            if (!container) return;
-            const toast = document.createElement('div');
-            toast.className = 'mk-toast';
-            const dot = document.createElement('span');
-            dot.className = 'mk-toast__dot';
-            dot.style.background = type === 'success' ? 'var(--mk-success)' : 'var(--mk-primary)';
-            toast.appendChild(dot);
-            toast.appendChild(document.createTextNode(message));
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateY(20px)';
-                toast.style.transition = 'opacity 300ms, transform 300ms';
-                setTimeout(() => toast.remove(), 300);
-            }, 3500);
-        }
-    }
 
 })();

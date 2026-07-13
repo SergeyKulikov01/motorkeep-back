@@ -1,7 +1,6 @@
-<!-- ======== САЙДБАР ======== -->
 <aside class="mk-sidebar" role="navigation" aria-label="Главное меню">
     <div class="mk-sidebar__brand">
-        <a href="/" class="mk-logo" aria-label="MOTORKEEP — на главную">
+        <a href="{{ route('dashboard') }}" class="mk-logo" aria-label="MOTORKEEP — на главную">
             <span class="mk-logo__mark"><i class="bi bi-car-front-fill"></i></span>
             <span class="mk-logo__text">MOTOR<span class="mk-logo__text-accent">KEEP</span></span>
         </a>
@@ -66,13 +65,16 @@
             <span>Свернуть</span>
         </button>
         <!-- Кнопка Выйти -->
-        <button class="mk-navitem mk-logout" data-tip="Выйти">
-            <svg viewBox="0 0 24 24">
-                <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
-                <polyline points="16 17 21 12 16 7"/>
-                <line x1="21" y1="12" x2="9" y2="12"/>
-            </svg>
-            <span class="lbl">Выйти</span>
-        </button>
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="mk-navitem mk-logout" data-tip="Выйти">
+                <svg viewBox="0 0 24 24">
+                    <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+                <span class="lbl">Выйти</span>
+            </button>
+        </form>
     </div>
 </aside>
