@@ -4,8 +4,10 @@
             <span></span><span></span><span></span>
         </button>
         <div class="mk-header__title">
-            Мой гараж
-            <span class="mk-header__crumb">/ список авто</span>
+            {{ $pageTitle ?? 'Мой гараж' }}
+            @if(!empty($pageCrumb))
+                <span class="mk-header__crumb">{{ $pageCrumb }}</span>
+            @endif
         </div>
         <div class="mk-header__right">
             <!-- КОЛОКОЛЬЧИК с popover -->

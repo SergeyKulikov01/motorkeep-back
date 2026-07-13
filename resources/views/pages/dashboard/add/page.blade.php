@@ -12,7 +12,7 @@
 @include('layouts.private.sidebar')
 
 <div class="mk-shell">
-    @include('layouts.private.header')
+    @include('layouts.private.header', ['pageTitle' => 'Мой гараж', 'pageCrumb' => '/ новый автомобиль'])
     <main class="mk-main" role="main">
         <div class="mk-container mk-container--form">
             <div class="mk-form-card">
