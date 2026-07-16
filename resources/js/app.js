@@ -1,6 +1,7 @@
 import './login.js';
 import './dashboard.js';
 import './add.js';
+import './detail.js';
 
 (function () {
     'use strict';

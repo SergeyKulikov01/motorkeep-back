@@ -124,10 +124,6 @@
     color: var(--mk-danger);
 }
 
-.mk-field--error .mk-field__input {
-    border-color: var(--mk-danger);
-}
-
 .mk-field--error .mk-field__input:focus {
     box-shadow: 0 0 0 4px rgba(240, 70, 59, 0.12);
 }
@@ -288,22 +284,13 @@
     .mk-form-section__title {
         font-size: 16px;
     }
+
 }
 
 @media (max-width: 900px) {
-    .mk-sidebar {
-        transform: translateX(-100%);
-        width: 280px;
-    }
-    body.nav-open .mk-sidebar { transform: translateX(0); }
-    .mk-burger { display: flex; }
+
     .mk-shell { margin-left: 0; }
     body.is-collapsed .mk-shell { margin-left: 0; }
-    body.is-collapsed .mk-sidebar { width: 280px; }
-    body.is-collapsed .mk-sidebar .lbl,
-    body.is-collapsed .mk-sidebar .mk-navlabel,
-    body.is-collapsed .mk-sidebar .pill,
-    body.is-collapsed .mk-sidebar .mk-logo__text { display: flex; }
-    body.is-collapsed .mk-sidebar .mk-navitem { justify-content: flex-start; padding: 8px 12px; }
-    body.is-collapsed .mk-sidebar .mk-collapse span { display: inline; }
+
 }
+

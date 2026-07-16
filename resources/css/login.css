@@ -188,13 +188,6 @@
 }
 
 /* ---------- Ошибки полей ---------- */
-.mk-field--error .mk-field__input {
-    border-color: var(--mk-danger);
-}
-
-.mk-field--error .mk-field__input:focus {
-    box-shadow: 0 0 0 4px rgba(240, 70, 59, .18);
-}
 
 .mk-field__error {
     font-size: 12px;
@@ -219,6 +212,7 @@
         padding: 24px 16px;
         background: transparent;
     }
+
 }
 
 @media (max-width: 480px) {
@@ -234,6 +228,7 @@
         flex-wrap: wrap;
         gap: 8px;
     }
+
 }
 /* ---------- Новые стили для текста на левой панели ---------- */
 .mk-auth-brand__features {
@@ -257,3 +252,4 @@
     color: rgba(255, 255, 255, .7);
     margin-top: 2px;
 }
+
