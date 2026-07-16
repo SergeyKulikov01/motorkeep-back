@@ -2,6 +2,7 @@
 <html lang="ru">
 <head>
     @include('layouts.public.landing-head')
+    <script src="https://yastatic.net/s3/passport-sdk/autofill/v1/sdk-suggest-with-polyfills-latest.js"></script>
 </head>
 <body>
 
@@ -66,15 +67,16 @@
     </div>
 
     <!-- Правая панель: форма -->
+    @php($showRegister = $errors->has('name'))
     <div class="mk-auth-form">
         <div class="mk-auth-form__card">
             <div class="mk-auth-form__head">
-                <h1 class="mk-auth-form__title" id="form-title">Вход</h1>
-                <p class="mk-auth-form__sub" id="form-sub">Войдите в свой аккаунт</p>
+                <h1 class="mk-auth-form__title" id="form-title">{{ $showRegister ? 'Регистрация' : 'Вход' }}</h1>
+                <p class="mk-auth-form__sub" id="form-sub">{{ $showRegister ? 'Создайте новый аккаунт' : 'Войдите в свой аккаунт' }}</p>
             </div>
 
             <form class="mk-auth-form__form" id="login-form" method="POST" action="{{ route('login') }}"
-                  autocomplete="off" novalidate>
+                  autocomplete="off" novalidate style="display:{{ $showRegister ? 'none' : 'flex' }};">
                 @csrf
                 <div class="mk-field @error('email') mk-field--error @enderror">
                     <label for="login-email" class="mk-field__label">Email</label>
@@ -100,25 +102,32 @@
                 <button type="submit" class="mk-btn mk-btn--primary mk-btn--block mk-btn--lg">Войти</button>
             </form>
 
-            <form class="mk-auth-form__form" id="register-form" autocomplete="off" novalidate style="display:none;">
-                <div class="mk-field">
+            <form class="mk-auth-form__form" method="POST" action="{{ route('register') }}" id="register-form" autocomplete="off" novalidate
+                  style="display:{{ $showRegister ? 'flex' : 'none' }};">
+                @csrf
+                <div class="mk-field @error('name') mk-field--error @enderror">
                     <label for="reg-name" class="mk-field__label">Имя</label>
-                    <input type="text" id="reg-name" class="mk-field__input" placeholder="Иван Петров" required/>
-                    <div class="mk-field__error" id="reg-name-error"></div>
+                    <input type="text" id="reg-name" name="name" class="mk-field__input" placeholder="Иван" value="{{ old('name') }}" required/>
+                    <div class="mk-field__error" id="reg-name-error">{{ $errors->first('name') }}</div>
                 </div>
-                <div class="mk-field">
+                <div class="mk-field @error('last_name') mk-field--error @enderror">
+                    <label for="reg-last-name" class="mk-field__label">Фамилия</label>
+                    <input type="text" id="reg-last-name" name="last_name" class="mk-field__input" placeholder="Петров" value="{{ old('last_name') }}" required/>
+                    <div class="mk-field__error" id="reg-last-name-error">{{ $errors->first('last_name') }}</div>
+                </div>
+                <div class="mk-field @error('email') mk-field--error @enderror">
                     <label for="reg-email" class="mk-field__label">Email</label>
-                    <input type="email" id="reg-email" class="mk-field__input" placeholder="ivan@example.com" required/>
-                    <div class="mk-field__error" id="reg-email-error"></div>
+                    <input type="email" id="reg-email" name="email" class="mk-field__input" placeholder="ivan@example.com" value="{{ old('email') }}" required/>
+                    <div class="mk-field__error" id="reg-email-error">{{ $errors->first('email') }}</div>
                 </div>
-                <div class="mk-field">
+                <div class="mk-field @error('password') mk-field--error @enderror">
                     <label for="reg-password" class="mk-field__label">Пароль</label>
-                    <input type="password" id="reg-password" class="mk-field__input" placeholder="••••••••" required/>
-                    <div class="mk-field__error" id="reg-password-error"></div>
+                    <input type="password" id="reg-password" name="password" class="mk-field__input" placeholder="••••••••" required/>
+                    <div class="mk-field__error" id="reg-password-error">{{ $errors->first('password') }}</div>
                 </div>
                 <div class="mk-field">
                     <label for="reg-password-confirm" class="mk-field__label">Подтвердите пароль</label>
-                    <input type="password" id="reg-password-confirm" class="mk-field__input" placeholder="••••••••"
+                    <input type="password" id="reg-password-confirm" name="password_confirmation" class="mk-field__input" placeholder="••••••••"
                            required/>
                     <div class="mk-field__error" id="reg-password-confirm-error"></div>
                 </div>
@@ -127,7 +136,41 @@
 
             <div class="mk-auth-form__divider"><span>или</span></div>
             <div class="mk-auth-form__social">
-                <button class="mk-btn mk-btn--ghost mk-btn--block" type="button">
+                <script>
+                    window.onload = function() {
+                        window.YaAuthSuggest.init({
+                                client_id: '400ef071329e44188865a1fcd4572105',
+                                response_type: 'token',
+                                redirect_uri: 'https://motorkeep.ru/'
+                            },
+                            'https://motorkeep.ru',
+                            {
+                                view: "button",
+                                parentId: "social-auth",
+                                buttonSize: 'm',
+                                buttonView: 'main',
+                                buttonTheme: 'light',
+                                buttonBorderRadius: "22",
+                                buttonIcon: 'ya',
+                            }
+                        )
+                            .then(function(result) {
+                                return result.handler()
+                            })
+                            .then(function(data) {
+                                console.log('Сообщение с токеном: ', data);
+                                document.body.innerHTML += `Сообщение с токеном: ${JSON.stringify(data)}`;
+                            })
+                            .catch(function(error) {
+                                console.log('Что-то пошло не так: ', error);
+                                document.body.innerHTML += `Что-то пошло не так: ${JSON.stringify(error)}`;
+                            });
+                    };
+                </script>
+                <div id="social-auth">
+
+                </div>
+                <button class="mk-btn mk-btn--ghost mk-btn--block" type="button" >
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
                         <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
                         <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -136,17 +179,11 @@
                     </svg>
                     Google
                 </button>
-                <button class="mk-btn mk-btn--ghost mk-btn--block" type="button">
-                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.15 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.62.24 2.85.12 3.15.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
-                    </svg>
-                    GitHub
-                </button>
             </div>
 
             <div class="mk-auth-form__switch">
-                <span id="switch-text">Нет аккаунта?</span>
-                <button type="button" class="mk-auth-form__switch-btn" id="switch-mode">Зарегистрироваться</button>
+                <span id="switch-text">{{ $showRegister ? 'Уже есть аккаунт?' : 'Нет аккаунта?' }}</span>
+                <button type="button" class="mk-auth-form__switch-btn" id="switch-mode">{{ $showRegister ? 'Войти' : 'Зарегистрироваться' }}</button>
             </div>
         </div>
     </div>
