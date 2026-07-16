@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'yandex' => [
+        'client_id' => env('YANDEX_CLIENT_ID'),
+    ],
+
 ];
