@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DetailCarController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\NewCarController;
@@ -22,11 +24,11 @@ Route::get('/contacts/', function () {
     return view('pages.main.contacts.index');
 });
 
-Route::get('/dashboard', function () {
-    return view('pages.dashboard.index');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::get('/dashboard/add',[NewCarController::class,'index'])->middleware(['auth', 'verified'])->name('dashboard.add');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class,'index'])->name('dashboard');
+    Route::get('/dashboard/add',[NewCarController::class,'index'])->name('dashboard.add');
+    Route::get('/dashboard/detail/{id}',[DetailCarController::class,'index'])->whereNumber('id')->name('dashboard.cardetail');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

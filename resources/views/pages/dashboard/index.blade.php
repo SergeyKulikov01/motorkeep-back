@@ -15,12 +15,12 @@
             <div class="mk-garage-head">
                 <div>
                     <h1 class="mk-garage-head__title">Мой гараж</h1>
-                    <p class="mk-garage-head__sub">3 автомобиля · 42 000 ₽ расходов за месяц</p>
+                    <p class="mk-garage-head__sub">{{ $cars->count() }} автомобиля · 42 000 ₽ расходов за месяц</p>
                 </div>
                 <a href="{{ route('dashboard.add') }}" class="mk-btn mk-btn--primary" id="add-car-btn">
-                    <svg viewBox="0 0 24 24" width="18" height="18">
-                        <line x1="12" y1="5" x2="12" y2="19"/>
-                        <line x1="5" y1="12" x2="19" y2="12"/>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="currentColor" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12.001 5.00003V19.002"></path>
+                        <path d="M19.002 12.002L4.99998 12.002"></path>
                     </svg>
                     Добавить авто
                 </a>
@@ -29,7 +29,7 @@
             <!-- Блок общей информации (сводка) -->
             <section class="mk-garage-summary">
                 <div class="mk-garage-summary__grid">
-                    <div class="mk-garage-summary__card js-summary-card" data-summary="to"
+                    <div class="mk-garage-summary__card js-summary-card mk-wip" data-summary="to"
                          style="--card-color: var(--mk-c-service); --card-bg: var(--mk-c-service-soft);">
                         <div class="mk-garage-summary__icon">
                             <svg viewBox="0 0 24 24">
@@ -43,7 +43,7 @@
                             <span class="mk-garage-summary__meta">BMW 320i — через 1 200 км</span>
                         </div>
                     </div>
-                    <div class="mk-garage-summary__card js-summary-card" data-summary="tax"
+                    <div class="mk-garage-summary__card js-summary-card mk-wip" data-summary="tax"
                          style="--card-color: var(--mk-warning); --card-bg: #FEF2E0;">
                         <div class="mk-garage-summary__icon">
                             <svg viewBox="0 0 24 24">
@@ -57,7 +57,7 @@
                             <span class="mk-garage-summary__meta">ОСАГО — до 15.08.2026</span>
                         </div>
                     </div>
-                    <div class="mk-garage-summary__card js-summary-card" data-summary="notes"
+                    <div class="mk-garage-summary__card js-summary-card mk-wip" data-summary="notes"
                          style="--card-color: var(--mk-c-note); --card-bg: var(--mk-c-note-soft);">
                         <div class="mk-garage-summary__icon">
                             <svg viewBox="0 0 24 24">
@@ -71,7 +71,7 @@
                             <span class="mk-garage-summary__meta">Замена свечей, шин, масла</span>
                         </div>
                     </div>
-                    <div class="mk-garage-summary__card js-summary-card" data-summary="costs"
+                    <div class="mk-garage-summary__card js-summary-card mk-wip" data-summary="costs"
                          style="--card-color: var(--mk-c-fuel); --card-bg: var(--mk-c-fuel-soft);">
                         <div class="mk-garage-summary__icon">
                             <svg viewBox="0 0 24 24">
@@ -93,7 +93,7 @@
             <section class="mk-quick-actions">
                 <h2 class="mk-quick-actions__title">Быстрые действия</h2>
                 <div class="mk-quick-actions__grid">
-                    <button class="mk-quick-action" data-type="service"
+                    <button class="mk-quick-action mk-wip" data-type="service"
                             style="--action-color: var(--mk-c-service); --action-bg: var(--mk-c-service-soft);">
                         <svg viewBox="0 0 24 24">
                             <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
@@ -103,7 +103,7 @@
                         </svg>
                         <span>ТО</span>
                     </button>
-                    <button class="mk-quick-action" data-type="fuel"
+                    <button class="mk-quick-action mk-wip" data-type="fuel"
                             style="--action-color: var(--mk-c-fuel); --action-bg: var(--mk-c-fuel-soft);">
                         <svg viewBox="0 0 24 24">
                             <rect x="2" y="6" width="16" height="14" rx="2"/>
@@ -113,7 +113,7 @@
                         </svg>
                         <span>Заправка</span>
                     </button>
-                    <button class="mk-quick-action" data-type="repair"
+                    <button class="mk-quick-action mk-wip" data-type="repair"
                             style="--action-color: var(--mk-c-repair); --action-bg: var(--mk-c-repair-soft);">
                         <svg viewBox="0 0 24 24">
                             <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
@@ -121,7 +121,7 @@
                         </svg>
                         <span>Ремонт</span>
                     </button>
-                    <button class="mk-quick-action" data-type="note"
+                    <button class="mk-quick-action mk-wip" data-type="note"
                             style="--action-color: var(--mk-c-note); --action-bg: var(--mk-c-note-soft);">
                         <svg viewBox="0 0 24 24">
                             <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
@@ -135,99 +135,48 @@
                 </div>
             </section>
 
-            <!-- Сетка карточек авто (обведены цветом) -->
             <div class="mk-garage-grid" id="garage-grid">
-                <a href="car.html?id=1" class="mk-garage-card">
+                @foreach ($cars as $car)
+                    <a href="{{ route('dashboard.cardetail',['id' => $car->id])  }}" class="mk-garage-card">
                     <div class="mk-garage-card__media">
-                        <svg viewBox="0 0 120 72" fill="none" aria-hidden="true">
-                            <rect x="10" y="24" width="100" height="32" rx="6" fill="#D4DCE8" opacity=".35"/>
-                            <rect x="16" y="28" width="88" height="24" rx="4" fill="#E5EAF2" opacity=".5"/>
-                            <path d="M28 44h64M32 36h56M36 52h48" stroke="#D4DCE8" stroke-width="2"
-                                  stroke-linecap="round" opacity=".4"/>
-                            <circle cx="44" cy="44" r="8" fill="#D4DCE8" opacity=".25"/>
-                            <circle cx="76" cy="44" r="8" fill="#D4DCE8" opacity=".25"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 72" width="120" height="72" color="currentColor" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <g transform="translate(38.4,14.4) scale(1.8)">
+                                <path d="M3 17V12.8885C3 11.9485 3 11.4785 3.107 11.0253C3.21401 10.572 3.4242 10.1516 3.84458 9.31084L4.89443 7.21115C5.43234 6.13531 5.7013 5.5974 6.18461 5.2987C6.66791 5 7.26932 5 8.47214 5H15.5279C16.7307 5 17.3321 5 17.8154 5.2987C18.2987 5.5974 18.5677 6.13531 19.1056 7.21114L20.1554 9.31083C20.5758 10.1516 20.786 10.572 20.893 11.0253C21 11.4785 21 11.9485 21 12.8885V17C21 17.9428 21 18.4142 20.7071 18.7071C20.4142 19 19.9428 19 19 19C18.0572 19 17.5858 19 17.2929 18.7071C17 18.4142 17 17.9428 17 17H7C7 17.9428 7 18.4142 6.70711 18.7071C6.41421 19 5.94281 19 5 19C4.05719 19 3.58579 19 3.29289 18.7071C3 18.4142 3 17.9428 3 17Z"></path>
+                                <path d="M21 11L23 10"></path>
+                                <path d="M3 11L1 10"></path>
+                                <path d="M3 11H21"></path>
+                                <path d="M6 14H7"></path>
+                                <path d="M17 14H18"></path>
+                            </g>
                         </svg>
-                        <span class="mk-garage-card__plate">А 777 ММ <span class="mk-garage-card__region">116 RUS</span></span>
+                        <span class="mk-garage-card__plate">{{ $car->plate_number }} <span class="mk-garage-card__region">{{ $car->plate_region }} RUS</span></span>
                     </div>
                     <div class="mk-garage-card__body">
-                        <h3 class="mk-garage-card__name">BMW 320i</h3>
+                        <h3 class="mk-garage-card__name">{{ $car->brand->name }} {{ $car->model->name }}</h3>
                         <div class="mk-odo mk-odo--sm">
                             <span class="mk-odo__label">Пробег</span>
-                            <span class="mk-odo__value">86 420 <span class="mk-odo__unit">км</span></span>
+                            <span class="mk-odo__value">{{ $car->mileage_formatted }} <span class="mk-odo__unit">км</span></span>
                             <span class="mk-odo__track" aria-hidden="true"></span>
                         </div>
                         <div class="mk-garage-card__stats">
-                            <div><span class="mk-garage-card__stat-label">Расходы за год</span><span
-                                    class="mk-garage-card__stat-value">214 600 ₽</span></div>
-                            <div><span class="mk-garage-card__stat-label">Записей</span><span
-                                    class="mk-garage-card__stat-value">12</span></div>
-                            <div><span class="mk-garage-card__stat-label">До ТО</span><span
-                                    class="mk-garage-card__stat-value">1 200 км</span></div>
+                            <div class="mk-wip">
+                                <span class="mk-garage-card__stat-label">Расходы за год</span>
+                                <span class="mk-garage-card__stat-value">214 600 ₽</span>
+                            </div>
+                            <div class="mk-wip">
+                                <span class="mk-garage-card__stat-label">Записей</span>
+                                <span class="mk-garage-card__stat-value">12</span>
+                            </div>
+                            <div class="mk-wip">
+                                <span class="mk-garage-card__stat-label">До ТО</span>
+                                <span class="mk-garage-card__stat-value">1 200 км</span>
+                            </div>
                         </div>
                     </div>
                 </a>
+                @endforeach
 
-                <a href="car.html?id=2" class="mk-garage-card">
-                    <div class="mk-garage-card__media">
-                        <svg viewBox="0 0 120 72" fill="none" aria-hidden="true">
-                            <rect x="10" y="24" width="100" height="32" rx="6" fill="#D4DCE8" opacity=".35"/>
-                            <rect x="16" y="28" width="88" height="24" rx="4" fill="#E5EAF2" opacity=".5"/>
-                            <path d="M28 44h64M32 36h56M36 52h48" stroke="#D4DCE8" stroke-width="2"
-                                  stroke-linecap="round" opacity=".4"/>
-                            <circle cx="44" cy="44" r="8" fill="#D4DCE8" opacity=".25"/>
-                            <circle cx="76" cy="44" r="8" fill="#D4DCE8" opacity=".25"/>
-                        </svg>
-                        <span class="mk-garage-card__plate">В 123 КН <span class="mk-garage-card__region">50 RUS</span></span>
-                    </div>
-                    <div class="mk-garage-card__body">
-                        <h3 class="mk-garage-card__name">Toyota Camry</h3>
-                        <div class="mk-odo mk-odo--sm">
-                            <span class="mk-odo__label">Пробег</span>
-                            <span class="mk-odo__value">42 150 <span class="mk-odo__unit">км</span></span>
-                            <span class="mk-odo__track" aria-hidden="true"></span>
-                        </div>
-                        <div class="mk-garage-card__stats">
-                            <div><span class="mk-garage-card__stat-label">Расходы за год</span><span
-                                    class="mk-garage-card__stat-value">98 300 ₽</span></div>
-                            <div><span class="mk-garage-card__stat-label">Записей</span><span
-                                    class="mk-garage-card__stat-value">8</span></div>
-                            <div><span class="mk-garage-card__stat-label">До ТО</span><span
-                                    class="mk-garage-card__stat-value">3 800 км</span></div>
-                        </div>
-                    </div>
-                </a>
-
-                <a href="car.html?id=3" class="mk-garage-card">
-                    <div class="mk-garage-card__media">
-                        <svg viewBox="0 0 120 72" fill="none" aria-hidden="true">
-                            <rect x="10" y="24" width="100" height="32" rx="6" fill="#D4DCE8" opacity=".35"/>
-                            <rect x="16" y="28" width="88" height="24" rx="4" fill="#E5EAF2" opacity=".5"/>
-                            <path d="M28 44h64M32 36h56M36 52h48" stroke="#D4DCE8" stroke-width="2"
-                                  stroke-linecap="round" opacity=".4"/>
-                            <circle cx="44" cy="44" r="8" fill="#D4DCE8" opacity=".25"/>
-                            <circle cx="76" cy="44" r="8" fill="#D4DCE8" opacity=".25"/>
-                        </svg>
-                        <span class="mk-garage-card__plate">С 999 РР <span class="mk-garage-card__region">102 RUS</span></span>
-                    </div>
-                    <div class="mk-garage-card__body">
-                        <h3 class="mk-garage-card__name">Lada Vesta</h3>
-                        <div class="mk-odo mk-odo--sm">
-                            <span class="mk-odo__label">Пробег</span>
-                            <span class="mk-odo__value">12 800 <span class="mk-odo__unit">км</span></span>
-                            <span class="mk-odo__track" aria-hidden="true"></span>
-                        </div>
-                        <div class="mk-garage-card__stats">
-                            <div><span class="mk-garage-card__stat-label">Расходы за год</span><span
-                                    class="mk-garage-card__stat-value">32 400 ₽</span></div>
-                            <div><span class="mk-garage-card__stat-label">Записей</span><span
-                                    class="mk-garage-card__stat-value">5</span></div>
-                            <div><span class="mk-garage-card__stat-label">До ТО</span><span
-                                    class="mk-garage-card__stat-value">2 200 км</span></div>
-                        </div>
-                    </div>
-                </a>
-
-                <a href="#" class="mk-garage-card mk-garage-card--add" id="add-car-card">
+                <a href="{{ route('dashboard.add') }}" class="mk-garage-card mk-garage-card--add" id="add-car-card">
                     <div class="mk-garage-card__add-icon">
                         <svg viewBox="0 0 24 24" width="48" height="48">
                             <line x1="12" y1="5" x2="12" y2="19"/>
@@ -239,7 +188,7 @@
             </div>
 
             <!-- Блок "История и напоминания" -->
-            <section class="mk-garage-extra">
+            <section class="mk-garage-extra mk-wip">
                 <div class="mk-garage-extra__grid">
                     <!-- Колонка: История -->
                     <div class="mk-garage-extra__col">

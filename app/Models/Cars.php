@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class Cars extends Model
@@ -25,5 +26,21 @@ class Cars extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
+    }
+    public function model()
+    {
+        return $this->belongsTo(CarModel::class, 'car_model_id');
+    }
+
+    protected function mileageFormatted(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => number_format($this->mileage, 0, '', ' '),
+        );
     }
 }

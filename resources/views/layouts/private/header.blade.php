@@ -4,9 +4,9 @@
             <span></span><span></span><span></span>
         </button>
         <div class="mk-header__title">
-            {{ $pageTitle ?? 'Мой гараж' }}
+            <span class="mk-header__crumb">{{ $pageTitle ?? 'Мой гараж' }} ›</span>
             @if(!empty($pageCrumb))
-                <span class="mk-header__crumb">{{ $pageCrumb }}</span>
+                <span>{{ $pageCrumb }}</span>
             @endif
         </div>
         <div class="mk-header__right">

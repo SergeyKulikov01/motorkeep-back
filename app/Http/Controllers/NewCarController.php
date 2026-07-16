@@ -32,7 +32,7 @@ class NewCarController extends Controller
                 'engine_volume' => $request->engine,
                 'transmission_type' => $request->transmission,
                 'vin' => $request->vin,
-                'plate_number' => $request->plate,
+                'plate_number' => strtoupper($request->plate),
                 'plate_region' => $request->region,
                 'mileage' => $request->mileage,
                 'comment' => $request->comment,
