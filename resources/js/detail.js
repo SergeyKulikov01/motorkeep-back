@@ -256,21 +256,30 @@
         if (e.target === this) closeAllModals();
     });
 
-    document.getElementById('mkNoteForm')?.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const title = document.getElementById('noteTitle').value.trim();
-        if (!title) { alert('Введите заголовок'); return; }
-        const content = document.getElementById('noteContent').value.trim();
-        data.notes.push({
-            id: getNextId(),
-            title,
-            content
+    function addNotes(){
+        const form = document.getElementById('mkNoteForm');
+        if (!form){
+            return;
+        }
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const data = new FormData(form);
+            console.log(data);
+            return;
+            const title = document.getElementById('noteTitle').value.trim();
+            if (!title) { alert('Введите заголовок'); return; }
+            const content = document.getElementById('noteContent').value.trim();
+            data.notes.push({
+                id: getNextId(),
+                title,
+                content
+            });
+            renderNotes();
+            closeAllModals();
+            this.reset();
+            showToast('Заметка добавлена');
         });
-        renderNotes();
-        closeAllModals();
-        this.reset();
-        showToast('Заметка добавлена');
-    });
+    }
 
     // ===== ОСТАЛЬНАЯ ЛОГИКА (сайдбар, бургер, FAB, модалка записи) =====
     // ... (вставьте весь код из предыдущей версии: бургер, свёртка, FAB, модалка записи)
@@ -376,5 +385,5 @@
     renderDocs();
     renderNotes();
 
-    console.log('MOTORKEEP: полная версия загружена');
+    addNotes();
 })();

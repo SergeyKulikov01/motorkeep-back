@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\YandexAuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DetailCarController;
+use App\Http\Controllers\UserNotesController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\NewCarController;
@@ -13,7 +14,12 @@ Route::controller(ApiController::class)->prefix('api')->group(function () {
     Route::get('getBrands', 'getBrandList');
     Route::get('getModels', 'getModelsList');
 });
-Route::post('/car',[NewCarController::class,'addCar'])->prefix('api')->middleware(['auth', 'verified'])->name('addCar');
+Route::prefix('api')->middleware(['auth', 'verified'])->group(function () {
+    Route::post('/car',[NewCarController::class,'addCar']);
+    Route::post('/notes',[UserNotesController::class,'addNote']);
+    Route::get('/notes',[UserNotesController::class,'getNote']);
+    Route::delete('/notes',[UserNotesController::class,'getNote']);
+});
 
 Route::get('/', function () {
     return view('pages.main.index');

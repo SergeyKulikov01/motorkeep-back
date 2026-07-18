@@ -483,7 +483,7 @@ body.is-collapsed .mk-collapse svg {
 .mk-hero__silhouette svg {
     width: 100%;
     height: auto;
-    max-height: 160px;
+    max-height: 300px;
 }
 .mk-hero__plate {
     position: absolute;
