@@ -15,7 +15,7 @@
         return;
     }
 
-    let isLoginMode = true;
+    let isLoginMode = registerForm.style.display === 'none';
 
     // Функция переключения режима
     function toggleMode() {
@@ -94,12 +94,13 @@
         // Если валидно — форма отправляется на сервер как обычно.
     });
 
-    // Обработка отправки формы регистрации
+    // Обработка отправки формы регистрации — клиентская валидация перед
+    // реальной отправкой формы на бэкенд (action="{{ route('register') }}")
     registerForm.addEventListener('submit', function (e) {
-        e.preventDefault();
         clearErrors(registerForm);
 
         const name = document.getElementById('reg-name');
+        const lastName = document.getElementById('reg-last-name');
         const email = document.getElementById('reg-email');
         const password = document.getElementById('reg-password');
         const confirm = document.getElementById('reg-password-confirm');
@@ -107,6 +108,11 @@
 
         if (name.value.trim().length < 2) {
             setFieldError(name, 'Введите имя (минимум 2 символа)');
+            valid = false;
+        }
+
+        if (lastName.value.trim().length < 2) {
+            setFieldError(lastName, 'Введите фамилию (минимум 2 символа)');
             valid = false;
         }
 
@@ -125,14 +131,10 @@
             valid = false;
         }
 
-        if (!valid) return;
-
-        // Имитация регистрации
-        console.log('Регистрация:', name.value, email.value, password.value);
-        window.showToast('Аккаунт создан!', 'success');
-        setTimeout(() => {
-            window.location.href = '/garage';
-        }, 1500);
+        if (!valid) {
+            e.preventDefault();
+        }
+        // Если валидно — форма отправляется на сервер как обычно.
     });
 
     // Переключение режима

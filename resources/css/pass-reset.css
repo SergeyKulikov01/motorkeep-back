@@ -1,0 +1,220 @@
+/* ===== Страница сброса пароля =====
+   Токены и глобальный сброс уже объявлены в app.css — здесь только
+   стили, скоупленные под .mk-reset-page / .mk-reset-container,
+   чтобы не затрагивать остальной сайт. */
+body.mk-reset-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px var(--mk-gutter);
+}
+
+/* ===== Контейнер ===== */
+.mk-reset-container {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+/* ===== Карточка ===== */
+.mk-reset-card {
+    background: var(--mk-surface);
+    border-radius: var(--mk-r-xl);
+    box-shadow: var(--mk-shadow-lg);
+    padding: 40px 36px;
+    transition: box-shadow 0.2s ease;
+}
+.mk-reset-card:hover {
+    box-shadow: 0 12px 40px rgba(14, 23, 38, 0.12);
+}
+
+/* ===== Логотип ===== */
+.mk-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--mk-font-display);
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--mk-ink);
+    text-decoration: none;
+    margin-bottom: 24px;
+}
+.mk-logo__mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: var(--mk-r-md);
+    background: linear-gradient(135deg, var(--mk-primary), var(--mk-primary-strong));
+    color: #fff;
+    font-size: 22px;
+}
+.mk-logo__text span {
+    color: var(--mk-ink-2);
+}
+
+/* ===== Заголовки и текст ===== */
+#reset-title,
+.mk-reset-card h1 {
+    font-family: var(--mk-font-display);
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+.mk-reset-sub {
+    color: var(--mk-ink-2);
+    font-size: 15px;
+    margin-bottom: 28px;
+}
+.mk-reset-sub strong {
+    color: var(--mk-ink);
+}
+
+/* ===== Форма ===== */
+.mk-form-group {
+    margin-bottom: 20px;
+}
+.mk-form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--mk-ink-2);
+    margin-bottom: 4px;
+}
+.mk-form-group input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--mk-border);
+    border-radius: var(--mk-r-sm);
+    font-family: var(--mk-font-body);
+    font-size: 15px;
+    background: var(--mk-bg);
+    color: var(--mk-ink);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.mk-form-group input:focus {
+    outline: none;
+    border-color: var(--mk-primary);
+    box-shadow: var(--mk-ring);
+}
+.mk-form-group input:read-only {
+    background: var(--mk-surface-2);
+    cursor: default;
+}
+.mk-form-group input.error {
+    border-color: var(--mk-danger);
+}
+.mk-form-group input.error:focus {
+    box-shadow: 0 0 0 4px rgba(240, 70, 59, 0.18);
+}
+.mk-error-message {
+    font-size: 12px;
+    color: var(--mk-danger);
+    min-height: 20px;
+    margin-top: 4px;
+}
+
+/* ===== Кнопка ===== */
+.mk-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: var(--mk-r-pill);
+    font-family: var(--mk-font-body);
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 1.4;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--mk-ink);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-decoration: none;
+    min-height: 44px;
+}
+.mk-btn--primary {
+    background: var(--mk-primary);
+    color: #fff;
+    border-color: var(--mk-primary);
+}
+.mk-btn--primary:hover {
+    background: var(--mk-primary-strong);
+    border-color: var(--mk-primary-strong);
+    box-shadow: 0 4px 12px rgba(47, 107, 255, 0.3);
+    transform: translateY(-1px);
+}
+.mk-btn--full {
+    width: 100%;
+    justify-content: center;
+}
+
+/* ===== Ссылка назад ===== */
+.mk-reset-back {
+    margin-top: 24px;
+    text-align: center;
+    font-size: 14px;
+}
+.mk-reset-back a {
+    color: var(--mk-ink-2);
+    text-decoration: none;
+}
+.mk-reset-back a:hover {
+    color: var(--mk-ink);
+    text-decoration: underline;
+}
+
+/* ===== Состояние ошибки токена ===== */
+.mk-error-icon {
+    text-align: center;
+    font-size: 56px;
+    color: var(--mk-danger);
+    margin-bottom: 16px;
+}
+.mk-error-text {
+    color: var(--mk-ink-2);
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+/* ===== Состояние успеха ===== */
+.mk-success-icon {
+    text-align: center;
+    font-size: 64px;
+    color: var(--mk-success);
+    margin-bottom: 16px;
+}
+.mk-success-text {
+    color: var(--mk-ink-2);
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+/* ===== Адаптивность ===== */
+@media (max-width: 500px) {
+    .mk-reset-card {
+        padding: 28px 20px;
+    }
+    #reset-title,
+    .mk-reset-card h1 {
+        font-size: 22px;
+    }
+    .mk-reset-sub {
+        font-size: 14px;
+    }
+    .mk-btn {
+        font-size: 14px;
+    }
+}
+@media (max-width: 380px) {
+    .mk-reset-card {
+        padding: 20px 16px;
+    }
+}

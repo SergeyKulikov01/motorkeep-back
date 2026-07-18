@@ -6,6 +6,8 @@
 @import "./dashboard.css";
 @import "./add.css";
 @import "./detail.css";
+@import "./forgot-pass.css";
+@import "./pass-reset.css";
 
 /* ---------- Сброс и базовые настройки ---------- */
 *,

@@ -2,6 +2,8 @@ import './login.js';
 import './dashboard.js';
 import './add.js';
 import './detail.js';
+import './forgot-pass.js'
+import './pass-reset.js'
 
 (function () {
     'use strict';

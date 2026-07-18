@@ -1,39 +1,74 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('password.store') }}">
-        @csrf
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    @include('layouts.public.landing-head')
+</head>
+<body class="mk-reset-page">
 
-        <!-- Password Reset Token -->
-        <input type="hidden" name="token" value="{{ $request->route('token') }}">
+<div class="mk-reset-container">
+    <div class="mk-reset-card" role="main" aria-labelledby="reset-title">
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+        <!-- Логотип -->
+        <a href="/" class="mk-logo" aria-label="MOTORKEEP — на главную">
+            <span class="mk-logo__mark"><i class="bi bi-car-front-fill"></i></span>
+            <span class="mk-logo__text">MOTOR<span>KEEP</span></span>
+        </a>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+        @if ($errors->has('email'))
+            <!-- Состояние: токен недействителен -->
+            <div id="invalid-state">
+                <div class="mk-error-icon">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                </div>
+                <h1>Ссылка недействительна</h1>
+                <p class="mk-error-text">
+                    {{ $errors->first('email') }}
+                    Пожалуйста, запросите восстановление пароля заново.
+                </p>
+                <a href="{{ route('password.request') }}" class="mk-btn mk-btn--primary mk-btn--full">Запросить новую ссылку</a>
+                <p class="mk-reset-back">
+                    <a href="{{ route('login') }}">← Вернуться ко входу</a>
+                </p>
+            </div>
+        @else
+            <!-- Состояние: форма сброса -->
+            <div id="form-state">
+                <h1 id="reset-title">Установите новый пароль</h1>
+                <p class="mk-reset-sub">Для учётной записи <strong id="display-email">{{ $request->email }}</strong> установите новый пароль.</p>
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+                <form method="POST" action="{{ route('password.store') }}" id="reset-form" novalidate>
+                    @csrf
+                    <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                                type="password"
-                                name="password_confirmation" required autocomplete="new-password" />
+                    <!-- Email (readonly) -->
+                    <div class="mk-form-group">
+                        <label for="email">Электронная почта</label>
+                        <input type="email" id="email" name="email" value="{{ old('email', $request->email) }}" readonly required />
+                    </div>
 
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
+                    <!-- Новый пароль -->
+                    <div class="mk-form-group">
+                        <label for="password">Новый пароль</label>
+                        <input type="password" id="password" name="password" class="{{ $errors->has('password') ? 'error' : '' }}" placeholder="Не менее 8 символов, буквы и цифры" autofocus required />
+                        <div class="mk-error-message" id="password-error">{{ $errors->first('password') }}</div>
+                    </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Reset Password') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+                    <!-- Подтверждение пароля -->
+                    <div class="mk-form-group">
+                        <label for="password-confirm">Подтвердите пароль</label>
+                        <input type="password" id="password-confirm" name="password_confirmation" placeholder="Повторите пароль" required />
+                        <div class="mk-error-message" id="confirm-error"></div>
+                    </div>
+
+                    <button type="submit" class="mk-btn mk-btn--primary mk-btn--full">Сохранить новый пароль</button>
+                </form>
+
+                <p class="mk-reset-back">
+                    <a href="{{ route('login') }}">← Вернуться ко входу</a>
+                </p>
+            </div>
+        @endif
+    </div>
+</div>
+</body>
+</html>
