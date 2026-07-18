@@ -5,6 +5,12 @@
     const emailInput = document.getElementById('email');
     const errorEl = document.getElementById('email-error');
 
+    // Скрипт грузится на всех страницах через общий app.js —
+    // выполняем логику только там, где есть форма запроса сброса пароля.
+    if (!form || !emailInput || !errorEl) {
+        return;
+    }
+
     // Вспомогательная функция валидации email
     function isValidEmail(value) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
