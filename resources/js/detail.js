@@ -256,6 +256,10 @@
         if (e.target === this) closeAllModals();
     });
 
+    function getCsrfToken() {
+        const meta = document.querySelector('meta[name="csrf-token"]');
+        return meta ? meta.content : '';
+    }
     function addNotes(){
         const form = document.getElementById('mkNoteForm');
         if (!form){
@@ -264,7 +268,37 @@
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             const data = new FormData(form);
-            console.log(data);
+            const payload = Object.fromEntries(data.entries());
+            fetch('/api/notes', {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': getCsrfToken()
+                },
+                body: JSON.stringify(payload)
+            })
+                .then(function (res) {
+                    return res.json().catch(function () { return {}; }).then(function (data) {
+                        return { ok: res.ok, data: data };
+                    });
+                })
+                .then(function (result) {
+                    if (!result.ok || !result.data.success) {
+                        return Promise.reject(result.data);
+                    }
+
+                    if (typeof window.showToast === 'function') {
+                        window.showToast('Заметка добавлена', 'success');
+                    }
+                    form.reset();
+                })
+                .catch(function () {
+                    if (typeof window.showToast === 'function') {
+                        window.showToast('Не удалось добавить заметку. Попробуйте ещё раз.', 'error');
+                    }
+                });
             return;
             const title = document.getElementById('noteTitle').value.trim();
             if (!title) { alert('Введите заголовок'); return; }
@@ -276,8 +310,6 @@
             });
             renderNotes();
             closeAllModals();
-            this.reset();
-            showToast('Заметка добавлена');
         });
     }
 

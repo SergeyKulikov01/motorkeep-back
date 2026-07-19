@@ -15,7 +15,6 @@ Route::controller(ApiController::class)->prefix('api')->group(function () {
     Route::get('getModels', 'getModelsList');
 });
 Route::prefix('api')->middleware(['auth', 'verified'])->group(function () {
-    Route::post('/car',[NewCarController::class,'addCar']);
     Route::post('/notes',[UserNotesController::class,'addNote']);
     Route::get('/notes',[UserNotesController::class,'getNote']);
     Route::delete('/notes',[UserNotesController::class,'getNote']);
