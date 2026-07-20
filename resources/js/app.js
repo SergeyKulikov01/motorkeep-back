@@ -2,13 +2,46 @@ import './login.js';
 import './dashboard.js';
 import './add.js';
 import './detail.js';
-import './forgot-pass.js'
-import './pass-reset.js'
+import './forgot-pass.js';
+import './pass-reset.js';
 
-(function () {
-    'use strict';
+// ---------- ТОСТЫ ----------
+// Единственная реализация на всё приложение — остальные файлы
+// импортируют showToast из app.js вместо того, чтобы определять свою копию.
+export function showToast(message, type) {
+    const container = document.querySelector('.mk-toast-container');
+    if (!container) return;
 
-    // ---------- САЙДБАР: СВЁРТКА ----------
+    const colors = {
+        success: 'var(--mk-success)',
+        error: 'var(--mk-danger)',
+        warning: 'var(--mk-warning)',
+        info: 'var(--mk-primary)'
+    };
+
+    const toast = document.createElement('div');
+    toast.className = 'mk-toast';
+    const dot = document.createElement('span');
+    dot.className = 'mk-toast__dot';
+    dot.style.background = colors[type] || colors.info;
+    toast.appendChild(dot);
+    toast.appendChild(document.createTextNode(message));
+
+    container.appendChild(toast);
+
+    // Автоматическое исчезновение через 3.5 сек
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(20px)';
+        toast.style.transition = 'opacity 300ms, transform 300ms';
+        setTimeout(() => {
+            toast.remove();
+        }, 300);
+    }, 3500);
+}
+
+// ---------- САЙДБАР: СВЁРТКА ----------
+export function initSidebarCollapse() {
     const sidebar = document.querySelector('.mk-sidebar');
     const collapseBtn = document.querySelector('.mk-collapse');
     const body = document.body;
@@ -25,30 +58,32 @@ import './pass-reset.js'
             localStorage.setItem('mk-collapsed', isCollapsed);
         });
     }
+}
 
-    // ---------- МОБИЛЬНЫЙ DRAWER (бургер) ----------
+// ---------- МОБИЛЬНЫЙ DRAWER (бургер) ----------
+export function handleEsc(e) {
+    if (e.key === 'Escape') {
+        closeNav();
+    }
+}
+
+export function openNav() {
+    document.body.classList.add('nav-open');
+    document.addEventListener('keydown', handleEsc);
+}
+
+export function closeNav() {
+    document.body.classList.remove('nav-open');
+    document.removeEventListener('keydown', handleEsc);
+}
+
+export function initMobileDrawer() {
     const burger = document.querySelector('.mk-burger');
     const scrim = document.querySelector('.mk-scrim');
 
-    function openNav() {
-        body.classList.add('nav-open');
-        document.addEventListener('keydown', handleEsc);
-    }
-
-    function closeNav() {
-        body.classList.remove('nav-open');
-        document.removeEventListener('keydown', handleEsc);
-    }
-
-    function handleEsc(e) {
-        if (e.key === 'Escape') {
-            closeNav();
-        }
-    }
-
     if (burger) {
         burger.addEventListener('click', function () {
-            if (body.classList.contains('nav-open')) {
+            if (document.body.classList.contains('nav-open')) {
                 closeNav();
             } else {
                 openNav();
@@ -68,25 +103,29 @@ import './pass-reset.js'
             }
         });
     });
+}
 
-    // ---------- ЛЕНДИНГ: МОБИЛЬНОЕ МЕНЮ ----------
+// ---------- ЛЕНДИНГ: МОБИЛЬНОЕ МЕНЮ ----------
+export function initLandingMobileMenu() {
     const landingBurger = document.querySelector('.mk-landing-burger');
     const mobileMenu = document.querySelector('.mk-landing-mobile-menu');
 
-    if (landingBurger && mobileMenu) {
-        landingBurger.addEventListener('click', function () {
-            mobileMenu.classList.toggle('open');
-        });
+    if (!landingBurger || !mobileMenu) return;
 
-        // Закрыть при клике на ссылку
-        mobileMenu.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', function () {
-                mobileMenu.classList.remove('open');
-            });
-        });
-    }
+    landingBurger.addEventListener('click', function () {
+        mobileMenu.classList.toggle('open');
+    });
 
-    // ---------- ФИЛЬТРЫ (чипы) ----------
+    // Закрыть при клике на ссылку
+    mobileMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', function () {
+            mobileMenu.classList.remove('open');
+        });
+    });
+}
+
+// ---------- ФИЛЬТРЫ (чипы) ----------
+export function initFilterChips() {
     document.querySelectorAll('.mk-chips').forEach(chipContainer => {
         const chips = chipContainer.querySelectorAll('.mk-chip');
         chips.forEach(chip => {
@@ -104,8 +143,10 @@ import './pass-reset.js'
             chips[0].classList.add('mk-chip--active');
         }
     });
+}
 
-    // ---------- ПОИСК (заглушка) ----------
+// ---------- ПОИСК ----------
+export function initSearch() {
     const searchInputs = document.querySelectorAll('.mk-search input');
     searchInputs.forEach(input => {
         input.addEventListener('keydown', function (e) {
@@ -116,8 +157,10 @@ import './pass-reset.js'
             }
         });
     });
+}
 
-    // Глобальный хоткей ⌘K / Ctrl+K для фокуса на поиске
+// Глобальный хоткей ⌘K / Ctrl+K для фокуса на поиске
+export function initSearchHotkey() {
     document.addEventListener('keydown', function (e) {
         if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
             e.preventDefault();
@@ -127,46 +170,10 @@ import './pass-reset.js'
             }
         }
     });
+}
 
-    // ---------- ТОСТЫ ----------
-    // Единственная реализация на всё приложение — login.js, dashboard.js
-    // и add.js вызывают window.showToast, не определяя свою копию.
-    window.showToast = function (message, type) {
-        const container = document.querySelector('.mk-toast-container');
-        if (!container) return;
-
-        const colors = {
-            success: 'var(--mk-success)',
-            error: 'var(--mk-danger)',
-            warning: 'var(--mk-warning)',
-            info: 'var(--mk-primary)'
-        };
-
-        const toast = document.createElement('div');
-        toast.className = 'mk-toast';
-        const dot = document.createElement('span');
-        dot.className = 'mk-toast__dot';
-        dot.style.background = colors[type] || colors.info;
-        toast.appendChild(dot);
-        toast.appendChild(document.createTextNode(message));
-
-        container.appendChild(toast);
-
-        // Автоматическое исчезновение через 3.5 сек
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            toast.style.transform = 'translateY(20px)';
-            toast.style.transition = 'opacity 300ms, transform 300ms';
-            setTimeout(() => {
-                toast.remove();
-            }, 300);
-        }, 3500);
-    };
-
-    // Пример: после сохранения формы показать тост
-    // (можно вызвать из обработчика submit)
-
-    // ---------- ЗАКРЫТИЕ МОДАЛОК (оверлей) ----------
+// ---------- ЗАКРЫТИЕ МОДАЛОК (оверлей) ----------
+export function initModalOverlays() {
     document.querySelectorAll('.mk-overlay').forEach(overlay => {
         overlay.addEventListener('click', function (e) {
             if (e.target === overlay) {
@@ -184,12 +191,16 @@ import './pass-reset.js'
             }
         });
     });
+}
 
-    // ---------- ПОДДЕРЖКА PREFERS-REDUCED-MOTION ----------
-    // (уже обработано в CSS)
-
-    // ---------- ИНИЦИАЛИЗАЦИЯ: СКЕЛЕТОНЫ (опционально) ----------
-    // Можно добавить логику для замены скелетонов реальными данными
+document.addEventListener('DOMContentLoaded', function () {
+    initSidebarCollapse();
+    initMobileDrawer();
+    initLandingMobileMenu();
+    initFilterChips();
+    initSearch();
+    initSearchHotkey();
+    initModalOverlays();
 
     console.log('MOTORKEEP инициализирован');
-})();
+});
