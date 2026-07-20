@@ -17,7 +17,7 @@ Route::controller(ApiController::class)->prefix('api')->group(function () {
 Route::prefix('api')->middleware(['auth', 'verified'])->group(function () {
     Route::post('/notes',[UserNotesController::class,'addNote']);
     Route::get('/notes',[UserNotesController::class,'getNote']);
-    Route::delete('/notes',[UserNotesController::class,'getNote']);
+    Route::delete('/notes',[UserNotesController::class,'deleteNote']);
 });
 
 Route::get('/', function () {

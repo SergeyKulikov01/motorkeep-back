@@ -389,7 +389,7 @@
             <h2>Новая заметка</h2>
             <button class="mk-modal__close" id="mkNoteModalClose">✕</button>
         </div>
-        <form class="mk-modal__form" id="mkNoteForm">
+        <form class="mk-modal__form" id="mkNoteForm" data-notes-form>
             <input name="car_id" type="hidden" value="{{$car->id}}">
             <div class="mk-form-group">
                 <label class="mk-form-label" for="noteTitle">Заголовок <span class="mk-form-required">*</span></label>

@@ -13,10 +13,6 @@ export const data = {
         { id: 3, title: 'Диагностическая карта', date: '2026-12-20', type: 'Диагностика', status: 'ok', desc: 'Пройден техосмотр' },
         { id: 4, title: 'ПТС', date: '2025-01-01', type: 'ПТС', status: 'error', desc: 'Паспорт транспортного средства' },
     ],
-    notes: [
-        { id: 1, title: 'План по обслуживанию', content: '1. Заменить масло до 90 000 км\n2. Проверить тормозные диски\n3. Запланировать замену ГРМ' },
-        { id: 2, title: 'Идеи для апгрейда', content: '— Установить камеру заднего вида\n— Заменить магнитолу на CarPlay\n— Сделать шумоизоляцию дверей' },
-    ],
     nextId: 100
 };
 
@@ -159,25 +155,44 @@ export function renderDocs() {
 
 export function handleNoteDelete(e) {
     const card = e.currentTarget.closest('.mk-note-card');
-    const id = parseInt(card.dataset.id);
-    if (confirm('Удалить заметку?')) {
-        data.notes = data.notes.filter(n => n.id !== id);
-        renderNotes();
-        showDetailToast('Заметка удалена');
-    }
+    const params = new URLSearchParams({ note_id: card.dataset.id });
+    fetch(`/api/notes?${params}`, {
+        method: 'DELETE',
+        credentials: 'same-origin',
+        headers: {
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': getCsrfToken()
+        }
+    })
+        .then(function (res) {
+            return res.json().catch(function () { return {}; }).then(function (json) {
+                return { ok: res.ok, data: json };
+            });
+        })
+        .then(function (result) {
+            const list = card.closest('#notesList');
+            card.remove();
+            if (list && !list.querySelector('.mk-note-card')) {
+                list.innerHTML = `<div class="mk-empty-state">Нет заметок. Добавьте первую!</div>`;
+            }
+            showDetailToast('Заметка удалена');
+        })
+        .catch(function () {
+            showDetailToast('Не удалось удалить заметку. Попробуйте позже.');
+        });
 }
 
-export function renderNotes() {
+export function renderNotes(notes) {
     const list = document.getElementById('notesList');
     if (!list) return;
-    if (data.notes.length === 0) {
+    if (!notes || notes.length === 0) {
         list.innerHTML = `<div class="mk-empty-state">Нет заметок. Добавьте первую!</div>`;
         return;
     }
-    list.innerHTML = data.notes.map(n => `
+    list.innerHTML = notes.map(n => `
       <div class="mk-note-card" data-id="${n.id}">
-        <div class="mk-note-card__title">${n.title}</div>
-        <div class="mk-note-card__content">${n.content || ''}</div>
+        <div class="mk-note-card__title">${n.name}</div>
+        <div class="mk-note-card__content">${n.comment || ''}</div>
         <button class="mk-note-card__delete" data-action="delete-note" title="Удалить">✕</button>
       </div>
     `).join('');
@@ -287,12 +302,41 @@ export function handleNoteFormSubmit(e) {
             if (!result.ok || !result.data.success) {
                 return Promise.reject(result.data);
             }
-
+            closeAllModals();
+            loadNotes();
             showDetailToast('Заметка добавлена');
             form.reset();
         })
         .catch(function () {
             showDetailToast('Не удалось добавить заметку. Попробуйте ещё раз.');
+        });
+}
+function loadNotes(){
+    const form = document.querySelector('[data-notes-form]');
+    if (!form){
+        return;
+    }
+    const carId = form.querySelector('input[name="car_id"]').value;
+    const params = new URLSearchParams({ car_id: carId });
+    fetch(`/api/notes?${params}`, {
+        method: 'GET',
+        credentials: 'same-origin',
+        headers: {
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': getCsrfToken()
+        }
+    })
+        .then(function (res) {
+            return res.json().catch(function () { return {}; }).then(function (json) {
+                return { ok: res.ok, data: json };
+            });
+        })
+        .then(function (result) {
+            console.log(result.data);
+            renderNotes(result.data.notes);
+        })
+        .catch(function () {
+            showDetailToast('Не удалось получить заметки. Попробуйте позже.');
         });
 }
 
@@ -439,7 +483,8 @@ export function initDetailPage() {
 
     renderEvents();
     renderDocs();
-    renderNotes();
+
+    loadNotes();
 }
 
 document.addEventListener('DOMContentLoaded', function () {
