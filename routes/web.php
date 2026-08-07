@@ -4,6 +4,7 @@ use App\Http\Controllers\ApiController;
 use App\Http\Controllers\Auth\YandexAuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\RemindersController;
 use App\Http\Controllers\DetailCarController;
 use App\Http\Controllers\UserNotesController;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +17,8 @@ Route::controller(ApiController::class)->prefix('api')->group(function () {
 });
 Route::prefix('api')->middleware(['auth', 'verified'])->group(function () {
     Route::post('/notes',[UserNotesController::class,'addNote']);
+    Route::post('/reminders',[RemindersController::class,'addReminder']);
+    Route::get('/reminders',[RemindersController::class,'getReminder']);
     Route::get('/notes',[UserNotesController::class,'getNote']);
     Route::delete('/notes',[UserNotesController::class,'deleteNote']);
 });

@@ -293,19 +293,20 @@
             <h2>Новое событие / напоминание</h2>
             <button class="mk-modal__close" id="mkEventModalClose">✕</button>
         </div>
-        <form class="mk-modal__form" id="mkEventForm">
+        <form class="mk-modal__form" data-reminder-form id="mkEventRemindersForm">
+            <input name="car_id" type="hidden" value="{{$car->id}}">
             <div class="mk-form-group">
                 <label class="mk-form-label" for="eventTitle">Название <span class="mk-form-required">*</span></label>
-                <input class="mk-input" id="eventTitle" type="text" placeholder="Например: Проверить давление в шинах" required>
+                <input class="mk-input" id="eventTitle" name="title" type="text" placeholder="Например: Проверить давление в шинах" required>
             </div>
             <div class="mk-form-row">
                 <div class="mk-form-group">
                     <label class="mk-form-label" for="eventDate">Дата</label>
-                    <input class="mk-input" id="eventDate" type="date">
+                    <input class="mk-input" name="date" id="eventDate" type="date">
                 </div>
                 <div class="mk-form-group">
                     <label class="mk-form-label" for="eventType">Тип</label>
-                    <select class="mk-input" id="eventType">
+                    <select class="mk-input" name="reminder_type" id="eventType">
                         <option value="event">Событие</option>
                         <option value="reminder">Напоминание</option>
                         <option value="periodic" selected>Периодическое</option>
@@ -314,17 +315,17 @@
             </div>
             <div class="mk-form-group" id="periodicityGroup">
                 <label class="mk-form-label" for="eventPeriodicity">Периодичность</label>
-                <select class="mk-input" id="eventPeriodicity">
-                    <option value="еженедельно">Еженедельно</option>
-                    <option value="ежемесячно">Ежемесячно</option>
-                    <option value="каждые 3 месяца">Каждые 3 месяца</option>
-                    <option value="каждые 6 месяцев">Каждые 6 месяцев</option>
-                    <option value="ежегодно">Ежегодно</option>
+                <select class="mk-input" name="reminder_cycle" id="eventPeriodicity">
+                    <option value="week">Еженедельно</option>
+                    <option value="month">Ежемесячно</option>
+                    <option value="month3">Каждые 3 месяца</option>
+                    <option value="month6">Каждые 6 месяцев</option>
+                    <option value="year">Ежегодно</option>
                 </select>
             </div>
             <div class="mk-form-group">
                 <label class="mk-form-label" for="eventDesc">Описание</label>
-                <textarea class="mk-textarea" id="eventDesc" rows="2" placeholder="Дополнительная информация…"></textarea>
+                <textarea class="mk-textarea" name="text" id="eventDesc" rows="2" placeholder="Дополнительная информация…"></textarea>
             </div>
             <div class="mk-modal__footer">
                 <button type="button" class="mk-btn mk-btn--ghost" id="mkEventModalCancel">Отмена</button>

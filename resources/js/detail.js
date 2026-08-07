@@ -1,12 +1,5 @@
 // ===== ХРАНИЛИЩЕ ДАННЫХ (в памяти) =====
 export const data = {
-    events: [
-        { id: 1, title: 'Замена масла и фильтров', date: '2026-08-15', type: 'periodic', periodicity: 'каждые 6 месяцев', desc: 'Моторное масло 5W-30, фильтры', completed: false },
-        { id: 2, title: 'Проверить давление в шинах', date: '2026-07-01', type: 'periodic', periodicity: 'ежемесячно', desc: 'Рекомендуемое давление 2.2 бар', completed: false },
-        { id: 3, title: 'Проверить уровень масла', date: '2026-06-25', type: 'periodic', periodicity: 'еженедельно', desc: 'Уровень должен быть между MIN и MAX', completed: false },
-        { id: 4, title: 'Проверить антифриз', date: '2026-06-20', type: 'periodic', periodicity: 'ежемесячно', desc: 'Уровень в расширительном бачке', completed: false },
-        { id: 5, title: 'Замена резины (лето → зима)', date: '2026-10-15', type: 'event', periodicity: '', desc: 'Переобувка в шиномонтаже', completed: false },
-    ],
     docs: [
         { id: 1, title: 'ОСАГО', date: '2026-10-01', type: 'Страховка', status: 'ok', desc: 'Страховая компания Росгосстрах' },
         { id: 2, title: 'СТС', date: '2026-08-15', type: 'СТС', status: 'warning', desc: 'Свидетельство о регистрации ТС' },
@@ -52,66 +45,6 @@ export function getCsrfToken() {
 }
 
 // ===== РЕНДЕРИНГ =====
-export function handleEventDone(e) {
-    const item = e.currentTarget.closest('.mk-event-item');
-    const id = parseInt(item.dataset.id);
-    const event = data.events.find(ev => ev.id === id);
-    if (event) {
-        event.completed = true;
-        renderEvents();
-        showDetailToast('Отмечено как выполненное');
-    }
-}
-
-export function handleEventDelete(e) {
-    const item = e.currentTarget.closest('.mk-event-item');
-    const id = parseInt(item.dataset.id);
-    if (confirm('Удалить событие?')) {
-        data.events = data.events.filter(ev => ev.id !== id);
-        renderEvents();
-        showDetailToast('Событие удалено');
-    }
-}
-
-export function renderEvents() {
-    const list = document.getElementById('eventsList');
-    if (!list) return;
-    const incomplete = data.events.filter(e => !e.completed);
-    const completed = data.events.filter(e => e.completed);
-    const allEvents = [...incomplete, ...completed];
-
-    if (allEvents.length === 0) {
-        list.innerHTML = `<div class="mk-empty-state">Нет событий. Добавьте первое!</div>`;
-        return;
-    }
-
-    list.innerHTML = allEvents.map(e => {
-        const typeLabel = e.type === 'periodic' ? 'Периодическое' : e.type === 'reminder' ? 'Напоминание' : 'Событие';
-        const periodLabel = e.periodicity ? `<span class="mk-event-item__period">${e.periodicity}</span>` : '';
-        const completedClass = e.completed ? 'completed' : '';
-        return `
-        <div class="mk-event-item ${completedClass}" data-id="${e.id}">
-          <span class="mk-event-item__date">${e.date || 'Без даты'}</span>
-          <span class="mk-event-item__desc">${e.title}</span>
-          ${periodLabel}
-          <span class="mk-event-item__tag" style="background:var(--mk-primary-soft);color:var(--mk-primary);">${typeLabel}</span>
-          <div class="mk-event-item__actions">
-            ${!e.completed ? `<button class="btn-done" data-action="done" title="Выполнено">✓</button>` : ''}
-            <button class="btn-delete" data-action="delete" title="Удалить">🗑</button>
-          </div>
-        </div>
-      `;
-    }).join('');
-
-    list.querySelectorAll('[data-action="done"]').forEach(btn => {
-        btn.addEventListener('click', handleEventDone);
-    });
-
-    list.querySelectorAll('[data-action="delete"]').forEach(btn => {
-        btn.addEventListener('click', handleEventDelete);
-    });
-}
-
 export function handleDocDelete(e) {
     const card = e.currentTarget.closest('.mk-doc-card');
     const id = parseInt(card.dataset.id);
@@ -201,31 +134,36 @@ export function renderNotes(notes) {
         btn.addEventListener('click', handleNoteDelete);
     });
 }
+const REMINDER_CYCLE_LABELS = {
+    week: 'еженедельно',
+    month: 'ежемесячно',
+    month3: 'раз в 3 месяца',
+    month6: 'раз в 6 месяцев',
+    year: 'ежегодно'
+};
 
-// ===== ОБРАБОТЧИКИ МОДАЛОК: СОБЫТИЕ =====
-export function handleEventFormSubmit(e) {
-    e.preventDefault();
-    const title = document.getElementById('eventTitle').value.trim();
-    if (!title) { alert('Введите название'); return; }
-    const date = document.getElementById('eventDate').value;
-    const type = document.getElementById('eventType').value;
-    const periodicity = document.getElementById('eventPeriodicity').value;
-    const desc = document.getElementById('eventDesc').value.trim();
-    data.events.push({
-        id: getNextId(),
-        title,
-        date,
-        type,
-        periodicity: type === 'periodic' ? periodicity : '',
-        desc,
-        completed: false
-    });
-    renderEvents();
-    closeAllModals();
-    e.target.reset();
-    showDetailToast('Событие добавлено');
+export function renderReminders(reminders) {
+    const list = document.getElementById('eventsList');
+    if (!list) return;
+    if (!reminders || reminders.length === 0) {
+        list.innerHTML = `<div class="mk-empty-state">Напоминания не добавлены.</div>`;
+        return;
+    }
+
+    list.innerHTML = reminders.map(n => {
+        const typeLabel = n.type === 'periodic' ? 'Периодическое' : 'Напоминание';
+        const periodLabel = n.cycle ? `<span class="mk-event-item__period">${REMINDER_CYCLE_LABELS[n.cycle] || n.cycle}</span>` : '';
+        return `
+        <div class="mk-event-item" data-id="${n.id}">
+          <span class="mk-event-item__date">${n.date_of_exec || 'Без даты'}</span>
+          <span class="mk-event-item__desc">${n.name}</span>
+          ${periodLabel}
+          <span class="mk-event-item__tag" style="background:var(--mk-primary-soft);color:var(--mk-primary);">${typeLabel}</span>
+        </div>
+      `;
+    }).join('');
 }
-
+// ===== ОБРАБОТЧИКИ МОДАЛОК: СОБЫТИЕ =====
 export function handleEventTypeChange() {
     const group = document.getElementById('periodicityGroup');
     if (group) {
@@ -240,7 +178,10 @@ export function initEventModal() {
     document.getElementById('mkEventModalOverlay')?.addEventListener('click', function (e) {
         if (e.target === this) closeAllModals();
     });
-    document.getElementById('mkEventForm')?.addEventListener('submit', handleEventFormSubmit);
+    const form = document.getElementById('mkEventRemindersForm');
+    if (form) {
+        form.addEventListener('submit', handleRemindersSubmit);
+    }
     document.getElementById('eventType')?.addEventListener('change', handleEventTypeChange);
 }
 
@@ -311,6 +252,40 @@ export function handleNoteFormSubmit(e) {
             showDetailToast('Не удалось добавить заметку. Попробуйте ещё раз.');
         });
 }
+// ===== ОБРАБОТЧИКИ МОДАЛОК: НАПОМИНАНИЕ =====
+export function handleRemindersSubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    const payload = Object.fromEntries(formData.entries());
+    fetch('/api/reminders', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': getCsrfToken()
+        },
+        body: JSON.stringify(payload)
+    })
+        .then(function (res) {
+            return res.json().catch(function () { return {}; }).then(function (json) {
+                return { ok: res.ok, data: json };
+            });
+        })
+        .then(function (result) {
+            if (!result.ok || !result.data.success) {
+                return Promise.reject(result.data);
+            }
+            closeAllModals();
+            loadReminders()
+            showDetailToast('Заметка добавлена');
+            form.reset();
+        })
+        .catch(function () {
+            showDetailToast('Не удалось добавить заметку. Попробуйте ещё раз.');
+        });
+}
 function loadNotes(){
     const form = document.querySelector('[data-notes-form]');
     if (!form){
@@ -339,7 +314,34 @@ function loadNotes(){
             showDetailToast('Не удалось получить заметки. Попробуйте позже.');
         });
 }
-
+function loadReminders(){
+    const form = document.querySelector('[data-reminder-form]');
+    if (!form){
+        return;
+    }
+    const carId = form.querySelector('input[name="car_id"]').value;
+    const params = new URLSearchParams({ car_id: carId });
+    fetch(`/api/reminders?${params}`, {
+        method: 'GET',
+        credentials: 'same-origin',
+        headers: {
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': getCsrfToken()
+        }
+    })
+        .then(function (res) {
+            return res.json().catch(function () { return {}; }).then(function (json) {
+                return { ok: res.ok, data: json };
+            });
+        })
+        .then(function (result) {
+            console.log(result.data);
+            renderReminders(result.data.remind);
+        })
+        .catch(function () {
+            showDetailToast('Не удалось получить напоминания. Попробуйте позже.');
+        });
+}
 export function initNoteModal() {
     document.getElementById('addNoteBtn')?.addEventListener('click', () => openModal('mkNoteModalOverlay'));
     document.getElementById('mkNoteModalClose')?.addEventListener('click', closeAllModals);
@@ -481,10 +483,10 @@ export function initDetailPage() {
     initDropzone();
     initDateDefaults();
 
-    renderEvents();
     renderDocs();
 
     loadNotes();
+    loadReminders();
 }
 
 document.addEventListener('DOMContentLoaded', function () {
