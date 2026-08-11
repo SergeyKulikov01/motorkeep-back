@@ -177,7 +177,7 @@ function handleReminderUpdate(e,action) {
         });
 }
 
-export function renderNotes(notes) {
+function renderNotes(notes) {
     const list = document.getElementById('notesList');
     if (!list) return;
     if (!notes || notes.length === 0) {
@@ -480,11 +480,10 @@ export function openRecordModal() {
 
 export function handleRecordFormSubmit(e) {
     e.preventDefault();
-    const title = document.getElementById('recordTitle').value.trim();
-    if (!title) { alert('Введите название'); return; }
-    closeAllModals();
-    e.target.reset();
-    showDetailToast('Сохранено');
+    const form = e.target;
+    const formData = new FormData(form);
+    const payload = Object.fromEntries(formData.entries());
+    console.log(payload)
 }
 
 export function initRecordModal() {
@@ -511,6 +510,61 @@ export function initSegments() {
         btn.addEventListener('click', function () {
             this.closest('.mk-segment').querySelectorAll('.mk-segment__item').forEach(b => b.classList.remove('active'));
             this.classList.add('active');
+        });
+    });
+}
+
+// ===== ПОЛЯ ФОРМЫ ЗАПИСИ В ЗАВИСИМОСТИ ОТ ТИПА =====
+// Для каждого типа записи показываем только те поля, которые имеют смысл.
+const RECORD_TYPE_FIELDS = {
+    service: ['date', 'odometer', 'cost', 'place', 'photo'],
+    repair: ['date', 'odometer', 'cost', 'place', 'photo'],
+    buy: ['date', 'cost', 'place', 'photo'],
+    fuel: ['date', 'odometer', 'cost', 'place', 'volume', 'photo'],
+    note: ['date', 'photo'],
+};
+
+const RECORD_PLACE_LABELS = {
+    service: 'Автосервис',
+    repair: 'Автосервис',
+    buy: 'Магазин',
+    fuel: 'АЗС',
+};
+
+const RECORD_PLACE_PLACEHOLDERS = {
+    service: 'Название СТО',
+    repair: 'Название СТО',
+    buy: 'Название магазина',
+    fuel: 'Название АЗС',
+};
+
+export function applyRecordTypeFields(type) {
+    const fields = RECORD_TYPE_FIELDS[type] || RECORD_TYPE_FIELDS.service;
+
+    document.querySelectorAll('#mkRecordForm [data-record-field]').forEach(group => {
+        group.hidden = !fields.includes(group.dataset.recordField);
+    });
+
+    document.querySelectorAll('#mkRecordForm .mk-form-row').forEach(row => {
+        const groups = row.querySelectorAll('.mk-form-group');
+        row.hidden = groups.length > 0 && Array.from(groups).every(g => g.hidden);
+    });
+
+    const placeLabel = document.getElementById('recordPlaceLabel');
+    const placeInput = document.getElementById('recordPlace');
+    if (placeLabel) placeLabel.textContent = RECORD_PLACE_LABELS[type] || 'Место';
+    if (placeInput) placeInput.placeholder = RECORD_PLACE_PLACEHOLDERS[type] || 'Название места';
+}
+
+export function initRecordTypeFields() {
+    const segment = document.getElementById('mkTypeSegment');
+    if (!segment) return;
+
+    applyRecordTypeFields(segment.querySelector('.mk-segment__item.active')?.dataset.type || 'service');
+
+    segment.querySelectorAll('.mk-segment__item').forEach(btn => {
+        btn.addEventListener('click', function () {
+            applyRecordTypeFields(this.dataset.type);
         });
     });
 }
@@ -560,6 +614,7 @@ export function initDetailPage() {
     initDetailCollapse();
     initRecordModal();
     initSegments();
+    initRecordTypeFields();
     initDetailChips();
     initDropzone();
     initDateDefaults();

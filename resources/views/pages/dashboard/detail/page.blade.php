@@ -231,7 +231,7 @@
             <h2>Новая запись</h2>
             <button class="mk-modal__close" id="mkModalClose">✕</button>
         </div>
-        <form class="mk-modal__form" id="mkRecordForm">
+        <form class="mk-modal__form" id="mkRecordForm" data-history-form>
             <div class="mk-form-group">
                 <label class="mk-form-label">Тип записи</label>
                 <div class="mk-segment" id="mkTypeSegment">
@@ -244,38 +244,42 @@
             </div>
             <div class="mk-form-group">
                 <label class="mk-form-label" for="recordTitle">Название <span class="mk-form-required">*</span></label>
-                <input class="mk-input" id="recordTitle" type="text" placeholder="Например: Замена масла" required>
+                <input class="mk-input" name="title" id="recordTitle" type="text" placeholder="Например: Замена масла" required>
             </div>
             <div class="mk-form-row">
-                <div class="mk-form-group">
+                <div class="mk-form-group" data-record-field="date">
                     <label class="mk-form-label" for="recordDate">Дата</label>
-                    <input class="mk-input" id="recordDate" type="date">
+                    <input class="mk-input" name="date" id="recordDate" type="date">
                 </div>
-                <div class="mk-form-group">
+                <div class="mk-form-group" data-record-field="odometer">
                     <label class="mk-form-label" for="recordOdometer">Пробег, км</label>
-                    <input class="mk-input mk-input--right" id="recordOdometer" type="text" inputmode="numeric" placeholder="86 420">
+                    <input class="mk-input mk-input--right" name="mileage" id="recordOdometer" type="text" inputmode="numeric" placeholder="86 420">
                 </div>
             </div>
             <div class="mk-form-row">
-                <div class="mk-form-group">
-                    <label class="mk-form-label" for="recordCost">Сумма, ₽</label>
-                    <input class="mk-input mk-input--right" id="recordCost" type="text" inputmode="numeric" placeholder="0">
+                <div class="mk-form-group" data-record-field="cost">
+                    <label class="mk-form-label" for="recordCost" id="recordCostLabel">Сумма, ₽</label>
+                    <input class="mk-input mk-input--right" name="cost" id="recordCost" type="text" inputmode="numeric" placeholder="0">
                 </div>
-                <div class="mk-form-group">
-                    <label class="mk-form-label" for="recordPlace">Место</label>
-                    <input class="mk-input" id="recordPlace" type="text" placeholder="Название СТО">
+                <div class="mk-form-group" data-record-field="place">
+                    <label class="mk-form-label" for="recordPlace" id="recordPlaceLabel">Место</label>
+                    <input class="mk-input" name="place" id="recordPlace" type="text" placeholder="Название СТО">
                 </div>
+            </div>
+            <div class="mk-form-group" data-record-field="volume">
+                <label class="mk-form-label" for="recordVolume">Объём, л</label>
+                <input class="mk-input mk-input--right" name="volume" id="recordVolume" type="text" inputmode="numeric" placeholder="45">
             </div>
             <div class="mk-form-group">
                 <label class="mk-form-label" for="recordDesc">Описание</label>
-                <textarea class="mk-textarea" id="recordDesc" rows="3" placeholder="Дополнительные детали…"></textarea>
+                <textarea class="mk-textarea" name="details" id="recordDesc" rows="3" placeholder="Дополнительные детали…"></textarea>
             </div>
-            <div class="mk-form-group">
+            <div class="mk-form-group" data-record-field="photo">
                 <label class="mk-form-label">Фото / Чек</label>
                 <div class="mk-dropzone" id="mkDropzone">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
                     <span>Перетащите файл или кликните</span>
-                    <input type="file" accept="image/*" multiple>
+                    <input type="file" name="files" accept="image/*" multiple>
                 </div>
             </div>
             <div class="mk-modal__footer">
