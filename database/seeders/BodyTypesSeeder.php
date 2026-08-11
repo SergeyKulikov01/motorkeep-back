@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\BodyTypes;
+use Illuminate\Database\Seeder;
 
 class BodyTypesSeeder extends Seeder
 {
@@ -21,7 +20,7 @@ class BodyTypesSeeder extends Seeder
             'wagon' => 'Универсал',
             'minivan' => 'Минивен',
             'pickup' => 'Пикап',
-            'convertible' => 'Кабриолет'
+            'convertible' => 'Кабриолет',
         ];
 
         foreach ($types as $type => $data) {

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text('comment')->nullable();
             $table->enum('type', ['reminder', 'periodic'])->default('reminder');
             $table->date('date_of_exec');
-            $table->enum('cycle', ['week', 'month','month3','month6','year'])->nullable();
+            $table->enum('cycle', ['week', 'month', 'month3', 'month6', 'year'])->nullable();
         });
     }
 

@@ -8,7 +8,8 @@ use Throwable;
 
 class UserNotesController extends Controller
 {
-    public function addNote(request $request){
+    public function addNote(Request $request)
+    {
         $request->user()->cars()->findOrFail($request->input('car_id'));
         try {
             $note = UserNotes::create([
@@ -20,28 +21,35 @@ class UserNotesController extends Controller
         } catch (Throwable) {
             return response()->json(['success' => false]);
         }
+
         return response()->json(['success' => true]);
     }
-    public function getNote(request $request){
+
+    public function getNote(Request $request)
+    {
         try {
             $note = UserNotes::where([
                 'user_id' => $request->user()->id,
                 'car_id' => $request->input('car_id'),
-            ])->select(['id','comment','name'])->get();
+            ])->select(['id', 'comment', 'name'])->get();
         } catch (Throwable) {
             return response()->json(['success' => false]);
         }
-        return response()->json(['success' => true, 'notes' => $note,'count' => $note->count()]);
+
+        return response()->json(['success' => true, 'notes' => $note, 'count' => $note->count()]);
     }
-    public function deleteNote(request $request){
+
+    public function deleteNote(Request $request)
+    {
         try {
             $note = UserNotes::where([
                 'user_id' => $request->user()->id,
                 'id' => $request->input('note_id'),
-            ])->select(['id','comment','name'])->delete();
+            ])->select(['id', 'comment', 'name'])->delete();
         } catch (Throwable) {
             return response()->json(['success' => false]);
         }
+
         return response()->json(['success' => true]);
     }
 }

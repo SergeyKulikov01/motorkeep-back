@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Reminders;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class RemindersController extends Controller
 {
-    public function addReminder(request $request){
+    public function addReminder(Request $request)
+    {
         $request->user()->cars()->findOrFail($request->input('car_id'));
         $date = $request->input('date');
         switch ($request->input('reminder_cycle')) {
@@ -41,22 +42,28 @@ class RemindersController extends Controller
         } catch (Throwable) {
             return response()->json(['success' => false]);
         }
+
         return response()->json(['success' => true]);
     }
-    public function getReminder(request $request){
+
+    public function getReminder(Request $request)
+    {
         try {
             $remind = Reminders::where([
                 'user_id' => $request->user()->id,
                 'car_id' => $request->input('car_id'),
-            ])->select(['id','comment','name','type','date_of_exec','cycle'])
+            ])->select(['id', 'comment', 'name', 'type', 'date_of_exec', 'cycle'])
                 ->orderByRaw('ABS(DATEDIFF(date_of_exec, ?))', [now()->toDateString()])
                 ->get();
         } catch (Throwable) {
             return response()->json(['success' => false]);
         }
-        return response()->json(['success' => true, 'remind' => $remind,'count' => $remind->count()]);
+
+        return response()->json(['success' => true, 'remind' => $remind, 'count' => $remind->count()]);
     }
-    public function deleteReminder(request $request){
+
+    public function deleteReminder(Request $request)
+    {
         try {
             $remind = Reminders::where([
                 'id' => $request->input('id'),
@@ -65,15 +72,18 @@ class RemindersController extends Controller
         } catch (Throwable) {
             return response()->json(['success' => false]);
         }
+
         return response()->json(['success' => true]);
     }
-    public function updateReminder(request $request){
+
+    public function updateReminder(Request $request)
+    {
         try {
             $remind = Reminders::where([
                 'id' => $request->input('id'),
                 'user_id' => $request->user()->id,
             ])->first();
-            if ($remind->type == 'periodic'){
+            if ($remind->type == 'periodic') {
                 switch ($remind->cycle) {
                     case 'week':
                         $date = Carbon::parse($request->input('date'))->addWeek()->format('Y-m-d');
@@ -99,6 +109,7 @@ class RemindersController extends Controller
         } catch (Throwable) {
             return response()->json(['success' => false]);
         }
+
         return response()->json(['success' => true]);
     }
 }

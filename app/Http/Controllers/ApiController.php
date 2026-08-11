@@ -19,6 +19,7 @@ class ApiController extends Controller
 
         return response()->json($brands);
     }
+
     public function getModelsList(Request $request)
     {
         $brandId = $request->query('brand_id');

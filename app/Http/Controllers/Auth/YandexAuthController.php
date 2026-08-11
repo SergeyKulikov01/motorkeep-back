@@ -39,11 +39,11 @@ class YandexAuthController extends Controller
 
         $user = User::where('yandex_id', $profile['id'])->first();
 
-        if (!$user) {
+        if (! $user) {
             $user = User::where('email', $profile['default_email'])->first();
         }
 
-        if (!$user) {
+        if (! $user) {
             $user = User::create([
                 'name' => $profile['first_name'] ?? $profile['login'],
                 'last_name' => $profile['last_name'] ?? '',
