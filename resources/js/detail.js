@@ -39,6 +39,21 @@ export function openModal(overlayId) {
     }
 }
 
+const RU_MONTHS = [
+    'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
+    'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'
+];
+
+export function formatDate(dateStr) {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return dateStr;
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = RU_MONTHS[date.getMonth()];
+    const year = date.getFullYear();
+    return `${day} ${month} ${year}`;
+}
+
 export function getCsrfToken() {
     const meta = document.querySelector('meta[name="csrf-token"]');
     return meta ? meta.content : '';
@@ -114,6 +129,53 @@ export function handleNoteDelete(e) {
             showDetailToast('Не удалось удалить заметку. Попробуйте позже.');
         });
 }
+export function handleReminderDelete(e) {
+    const card = e.target.closest('[data-reminder-item]');
+    const params = new URLSearchParams({ id: card.dataset.id });
+    fetch(`/api/reminders?${params}`, {
+        method: 'DELETE',
+        credentials: 'same-origin',
+        headers: {
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': getCsrfToken()
+        }
+    })
+        .then(function (res) {
+            return res.json().catch(function () { return {}; }).then(function (json) {
+                return { ok: res.ok, data: json };
+            });
+        })
+        .then(function (result) {
+            showDetailToast('Напоминание удалено');
+        })
+        .catch(function () {
+            showDetailToast('Не удалось удалить напоминание. Попробуйте позже.');
+        });
+}
+function handleReminderUpdate(e,action) {
+    const card = e.target.closest('[data-reminder-item]');
+    const params = new URLSearchParams({ id: card.dataset.id,action: action });
+    fetch(`/api/reminders?${params}`, {
+        method: 'PATCH',
+        credentials: 'same-origin',
+        headers: {
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': getCsrfToken()
+        }
+    })
+        .then(function (res) {
+            return res.json().catch(function () { return {}; }).then(function (json) {
+                return { ok: res.ok, data: json };
+            });
+        })
+        .then(function (result) {
+            loadReminders()
+            showDetailToast('Напоминание перенесено');
+        })
+        .catch(function () {
+            showDetailToast('Не удалось перенести напоминание. Попробуйте позже.');
+        });
+}
 
 export function renderNotes(notes) {
     const list = document.getElementById('notesList');
@@ -154,14 +216,32 @@ export function renderReminders(reminders) {
         const typeLabel = n.type === 'periodic' ? 'Периодическое' : 'Напоминание';
         const periodLabel = n.cycle ? `<span class="mk-event-item__period">${REMINDER_CYCLE_LABELS[n.cycle] || n.cycle}</span>` : '';
         return `
-        <div class="mk-event-item" data-id="${n.id}">
-          <span class="mk-event-item__date">${n.date_of_exec || 'Без даты'}</span>
+        <div class="mk-event-item" data-reminder-item data-id="${n.id}">
+          <span class="mk-event-item__date">${n.date_of_exec ? formatDate(n.date_of_exec) : 'Без даты'}</span>
           <span class="mk-event-item__desc">${n.name}</span>
           ${periodLabel}
           <span class="mk-event-item__tag" style="background:var(--mk-primary-soft);color:var(--mk-primary);">${typeLabel}</span>
+          <div class="mk-event-item__actions">
+            <button class="btn-done" data-reminder-action="done" title="Отметить выполненным">✓</button>
+            <button class="btn-move" data-reminder-action="move" title="Перенести">↻</button>
+            <button class="btn-delete" data-reminder-action="delete" title="Удалить">🗑</button>
+          </div>
         </div>
       `;
     }).join('');
+}
+function remindersItems(){
+    document.addEventListener('click', function (e) {
+        const target = e.target.closest('[data-reminder-action]');
+        if (!target) return;
+        console.log(target.dataset.reminderAction);
+        if (target.dataset.reminderAction === 'delete'){
+            handleReminderDelete(e)
+        }
+        if (target.dataset.reminderAction === 'move' || target.dataset.reminderAction === 'done'){
+            handleReminderUpdate(e,target.dataset.reminderAction)
+        }
+    });
 }
 // ===== ОБРАБОТЧИКИ МОДАЛОК: СОБЫТИЕ =====
 export function handleEventTypeChange() {
@@ -472,6 +552,7 @@ export function initDateDefaults() {
 }
 
 export function initDetailPage() {
+    remindersItems();
     initEventModal();
     initDocModal();
     initNoteModal();

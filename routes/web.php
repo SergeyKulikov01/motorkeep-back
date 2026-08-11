@@ -17,10 +17,11 @@ Route::controller(ApiController::class)->prefix('api')->group(function () {
 });
 Route::prefix('api')->middleware(['auth', 'verified'])->group(function () {
     Route::post('/notes',[UserNotesController::class,'addNote']);
-    Route::post('/reminders',[RemindersController::class,'addReminder']);
-    Route::get('/reminders',[RemindersController::class,'getReminder']);
     Route::get('/notes',[UserNotesController::class,'getNote']);
     Route::delete('/notes',[UserNotesController::class,'deleteNote']);
+    Route::post('/reminders',[RemindersController::class,'addReminder']);
+    Route::get('/reminders',[RemindersController::class,'getReminder']);
+    Route::patch('/reminders',[RemindersController::class,'updateReminder']);
 });
 
 Route::get('/', function () {

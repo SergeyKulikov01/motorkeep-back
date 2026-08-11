@@ -1114,6 +1114,10 @@ body.is-collapsed .mk-collapse svg {
 .mk-event-item__actions .btn-done:hover {
     background: var(--mk-c-fuel-soft);
 }
+.mk-event-item__actions .btn-move:hover {
+    color: var(--mk-primary);
+    background: var(--mk-primary-soft);
+}
 .mk-event-item__actions .btn-delete:hover {
     color: var(--mk-danger);
     background: var(--mk-c-repair-soft);
