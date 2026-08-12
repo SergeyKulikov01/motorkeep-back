@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\Auth\YandexAuthController;
+use App\Http\Controllers\CarHistoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DetailCarController;
 use App\Http\Controllers\NewCarController;
@@ -21,6 +22,8 @@ Route::prefix('api')->middleware(['auth', 'verified'])->group(function () {
     Route::post('/reminders', [RemindersController::class, 'addReminder']);
     Route::get('/reminders', [RemindersController::class, 'getReminder']);
     Route::patch('/reminders', [RemindersController::class, 'updateReminder']);
+    Route::post('/car-history', [CarHistoryController::class, 'addCarHistory']);
+    Route::get('/car-history', [CarHistoryController::class, 'getCarHistory']);
 });
 
 Route::get('/', function () {

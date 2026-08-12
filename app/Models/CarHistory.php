@@ -6,5 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class CarHistory extends Model
 {
-    //
+    protected $fillable = [
+        'user_id',
+        'car_id',
+        'name',
+        'file_id',
+        'place',
+        'volume',
+        'mileage',
+        'price',
+        'date',
+        'type',
+        'comment',
+    ];
 }

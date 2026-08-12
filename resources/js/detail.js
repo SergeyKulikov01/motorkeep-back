@@ -483,7 +483,38 @@ export function handleRecordFormSubmit(e) {
     const form = e.target;
     const formData = new FormData(form);
     const payload = Object.fromEntries(formData.entries());
+
+    const activeType = form.querySelector('[data-type].active');
+    if (activeType) payload.type = activeType.dataset.type;
+
     console.log(payload)
+    fetch('/api/car-history', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': getCsrfToken()
+        },
+        body: JSON.stringify(payload)
+    })
+        .then(function (res) {
+            return res.json().catch(function () { return {}; }).then(function (json) {
+                return { ok: res.ok, data: json };
+            });
+        })
+        .then(function (result) {
+            if (!result.ok || !result.data.success) {
+                return Promise.reject(result.data);
+            }
+            closeAllModals();
+            loadRecords();
+            showDetailToast('Запись добавлена');
+            form.reset();
+        })
+        .catch(function () {
+            showDetailToast('Не удалось добавить запись. Попробуйте ещё раз.');
+        });
 }
 
 export function initRecordModal() {
@@ -597,6 +628,263 @@ export function initDropzone() {
     });
 }
 
+// ===== ЛЕНТА ЗАПИСЕЙ: ЗАГРУЗКА И РЕНДЕРИНГ =====
+function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, ch => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[ch]));
+}
+
+function formatThousands(value) {
+    const num = Math.round(Number(value) || 0);
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+
+const RECORD_ICON_CLOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+const RECORD_ICON_PIN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
+const RECORD_ICON_DROP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c4.4 0 8-3.6 8-8 0-4-8-12-8-12S4 10 4 14c0 4.4 3.6 8 8 8z"/></svg>';
+
+const RECORD_TYPE_META = {
+    service: {
+        tag: 'ТО',
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="{COLOR}" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+    },
+    repair: {
+        tag: 'Поломка',
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="{COLOR}" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"/></svg>',
+    },
+    buy: {
+        tag: 'Покупка',
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="{COLOR}" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>',
+    },
+    fuel: {
+        tag: 'Заправка',
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="{COLOR}" stroke-width="2"><path d="M3 22h12"/><path d="M18 2l-3 3"/><path d="M10 10l3-3"/><path d="M6 14l3-3"/><path d="M13 6l3-3"/><path d="M6 22h12"/><path d="M9 7l3-3"/></svg>',
+    },
+    note: {
+        tag: 'Заметка',
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="{COLOR}" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>',
+    },
+};
+
+function buildRecordCard(r) {
+    const meta = RECORD_TYPE_META[r.type] || RECORD_TYPE_META.service;
+    const title = escapeHtml(r.name);
+    const desc = r.comment ? `<div class="mk-record__desc">${escapeHtml(r.comment)}</div>` : '';
+    const dateLabel = formatDate(r.date);
+    const mileageLabel = r.mileage > 0 ? `${formatThousands(r.mileage)} км` : '';
+    const placeLabel = r.place ? escapeHtml(r.place) : '';
+    const volumeLabel = r.volume > 0 ? `${formatThousands(r.volume)} л` : '';
+    const costLabel = r.price > 0 ? `${formatThousands(r.price)} ₽` : '';
+
+    const metaItems = [
+        mileageLabel && `<span><span class="mk-record__icon-text">${RECORD_ICON_CLOCK} ${mileageLabel}</span></span>`,
+        placeLabel && `<span><span class="mk-record__icon-text">${RECORD_ICON_PIN} ${placeLabel}</span></span>`,
+        volumeLabel && `<span><span class="mk-record__icon-text">${RECORD_ICON_DROP} ${volumeLabel}</span></span>`,
+    ].filter(Boolean).join('');
+    const metaline = metaItems ? `<div class="mk-record__metaline">${metaItems}</div>` : '';
+
+    return `
+      <article class="mk-record" style="--rail: var(--mk-c-${r.type});" data-record data-id="${r.id}" data-type="${r.type}"
+               data-tag="${escapeHtml(meta.tag)}" data-title="${title}" data-desc="${escapeHtml(r.comment || '')}"
+               data-date="${escapeHtml(dateLabel)}" data-mileage="${escapeHtml(mileageLabel)}"
+               data-place="${placeLabel}" data-volume="${escapeHtml(volumeLabel)}" data-cost="${escapeHtml(costLabel)}">
+          <div class="mk-record__ic" style="--ic-bg: var(--mk-c-${r.type}-soft);">${meta.icon.replace('{COLOR}', `var(--mk-c-${r.type})`)}</div>
+          <div class="mk-record__main">
+              <div class="mk-record__title">${title} <span class="mk-tag" style="--tag-bg: var(--mk-c-${r.type}-soft); --tag-color: var(--mk-c-${r.type});">${escapeHtml(meta.tag)}</span></div>
+              ${desc}
+              ${metaline}
+          </div>
+          <div class="mk-record__side">
+              ${costLabel ? `<span class="mk-record__cost">${costLabel}</span>` : ''}
+              <span class="mk-record__date">${escapeHtml(dateLabel)}</span>
+              <button class="mk-record__more" data-record-menu-toggle type="button" aria-haspopup="true" aria-expanded="false" aria-label="Ещё">⋯</button>
+          </div>
+      </article>
+    `;
+}
+
+function renderRecords(records) {
+    const feed = document.getElementById('recordsFeed');
+    if (!feed) return;
+    if (!records || records.length === 0) {
+        feed.innerHTML = `<div class="mk-empty-state">Записей пока нет. Добавьте первую!</div>`;
+        return;
+    }
+    feed.innerHTML = records.map(buildRecordCard).join('');
+
+    const countEl = document.querySelector('.mk-section-head__title .count');
+    if (countEl) countEl.textContent = records.length;
+}
+
+function loadRecords() {
+    const form = document.getElementById('mkRecordForm');
+    if (!form) return;
+    const carId = form.querySelector('input[name="car_id"]').value;
+    const params = new URLSearchParams({ car_id: carId });
+    fetch(`/api/car-history?${params}`, {
+        method: 'GET',
+        credentials: 'same-origin',
+        headers: {
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': getCsrfToken()
+        }
+    })
+        .then(function (res) {
+            return res.json().catch(function () { return {}; }).then(function (json) {
+                return { ok: res.ok, data: json };
+            });
+        })
+        .then(function (result) {
+            renderRecords(result.data.records);
+        })
+        .catch(function () {
+            showDetailToast('Не удалось получить историю. Попробуйте позже.');
+        });
+}
+
+// ===== ЛЕНТА ЗАПИСЕЙ: МЕНЮ «⋯» И ПОДРОБНЫЙ ПРОСМОТР =====
+let activeDetailRecord = null;
+let activeMenuRecord = null;
+let activeMenuToggle = null;
+
+function closeAllRecordDropdowns() {
+    const menu = document.getElementById('mkRecordMenu');
+    if (menu) {
+        menu.classList.remove('open');
+        menu.style.display = '';
+    }
+    activeMenuToggle?.setAttribute('aria-expanded', 'false');
+    activeMenuRecord = null;
+    activeMenuToggle = null;
+}
+
+function positionRecordMenu(toggle) {
+    const menu = document.getElementById('mkRecordMenu');
+    if (!menu) return;
+    const btnRect = toggle.getBoundingClientRect();
+    menu.style.display = 'flex';
+    const menuRect = menu.getBoundingClientRect();
+    let left = btnRect.right - menuRect.width;
+    let top = btnRect.bottom + 4;
+    left = Math.max(8, Math.min(left, window.innerWidth - menuRect.width - 8));
+    if (top + menuRect.height > window.innerHeight - 8) {
+        top = btnRect.top - menuRect.height - 4;
+    }
+    menu.style.left = `${left}px`;
+    menu.style.top = `${top}px`;
+}
+
+function openRecordMenu(toggle) {
+    const menu = document.getElementById('mkRecordMenu');
+    if (!menu) return;
+    const article = toggle.closest('[data-record]');
+    const willOpen = activeMenuToggle !== toggle || !menu.classList.contains('open');
+    closeAllRecordDropdowns();
+    if (!willOpen) return;
+    activeMenuRecord = article;
+    activeMenuToggle = toggle;
+    positionRecordMenu(toggle);
+    menu.classList.add('open');
+    toggle.setAttribute('aria-expanded', 'true');
+}
+
+function decrementRecordsCount() {
+    const countEl = document.querySelector('.mk-section-head__title .count');
+    if (!countEl) return;
+    const current = parseInt(countEl.textContent, 10);
+    if (!isNaN(current) && current > 0) countEl.textContent = current - 1;
+}
+
+function deleteRecord(article) {
+    if (!article) return;
+    if (!confirm('Удалить запись?')) return;
+    if (activeDetailRecord === article) {
+        closeAllModals();
+        activeDetailRecord = null;
+    }
+    article.remove();
+    decrementRecordsCount();
+    showDetailToast('Запись удалена');
+}
+
+function populateRecordDetail(article) {
+    const d = article.dataset;
+    const setRow = (fieldId, rowField, value) => {
+        const valueEl = document.getElementById(fieldId);
+        const row = document.querySelector(`#mkRecordDetailModal [data-detail-field="${rowField}"]`);
+        if (valueEl) valueEl.textContent = value || '';
+        if (row) row.hidden = !value;
+    };
+
+    document.getElementById('mkDetailTitle').textContent = d.title || 'Запись';
+    const tagEl = document.getElementById('mkDetailTag');
+    if (tagEl) {
+        tagEl.textContent = d.tag || '';
+        tagEl.style.setProperty('--tag-bg', `var(--mk-c-${d.type}-soft)`);
+        tagEl.style.setProperty('--tag-color', `var(--mk-c-${d.type})`);
+    }
+    const descEl = document.getElementById('mkDetailDesc');
+    if (descEl) descEl.textContent = d.desc || '';
+
+    setRow('mkDetailDate', 'date', d.date);
+    setRow('mkDetailMileage', 'mileage', d.mileage);
+    setRow('mkDetailPlace', 'place', d.place);
+    setRow('mkDetailVolume', 'volume', d.volume);
+    setRow('mkDetailCost', 'cost', d.cost);
+}
+
+export function openRecordDetail(article) {
+    if (!article) return;
+    activeDetailRecord = article;
+    populateRecordDetail(article);
+    openModal('mkRecordDetailOverlay');
+}
+
+export function initRecordFeed() {
+    const feed = document.getElementById('recordsFeed');
+    if (!feed) return;
+
+    feed.addEventListener('click', function (e) {
+        const toggle = e.target.closest('[data-record-menu-toggle]');
+        if (toggle) {
+            e.stopPropagation();
+            openRecordMenu(toggle);
+            return;
+        }
+
+        const article = e.target.closest('[data-record]');
+        if (article) openRecordDetail(article);
+    });
+
+    document.getElementById('mkRecordMenu')?.addEventListener('click', function (e) {
+        const actionBtn = e.target.closest('[data-record-action]');
+        if (!actionBtn) return;
+        e.stopPropagation();
+        const article = activeMenuRecord;
+        closeAllRecordDropdowns();
+        if (actionBtn.dataset.recordAction === 'delete') {
+            deleteRecord(article);
+        } else if (actionBtn.dataset.recordAction === 'edit') {
+            showDetailToast('Редактирование скоро будет доступно');
+        }
+    });
+
+    window.addEventListener('resize', closeAllRecordDropdowns);
+    window.addEventListener('scroll', closeAllRecordDropdowns, true);
+    document.addEventListener('click', closeAllRecordDropdowns);
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeAllRecordDropdowns();
+    });
+
+    document.getElementById('mkRecordDetailClose')?.addEventListener('click', closeAllModals);
+    document.getElementById('mkRecordDetailCloseBtn')?.addEventListener('click', closeAllModals);
+    document.getElementById('mkRecordDetailOverlay')?.addEventListener('click', function (e) {
+        if (e.target === this) closeAllModals();
+    });
+    document.getElementById('mkRecordDetailDelete')?.addEventListener('click', () => deleteRecord(activeDetailRecord));
+}
+
 // ===== ИНИЦИАЛИЗАЦИЯ ДАТ =====
 export function initDateDefaults() {
     const today = new Date().toISOString().split('T')[0];
@@ -616,6 +904,7 @@ export function initDetailPage() {
     initSegments();
     initRecordTypeFields();
     initDetailChips();
+    initRecordFeed();
     initDropzone();
     initDateDefaults();
 
@@ -623,6 +912,7 @@ export function initDetailPage() {
 
     loadNotes();
     loadReminders();
+    loadRecords();
 }
 
 document.addEventListener('DOMContentLoaded', function () {

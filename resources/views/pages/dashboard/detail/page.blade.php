@@ -190,25 +190,8 @@
                     <button class="mk-chip" role="tab"><span class="dot" style="background:var(--mk-c-buy);"></span> Покупки</button>
                     <button class="mk-chip" role="tab"><span class="dot" style="background:var(--mk-c-fuel);"></span> Заправки</button>
                 </div>
-                <div class="mk-feed">
-                    <article class="mk-record" style="--rail: var(--mk-c-service);">
-                        <div class="mk-record__ic" style="--ic-bg: var(--mk-c-service-soft);">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="var(--mk-c-service)" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-                        </div>
-                        <div class="mk-record__main">
-                            <div class="mk-record__title">Замена масла и фильтров <span class="mk-tag" style="--tag-bg: var(--mk-c-service-soft); --tag-color: var(--mk-c-service);">ТО</span></div>
-                            <div class="mk-record__desc">Моторное масло 5W-30, масляный фильтр, воздушный фильтр</div>
-                            <div class="mk-record__metaline">
-                                <span><span class="mk-record__icon-text"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 82 400 км</span></span>
-                                <span><span class="mk-record__icon-text"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Автосервис «Техно»</span></span>
-                            </div>
-                        </div>
-                        <div class="mk-record__side">
-                            <span class="mk-record__cost">8 200 ₽</span>
-                            <span class="mk-record__date">12 июня 2026</span>
-                            <button class="mk-record__more" aria-label="Ещё">⋯</button>
-                        </div>
-                    </article>
+                <div class="mk-feed" id="recordsFeed">
+                    <!-- Записи истории добавляются через JS -->
                 </div>
             </section>
         </div>
@@ -228,10 +211,11 @@
 <div class="mk-modal-overlay" id="mkModalOverlay">
     <div class="mk-modal" id="mkModal">
         <div class="mk-modal__header">
-            <h2>Новая запись</h2>
+            <h2>ись</h2>
             <button class="mk-modal__close" id="mkModalClose">✕</button>
         </div>
         <form class="mk-modal__form" id="mkRecordForm" data-history-form>
+            <input name="car_id" type="hidden" value="{{$car->id}}">
             <div class="mk-form-group">
                 <label class="mk-form-label">Тип записи</label>
                 <div class="mk-segment" id="mkTypeSegment">
@@ -244,7 +228,7 @@
             </div>
             <div class="mk-form-group">
                 <label class="mk-form-label" for="recordTitle">Название <span class="mk-form-required">*</span></label>
-                <input class="mk-input" name="title" id="recordTitle" type="text" placeholder="Например: Замена масла" required>
+                <input class="mk-input" name="name" id="recordTitle" type="text" placeholder="Например: Замена масла" required>
             </div>
             <div class="mk-form-row">
                 <div class="mk-form-group" data-record-field="date">
@@ -409,6 +393,52 @@
                 <button type="submit" class="mk-btn mk-btn--primary">Добавить</button>
             </div>
         </form>
+    </div>
+</div>
+
+<!-- ЕДИНОЕ ВЫПАДАЮЩЕЕ МЕНЮ ЗАПИСИ (position: fixed, общее на всю ленту) -->
+<div class="mk-record__dropdown" id="mkRecordMenu" data-record-dropdown>
+    <button type="button" class="mk-record__dropdown-item" data-record-action="edit">✏️ Редактировать</button>
+    <button type="button" class="mk-record__dropdown-item mk-record__dropdown-item--danger" data-record-action="delete">🗑 Удалить</button>
+</div>
+
+<!-- МОДАЛКА ПОДРОБНОСТЕЙ ЗАПИСИ -->
+<div class="mk-modal-overlay" id="mkRecordDetailOverlay">
+    <div class="mk-modal" id="mkRecordDetailModal">
+        <div class="mk-modal__header">
+            <h2 id="mkDetailTitle">Запись</h2>
+            <button class="mk-modal__close" id="mkRecordDetailClose">✕</button>
+        </div>
+        <div class="mk-modal__form">
+            <span class="mk-record-detail__tag" id="mkDetailTag"></span>
+            <p class="mk-record-detail__desc" id="mkDetailDesc"></p>
+            <div class="mk-record-detail__grid">
+                <div class="mk-record-detail__row" data-detail-field="date">
+                    <span class="mk-record-detail__label">Дата</span>
+                    <span class="mk-record-detail__value" id="mkDetailDate"></span>
+                </div>
+                <div class="mk-record-detail__row" data-detail-field="mileage">
+                    <span class="mk-record-detail__label">Пробег</span>
+                    <span class="mk-record-detail__value" id="mkDetailMileage"></span>
+                </div>
+                <div class="mk-record-detail__row" data-detail-field="place">
+                    <span class="mk-record-detail__label">Место</span>
+                    <span class="mk-record-detail__value" id="mkDetailPlace"></span>
+                </div>
+                <div class="mk-record-detail__row" data-detail-field="volume">
+                    <span class="mk-record-detail__label">Объём</span>
+                    <span class="mk-record-detail__value" id="mkDetailVolume"></span>
+                </div>
+                <div class="mk-record-detail__row" data-detail-field="cost">
+                    <span class="mk-record-detail__label">Сумма</span>
+                    <span class="mk-record-detail__value" id="mkDetailCost"></span>
+                </div>
+            </div>
+        </div>
+        <div class="mk-modal__footer">
+            <button type="button" class="mk-btn mk-btn--ghost" id="mkRecordDetailDelete">Удалить</button>
+            <button type="button" class="mk-btn mk-btn--primary" id="mkRecordDetailCloseBtn">Закрыть</button>
+        </div>
     </div>
 </div>
 
