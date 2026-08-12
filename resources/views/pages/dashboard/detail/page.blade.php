@@ -212,7 +212,7 @@
 <div class="mk-modal-overlay" id="mkModalOverlay">
     <div class="mk-modal" id="mkModal">
         <div class="mk-modal__header">
-            <h2>ись</h2>
+            <h2>Новая запись</h2>
             <button class="mk-modal__close" id="mkModalClose">✕</button>
         </div>
         <form class="mk-modal__form" id="mkRecordForm" data-history-form>
