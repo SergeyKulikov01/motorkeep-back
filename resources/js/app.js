@@ -124,27 +124,6 @@ export function initLandingMobileMenu() {
     });
 }
 
-// ---------- ФИЛЬТРЫ (чипы) ----------
-export function initFilterChips() {
-    document.querySelectorAll('.mk-chips').forEach(chipContainer => {
-        const chips = chipContainer.querySelectorAll('.mk-chip');
-        chips.forEach(chip => {
-            chip.addEventListener('click', function () {
-                // Снять активный класс со всех в этом контейнере
-                chips.forEach(c => c.classList.remove('mk-chip--active'));
-                this.classList.add('mk-chip--active');
-                // Здесь можно добавить логику фильтрации (пока заглушка)
-                console.log('Фильтр выбран:', this.textContent.trim());
-            });
-        });
-
-        // По умолчанию активировать первый, если нет активного
-        if (!chipContainer.querySelector('.mk-chip--active') && chips.length) {
-            chips[0].classList.add('mk-chip--active');
-        }
-    });
-}
-
 // ---------- ПОИСК ----------
 export function initSearch() {
     const searchInputs = document.querySelectorAll('.mk-search input');
@@ -197,7 +176,6 @@ document.addEventListener('DOMContentLoaded', function () {
     initSidebarCollapse();
     initMobileDrawer();
     initLandingMobileMenu();
-    initFilterChips();
     initSearch();
     initSearchHotkey();
     initModalOverlays();

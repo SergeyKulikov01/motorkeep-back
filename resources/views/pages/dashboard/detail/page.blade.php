@@ -1,5 +1,6 @@
 @include('layouts.public.landing-head')
 <body>
+<!-- Серверное время рендера: {{ now() }} -->
 <!-- СКРИМ -->
 <div class="mk-scrim" id="mkScrim"></div>
 
@@ -91,7 +92,7 @@
                         </span>
                         <span class="mk-stat__label">Всего записей</span>
                     </div>
-                    <div class="mk-stat__value">48</div>
+                    <div class="mk-stat__value" data-history-count>48</div>
                     <div class="mk-stat__delta ok">+12 за месяц</div>
                 </div>
                 <div class="mk-stat">
@@ -176,7 +177,7 @@
             <!-- История (сокращённая версия) -->
             <section class="mk-section" aria-label="История записей">
                 <div class="mk-section-head">
-                    <h2 class="mk-section-head__title">История <span class="count">48</span></h2>
+                    <h2 class="mk-section-head__title">История <span class="count" data-history-count>0</span></h2>
                     <div class="mk-section-head__spacer"></div>
                     <button class="mk-btn mk-btn--primary mk-btn--sm" id="addRecordBtn">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -184,11 +185,11 @@
                     </button>
                 </div>
                 <div class="mk-chips" role="tablist">
-                    <button class="mk-chip active" role="tab">Все</button>
-                    <button class="mk-chip" role="tab"><span class="dot" style="background:var(--mk-c-service);"></span> ТО</button>
-                    <button class="mk-chip" role="tab"><span class="dot" style="background:var(--mk-c-repair);"></span> Поломки</button>
-                    <button class="mk-chip" role="tab"><span class="dot" style="background:var(--mk-c-buy);"></span> Покупки</button>
-                    <button class="mk-chip" role="tab"><span class="dot" style="background:var(--mk-c-fuel);"></span> Заправки</button>
+                    <button class="mk-chip active" data-type-history="0" role="tab">Все</button>
+                    <button class="mk-chip" role="tab" data-type-history="service"><span class="dot" style="background:var(--mk-c-service);"></span> ТО</button>
+                    <button class="mk-chip" role="tab" data-type-history="repair"><span class="dot" style="background:var(--mk-c-repair);"></span> Поломки</button>
+                    <button class="mk-chip" role="tab" data-type-history="buy"><span class="dot" style="background:var(--mk-c-buy);"></span> Покупки</button>
+                    <button class="mk-chip" role="tab" data-type-history="fuel"><span class="dot" style="background:var(--mk-c-fuel);"></span> Заправки</button>
                 </div>
                 <div class="mk-feed" id="recordsFeed">
                     <!-- Записи истории добавляются через JS -->
@@ -223,7 +224,6 @@
                     <button type="button" class="mk-segment__item" data-type="repair">Поломка</button>
                     <button type="button" class="mk-segment__item" data-type="buy">Покупка</button>
                     <button type="button" class="mk-segment__item" data-type="fuel">Заправка</button>
-                    <button type="button" class="mk-segment__item" data-type="note">Заметка</button>
                 </div>
             </div>
             <div class="mk-form-group">

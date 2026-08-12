@@ -234,7 +234,6 @@ function remindersItems(){
     document.addEventListener('click', function (e) {
         const target = e.target.closest('[data-reminder-action]');
         if (!target) return;
-        console.log(target.dataset.reminderAction);
         if (target.dataset.reminderAction === 'delete'){
             handleReminderDelete(e)
         }
@@ -387,7 +386,6 @@ function loadNotes(){
             });
         })
         .then(function (result) {
-            console.log(result.data);
             renderNotes(result.data.notes);
         })
         .catch(function () {
@@ -415,7 +413,6 @@ function loadReminders(){
             });
         })
         .then(function (result) {
-            console.log(result.data);
             renderReminders(result.data.remind);
         })
         .catch(function () {
@@ -487,7 +484,6 @@ export function handleRecordFormSubmit(e) {
     const activeType = form.querySelector('[data-type].active');
     if (activeType) payload.type = activeType.dataset.type;
 
-    console.log(payload)
     fetch('/api/car-history', {
         method: 'POST',
         credentials: 'same-origin',
@@ -516,7 +512,46 @@ export function handleRecordFormSubmit(e) {
             showDetailToast('Не удалось добавить запись. Попробуйте ещё раз.');
         });
 }
+function initFilterChips() {
+    document.querySelectorAll('.mk-chips').forEach(chipContainer => {
+        const chips = chipContainer.querySelectorAll('.mk-chip');
+        chips.forEach(chip => {
+            chip.addEventListener('click', function () {
+                // Снять активный класс со всех в этом контейнере
+                chips.forEach(c => c.classList.remove('mk-chip--active'));
+                this.classList.add('mk-chip--active');
+                const form = document.getElementById('mkRecordForm');
+                if (!form) return;
+                const carId = form.querySelector('input[name="car_id"]').value;
+                const params = new URLSearchParams({ car_id: carId,type: this.dataset.typeHistory });
+                fetch(`/api/car-history?${params}`, {
+                    method: 'GET',
+                    credentials: 'same-origin',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': getCsrfToken()
+                    }
+                })
+                    .then(function (res) {
+                        return res.json().catch(function () { return {}; }).then(function (json) {
+                            return { ok: res.ok, data: json };
+                        });
+                    })
+                    .then(function (result) {
+                        renderRecords(result.data.records,false);
+                    })
+                    .catch(function () {
+                        showDetailToast('Не удалось получить историю. Попробуйте позже.');
+                    });
+            });
+        });
 
+        // По умолчанию активировать первый, если нет активного
+        if (!chipContainer.querySelector('.mk-chip--active') && chips.length) {
+            chips[0].classList.add('mk-chip--active');
+        }
+    });
+}
 export function initRecordModal() {
     const fab = document.getElementById('mkFab');
     const addRecordBtn = document.getElementById('addRecordBtn');
@@ -704,7 +739,7 @@ function buildRecordCard(r) {
     `;
 }
 
-function renderRecords(records) {
+function renderRecords(records,setCount = true) {
     const feed = document.getElementById('recordsFeed');
     if (!feed) return;
     if (!records || records.length === 0) {
@@ -713,8 +748,12 @@ function renderRecords(records) {
     }
     feed.innerHTML = records.map(buildRecordCard).join('');
 
-    const countEl = document.querySelector('.mk-section-head__title .count');
-    if (countEl) countEl.textContent = records.length;
+    if (setCount){
+        let counters = document.querySelectorAll('[data-history-count]');
+        counters.forEach(counter => {
+            counter.textContent = records.length;
+        });
+    }
 }
 
 function loadRecords() {
@@ -736,7 +775,7 @@ function loadRecords() {
             });
         })
         .then(function (result) {
-            renderRecords(result.data.records);
+            renderRecords(result.data.records,true);
         })
         .catch(function () {
             showDetailToast('Не удалось получить историю. Попробуйте позже.');
@@ -907,6 +946,7 @@ export function initDetailPage() {
     initRecordFeed();
     initDropzone();
     initDateDefaults();
+    initFilterChips();
 
     renderDocs();
 

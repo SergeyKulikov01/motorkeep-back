@@ -26,7 +26,7 @@ class CarHistoryController extends Controller
     public function getCarHistory(Request $request)
     {
         try {
-            $record = $this->carHistoryService->getRecord($request->user(), (int) $request->input('car_id'));
+            $record = $this->carHistoryService->getRecord($request->user(), (int) $request->input('car_id'),$request->input('type'));
         } catch (Throwable $e) {
             return response()->json(['success' => false]);
         }

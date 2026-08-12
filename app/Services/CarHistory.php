@@ -28,11 +28,11 @@ class CarHistory
             'file_id' => null,
         ]);
     }
-    public function getRecord(User $user, int $car_id): Collection
+    public function getRecord(User $user, int $car_id, ?string $type = null): Collection
     {
-        return CarHistoryModel::where([
-            'user_id' => $user->id,
-            'car_id' => $car_id,
-        ])->get();
+        return CarHistoryModel::where('user_id', $user->id)
+            ->where('car_id', $car_id)
+            ->when($type, fn ($query) => $query->where('type', $type))
+            ->get();
     }
 }
