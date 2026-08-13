@@ -24,6 +24,7 @@ Route::prefix('api')->middleware(['auth', 'verified'])->group(function () {
     Route::patch('/reminders', [RemindersController::class, 'updateReminder']);
     Route::post('/car-history', [CarHistoryController::class, 'addCarHistory']);
     Route::get('/car-history', [CarHistoryController::class, 'getCarHistory']);
+    Route::delete('/car-history', [CarHistoryController::class, 'deleteCarHistory']);
 });
 
 Route::get('/', function () {

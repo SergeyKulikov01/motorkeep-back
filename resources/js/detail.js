@@ -562,8 +562,8 @@ function handleRecordFormSubmit(e) {
             showDetailToast('Запись добавлена');
             form.reset();
         })
-        .catch(function () {
-            showDetailToast('Не удалось добавить запись. Попробуйте ещё раз.');
+        .catch(function (result) {
+            showDetailToast('Не удалось добавить запись.' + (result?.message ? ' ' + result.message : 'Попробуйте ещё раз.'));
         });
 }
 
@@ -727,16 +727,30 @@ function decrementRecordsCount() {
     });
 }
 
-function deleteRecord(article) {
+function deleteRecord(article,recordId) {
     if (!article) return;
     if (!confirm('Удалить запись?')) return;
     if (activeDetailRecord === article) {
         closeAllModals();
         activeDetailRecord = null;
     }
-    article.remove();
-    decrementRecordsCount();
-    showDetailToast('Запись удалена');
+    const form = document.getElementById('mkRecordForm');
+    if (!form) return;
+    console.log(activeDetailRecord)
+    const carId = form.querySelector('input[name="car_id"]').value;
+    const params = new URLSearchParams({ id: recordId,car_id: carId });
+    fetchJson(`/api/car-history?${params}`, { method: 'DELETE' })
+        .then(function (result) {
+            if (!result.ok || !result.data.success) {
+                return Promise.reject(result.data);
+            }
+            article.remove();
+            decrementRecordsCount();
+            showDetailToast('Запись удалена');
+        })
+        .catch(function () {
+            showDetailToast('Не удалось удалить. Попробуйте позже.');
+        });
 }
 
 function populateRecordDetail(article) {
@@ -795,7 +809,7 @@ function initRecordFeed() {
         const article = activeMenuRecord;
         closeAllRecordDropdowns();
         if (actionBtn.dataset.recordAction === 'delete') {
-            deleteRecord(article);
+            deleteRecord(article, article?.dataset.id);
         } else if (actionBtn.dataset.recordAction === 'edit') {
             showDetailToast('Редактирование скоро будет доступно');
         }
@@ -813,7 +827,9 @@ function initRecordFeed() {
     document.getElementById('mkRecordDetailOverlay')?.addEventListener('click', function (e) {
         if (e.target === this) closeAllModals();
     });
-    document.getElementById('mkRecordDetailDelete')?.addEventListener('click', () => deleteRecord(activeDetailRecord));
+    document.getElementById('mkRecordDetailDelete')?.addEventListener('click', () => {
+        deleteRecord(activeDetailRecord,activeDetailRecord?.dataset.id);
+    });
 }
 
 // =====================================================================

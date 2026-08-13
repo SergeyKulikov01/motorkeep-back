@@ -237,7 +237,7 @@
                 </div>
                 <div class="mk-form-group" data-record-field="odometer">
                     <label class="mk-form-label" for="recordOdometer">Пробег, км</label>
-                    <input class="mk-input mk-input--right" name="mileage" id="recordOdometer" type="text" inputmode="numeric" placeholder="86 420">
+                    <input class="mk-input mk-input--right" value="<?= $car->mileage ?>" name="mileage" id="recordOdometer" type="text" inputmode="numeric" placeholder="86 420">
                 </div>
             </div>
             <div class="mk-form-row">

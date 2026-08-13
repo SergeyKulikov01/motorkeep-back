@@ -33,4 +33,14 @@ class CarHistoryController extends Controller
 
         return response()->json(['success' => true, 'records' => $record]);
     }
+    public function deleteCarHistory(Request $request)
+    {
+        try {
+            $record = $this->carHistoryService->deleteRecord($request->user(), (int) $request->input('car_id'), (int) $request->input('id'));
+        } catch (Throwable $e) {
+            return response()->json(['success' => false]);
+        }
+
+        return response()->json(['success' => true]);
+    }
 }

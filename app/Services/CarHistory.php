@@ -21,7 +21,7 @@ class CarHistory
             'place' => $data['place'] ?? null,
             'volume' => $data['volume'] ?? null,
             'mileage' => $data['mileage'] ?? 0,
-            'price' => $data['price'] ?? 0,
+            'price' => $data['cost'] ?? 0,
             'date' => $data['date'],
             'type' => $data['type'],
             'comment' => $data['comment'] ?? null,
@@ -30,9 +30,20 @@ class CarHistory
     }
     public function getRecord(User $user, int $car_id, ?string $type = null): Collection
     {
+        $user->cars()->findOrFail($car_id);
+
         return CarHistoryModel::where('user_id', $user->id)
             ->where('car_id', $car_id)
             ->when($type, fn ($query) => $query->where('type', $type))
             ->get();
+    }
+    public function deleteRecord(User $user, int $car_id, int $id): int
+    {
+        $user->cars()->findOrFail($car_id);
+
+        return CarHistoryModel::where('user_id', $user->id)
+            ->where('car_id', $car_id)
+            ->where('id', $id)
+            ->delete();
     }
 }
