@@ -330,38 +330,35 @@
             <h2>Новый документ</h2>
             <button class="mk-modal__close" id="mkDocModalClose">✕</button>
         </div>
-        <form class="mk-modal__form" id="mkDocForm">
+        <form class="mk-modal__form" id="mkDocForm" data-docs-form>
+            <input name="car_id" type="hidden" value="{{$car->id}}">
             <div class="mk-form-group">
                 <label class="mk-form-label" for="docTitle">Название <span class="mk-form-required">*</span></label>
-                <input class="mk-input" id="docTitle" type="text" placeholder="Например: ОСАГО" required>
+                <input class="mk-input" id="docTitle" name="name" type="text" placeholder="Например: ОСАГО" required>
             </div>
             <div class="mk-form-row">
                 <div class="mk-form-group">
                     <label class="mk-form-label" for="docDate">Срок действия</label>
-                    <input class="mk-input" id="docDate" type="date">
+                    <input class="mk-input" id="docDate" name="date" type="date">
+                    <label class="mk-checkbox" for="docPermanent">
+                        <input type="checkbox" id="docPermanent" name="is_permanent">
+                        <span>Бессрочное</span>
+                    </label>
                 </div>
                 <div class="mk-form-group">
                     <label class="mk-form-label" for="docType">Тип</label>
-                    <select class="mk-input" id="docType">
-                        <option value="Страховка">Страховка</option>
-                        <option value="СТС">СТС</option>
-                        <option value="Диагностика">Диагностика</option>
-                        <option value="ПТС">ПТС</option>
-                        <option value="Другое">Другое</option>
+                    <select class="mk-input" id="docType" name="type">
+                        <option value="insurance">Страховка</option>
+                        <option value="registration">СТС</option>
+                        <option value="review">Диагностика</option>
+                        <option value="TransportPassport">ПТС</option>
+                        <option value="other">Другое</option>
                     </select>
                 </div>
             </div>
             <div class="mk-form-group">
-                <label class="mk-form-label" for="docStatus">Статус</label>
-                <select class="mk-input" id="docStatus">
-                    <option value="ok">Действует</option>
-                    <option value="warning">Истекает</option>
-                    <option value="error">Просрочен</option>
-                </select>
-            </div>
-            <div class="mk-form-group">
                 <label class="mk-form-label" for="docDesc">Описание</label>
-                <textarea class="mk-textarea" id="docDesc" rows="2" placeholder="Дополнительная информация…"></textarea>
+                <textarea class="mk-textarea" id="docDesc" name="comment" rows="2" placeholder="Дополнительная информация…"></textarea>
             </div>
             <div class="mk-modal__footer">
                 <button type="button" class="mk-btn mk-btn--ghost" id="mkDocModalCancel">Отмена</button>

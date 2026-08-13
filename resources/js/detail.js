@@ -1,21 +1,4 @@
 // =====================================================================
-// ХРАНИЛИЩЕ ДАННЫХ (в памяти)
-// =====================================================================
-const data = {
-    docs: [
-        { id: 1, title: 'ОСАГО', date: '2026-10-01', type: 'Страховка', status: 'ok', desc: 'Страховая компания Росгосстрах' },
-        { id: 2, title: 'СТС', date: '2026-08-15', type: 'СТС', status: 'warning', desc: 'Свидетельство о регистрации ТС' },
-        { id: 3, title: 'Диагностическая карта', date: '2026-12-20', type: 'Диагностика', status: 'ok', desc: 'Пройден техосмотр' },
-        { id: 4, title: 'ПТС', date: '2025-01-01', type: 'ПТС', status: 'error', desc: 'Паспорт транспортного средства' },
-    ],
-    nextId: 100
-};
-
-function getNextId() {
-    return data.nextId++;
-}
-
-// =====================================================================
 // КОНСТАНТЫ / СЛОВАРИ
 // =====================================================================
 const RU_MONTHS = [
@@ -29,6 +12,20 @@ const REMINDER_CYCLE_LABELS = {
     month3: 'раз в 3 месяца',
     month6: 'раз в 6 месяцев',
     year: 'ежегодно'
+};
+
+const DOC_TYPE_LABELS = {
+    insurance: 'Страховка',
+    registration: 'СТС',
+    review: 'Диагностика',
+    TransportPassport: 'ПТС',
+    other: 'Другое'
+};
+
+const DOC_STATUS_LABELS = {
+    ok: 'Действует',
+    warning: 'Истекает',
+    error: 'Просрочен'
 };
 
 // Для каждого типа записи показываем только те поля, которые имеют смысл.
@@ -160,67 +157,116 @@ function openModal(overlayId) {
 // =====================================================================
 // ДОКУМЕНТЫ
 // =====================================================================
-function renderDocs() {
+function renderDocs(docs) {
     const list = document.getElementById('docsList');
     if (!list) return;
-    if (data.docs.length === 0) {
+    if (!docs || docs.length === 0) {
         list.innerHTML = `<div class="mk-empty-state">Нет документов. Добавьте первый!</div>`;
         return;
     }
-    const statusMap = {
-        ok: 'Действует',
-        warning: 'Истекает',
-        error: 'Просрочен'
-    };
-    list.innerHTML = data.docs.map(d => `
+    list.innerHTML = docs.map(d => {
+        const status = computeDocStatus(d.date);
+        const typeLabel = DOC_TYPE_LABELS[d.type] || d.type;
+        return `
       <div class="mk-doc-card" data-id="${d.id}">
         <div class="mk-doc-card__icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="${d.status === 'ok' ? 'var(--mk-success)' : d.status === 'warning' ? 'var(--mk-warning)' : 'var(--mk-danger)'}" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="12" y2="17"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="${status === 'ok' ? 'var(--mk-success)' : status === 'warning' ? 'var(--mk-warning)' : 'var(--mk-danger)'}" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="12" y2="17"/></svg>
         </div>
         <div class="mk-doc-card__body">
-          <div class="mk-doc-card__title">${d.title}</div>
-          <div class="mk-doc-card__meta">${d.type} · ${d.date || 'Без срока'}</div>
-          <span class="mk-doc-card__status ${d.status}">${statusMap[d.status] || d.status}</span>
+          <div class="mk-doc-card__title">${escapeHtml(d.name)}</div>
+          <div class="mk-doc-card__meta">${escapeHtml(typeLabel)} · ${d.date ? formatDate(d.date) : 'Без срока'}</div>
+          <span class="mk-doc-card__status ${status}">${DOC_STATUS_LABELS[status]}</span>
         </div>
         <button class="mk-doc-card__delete" data-action="delete-doc" style="background:none;border:none;color:var(--mk-ink-3);cursor:pointer;font-size:18px;padding:4px;">✕</button>
       </div>
-    `).join('');
+    `;
+    }).join('');
 
     list.querySelectorAll('[data-action="delete-doc"]').forEach(btn => {
         btn.addEventListener('click', handleDocDelete);
     });
 }
 
+function loadDocs() {
+    const form = document.querySelector('[data-docs-form]');
+    if (!form) return;
+    const carId = form.querySelector('input[name="car_id"]').value;
+    const params = new URLSearchParams({ car_id: carId });
+
+    fetchJson(`/api/car-docs?${params}`)
+        .then(function (result) {
+            renderDocs(result.data.docs);
+        })
+        .catch(function () {
+            showDetailToast('Не удалось получить документы. Попробуйте позже.');
+        });
+}
+
 function handleDocDelete(e) {
     const card = e.currentTarget.closest('.mk-doc-card');
-    const id = parseInt(card.dataset.id);
-    if (confirm('Удалить документ?')) {
-        data.docs = data.docs.filter(d => d.id !== id);
-        renderDocs();
-        showDetailToast('Документ удалён');
+    if (!confirm('Удалить документ?')) return;
+    const list = card.closest('#docsList');
+    card.remove();
+    if (list && !list.querySelector('.mk-doc-card')) {
+        list.innerHTML = `<div class="mk-empty-state">Нет документов. Добавьте первый!</div>`;
     }
+    showDetailToast('Документ удалён');
+}
+
+function computeDocStatus(date) {
+    if (!date) return 'ok';
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const target = new Date(date);
+    const diffDays = Math.floor((target - today) / 86400000);
+    if (diffDays < 0) return 'error';
+    if (diffDays <= 30) return 'warning';
+    return 'ok';
+}
+
+function toggleDocPermanent() {
+    const checkbox = document.getElementById('docPermanent');
+    const dateInput = document.getElementById('docDate');
+    if (!checkbox || !dateInput) return;
+    dateInput.disabled = checkbox.checked;
+    if (checkbox.checked) dateInput.value = '';
 }
 
 function handleDocFormSubmit(e) {
     e.preventDefault();
-    const title = document.getElementById('docTitle').value.trim();
+    const form = e.target;
+    const formData = new FormData(form);
+    const title = (formData.get('name') || '').toString().trim();
     if (!title) { alert('Введите название'); return; }
-    const date = document.getElementById('docDate').value;
-    const type = document.getElementById('docType').value;
-    const status = document.getElementById('docStatus').value;
-    const desc = document.getElementById('docDesc').value.trim();
-    data.docs.push({
-        id: getNextId(),
-        title,
-        date,
-        type,
-        status,
-        desc
-    });
-    renderDocs();
-    closeAllModals();
-    e.target.reset();
-    showDetailToast('Документ добавлен');
+    const permanent = formData.get('is_permanent') === 'on';
+    const date = permanent ? '' : (formData.get('date') || '').toString();
+
+    const payload = {
+        car_id: formData.get('car_id'),
+        name: title,
+        date: date || null,
+        type: formData.get('type'),
+        comment: (formData.get('comment') || '').toString().trim(),
+    };
+
+    fetchJson('/api/car-docs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    })
+        .then(function (result) {
+            if (!result.ok || !result.data.success) {
+                return Promise.reject(result.data);
+            }
+            closeAllModals();
+            loadDocs();
+            form.reset();
+            toggleDocPermanent();
+            showDetailToast('Документ добавлен');
+        })
+        .catch(function () {
+            showDetailToast('Не удалось добавить документ. Попробуйте ещё раз.');
+        });
 }
 
 function initDocModal() {
@@ -231,6 +277,7 @@ function initDocModal() {
         if (e.target === this) closeAllModals();
     });
     document.getElementById('mkDocForm')?.addEventListener('submit', handleDocFormSubmit);
+    document.getElementById('docPermanent')?.addEventListener('change', toggleDocPermanent);
 }
 
 // =====================================================================
@@ -914,8 +961,7 @@ function initDetailPage() {
     initDateDefaults();
     initFilterChips();
 
-    renderDocs();
-
+    loadDocs();
     loadNotes();
     loadReminders();
     loadRecords();

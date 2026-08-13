@@ -9,6 +9,7 @@ use App\Http\Controllers\NewCarController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RemindersController;
 use App\Http\Controllers\UserNotesController;
+use App\Http\Controllers\CarDocsController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(ApiController::class)->prefix('api')->group(function () {
@@ -25,6 +26,8 @@ Route::prefix('api')->middleware(['auth', 'verified'])->group(function () {
     Route::post('/car-history', [CarHistoryController::class, 'addCarHistory']);
     Route::get('/car-history', [CarHistoryController::class, 'getCarHistory']);
     Route::delete('/car-history', [CarHistoryController::class, 'deleteCarHistory']);
+    Route::post('/car-docs', [CarDocsController::class, 'addDoc']);
+    Route::get('/car-docs', [CarDocsController::class, 'getDoc']);
 });
 
 Route::get('/', function () {

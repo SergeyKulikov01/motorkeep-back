@@ -1304,6 +1304,22 @@ body.is-collapsed .mk-collapse svg {
     grid-template-columns: 1fr 1fr;
     gap: 16px;
 }
+.mk-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--mk-ink-2);
+    cursor: pointer;
+    user-select: none;
+}
+.mk-checkbox input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--mk-primary);
+    cursor: pointer;
+}
 
 .mk-segment {
     display: flex;
