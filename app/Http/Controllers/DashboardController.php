@@ -10,7 +10,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $cars = Cars::with(['brand', 'model'])->where('user_id', auth()->id())->get();
+        $cars = Cars::with(['brand', 'model', 'history'])->where('user_id', auth()->id())->get();
         $data = [
             'cars' => $cars,
         ];

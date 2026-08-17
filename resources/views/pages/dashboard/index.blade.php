@@ -15,7 +15,7 @@
             <div class="mk-garage-head">
                 <div>
                     <h1 class="mk-garage-head__title">Мой гараж</h1>
-                    <p class="mk-garage-head__sub">{{ $cars->count() }} автомобиля · 42 000 ₽ расходов за месяц</p>
+                    <p class="mk-garage-head__sub">{{ $cars->count() }} автомобиля · {{ number_format($cars->sum(fn ($car) => $car->months_spend), 0, '', ' ') }} ₽ расходов за месяц</p>
                 </div>
                 <a href="{{ route('dashboard.add') }}" class="mk-btn mk-btn--primary" id="add-car-btn">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="currentColor" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -71,7 +71,7 @@
                             <span class="mk-garage-summary__meta">Замена свечей, шин, масла</span>
                         </div>
                     </div>
-                    <div class="mk-garage-summary__card js-summary-card mk-wip" data-summary="costs"
+                    <div class="mk-garage-summary__card js-summary-card" data-summary="costs"
                          style="--card-color: var(--mk-c-fuel); --card-bg: var(--mk-c-fuel-soft);">
                         <div class="mk-garage-summary__icon">
                             <svg viewBox="0 0 24 24">
@@ -82,8 +82,8 @@
                         </div>
                         <div class="mk-garage-summary__content">
                             <span class="mk-garage-summary__label">Расходы за месяц</span>
-                            <span class="mk-garage-summary__value">42 000 ₽</span>
-                            <span class="mk-garage-summary__meta">+8% к прошлому месяцу</span>
+                            <span class="mk-garage-summary__value">{{ number_format($cars->sum(fn ($car) => $car->months_spend), 0, '', ' ') }} ₽</span>
+                            <span class="mk-garage-summary__meta">{{($cars->sum(fn ($car) => $car->diff_percent_spend))}}% к прошлому месяцу</span>
                         </div>
                     </div>
                 </div>
@@ -159,13 +159,13 @@
                             <span class="mk-odo__track" aria-hidden="true"></span>
                         </div>
                         <div class="mk-garage-card__stats">
-                            <div class="mk-wip">
+                            <div>
                                 <span class="mk-garage-card__stat-label">Расходы за год</span>
-                                <span class="mk-garage-card__stat-value">214 600 ₽</span>
+                                <span class="mk-garage-card__stat-value">{{ $car->year_spend_formatted }} ₽</span>
                             </div>
-                            <div class="mk-wip">
+                            <div>
                                 <span class="mk-garage-card__stat-label">Записей</span>
-                                <span class="mk-garage-card__stat-value">12</span>
+                                <span class="mk-garage-card__stat-value">{{ count($car->history)}}</span>
                             </div>
                             <div class="mk-wip">
                                 <span class="mk-garage-card__stat-label">До ТО</span>

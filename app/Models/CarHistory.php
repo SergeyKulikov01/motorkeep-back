@@ -23,4 +23,9 @@ class CarHistory extends Model
         'type',
         'comment',
     ];
+
+    public function car()
+    {
+        return $this->belongsTo(Cars::class, 'car_id');
+    }
 }

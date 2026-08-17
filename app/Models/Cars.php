@@ -48,10 +48,56 @@ class Cars extends Model
         return $this->belongsTo(BodyTypes::class, 'body_type_id');
     }
 
+    public function history()
+    {
+        return $this->hasMany(CarHistory::class, 'car_id');
+    }
+
     protected function mileageFormatted(): Attribute
     {
         return Attribute::make(
             get: fn () => number_format($this->mileage, 0, '', ' '),
+        );
+    }
+
+    protected function yearSpend(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->history
+                ->filter(fn ($record) => $record->date?->year === now()->year)
+                ->sum('price'),
+        );
+    }
+    protected function monthsSpend(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->history
+                ->filter(fn ($record) => $record->date?->month === now()->month)
+                ->sum('price'),
+        );
+    }
+    protected function diffPercentSpend(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $prevMonth = now()->subMonthNoOverflow();
+                $prev = $this->history
+                    ->filter(fn ($record) => $record->date?->year === $prevMonth->year && $record->date?->month === $prevMonth->month)
+                    ->sum('price');
+
+                if ($prev <= 0) {
+                    return 0;
+                }
+
+                return ($this->months_spend - $prev) / $prev * 100;
+            },
+        );
+    }
+
+    protected function yearSpendFormatted(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => number_format($this->year_spend, 0, '', ' '),
         );
     }
 }
