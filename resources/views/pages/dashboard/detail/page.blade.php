@@ -92,7 +92,7 @@
                         <span class="mk-stat__label">Всего записей</span>
                     </div>
                     <div class="mk-stat__value" data-history-count>48</div>
-                    <div class="mk-stat__delta ok">+12 за месяц</div>
+                    <div class="mk-stat__delta ok">+{{$thisMonthHistoryCount}} за месяц</div>
                 </div>
                 <div class="mk-stat">
                     <div class="mk-stat__head">
@@ -102,9 +102,11 @@
                         <span class="mk-stat__label">Расходы за год</span>
                     </div>
                     <div class="mk-stat__value">{{ number_format($TotalSpend, 0, ',', ' ') }} ₽</div>
+                    @if($diffPercent)
                     <div class="mk-stat__delta up">+{{$diffPercent}}% к прошлому</div>
+                    @endif
                 </div>
-                <div class="mk-stat">
+                <div class="mk-stat mk-wip">
                     <div class="mk-stat__head">
                         <span class="mk-stat__ic" style="--ic-bg: var(--mk-c-fuel-soft);">
                             <svg viewBox="0 0 24 24" fill="none" stroke="var(--mk-c-fuel)" stroke-width="2"><path d="M3 22h12"/><path d="M18 2l-3 3"/><path d="M10 10l3-3"/><path d="M6 14l3-3"/><path d="M13 6l3-3"/><path d="M6 22h12"/><path d="M9 7l3-3"/></svg>
@@ -114,7 +116,7 @@
                     <div class="mk-stat__value">8.4 л/100 км</div>
                     <div class="mk-stat__delta ok">−0.3 л с прошлого</div>
                 </div>
-                <div class="mk-stat">
+                <div class="mk-stat mk-wip">
                     <div class="mk-stat__head">
                         <span class="mk-stat__ic" style="--ic-bg: var(--mk-c-service-soft);">
                             <svg viewBox="0 0 24 24" fill="none" stroke="var(--mk-c-service)" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -242,7 +244,7 @@
             <div class="mk-form-row">
                 <div class="mk-form-group" data-record-field="cost">
                     <label class="mk-form-label" for="recordCost" id="recordCostLabel">Сумма, ₽</label>
-                    <input class="mk-input mk-input--right" name="cost" id="recordCost" type="text" inputmode="numeric" placeholder="0">
+                    <input class="mk-input mk-input--right" name="price" id="recordCost" type="text" inputmode="numeric" placeholder="0">
                 </div>
                 <div class="mk-form-group" data-record-field="place">
                     <label class="mk-form-label" for="recordPlace" id="recordPlaceLabel">Место</label>

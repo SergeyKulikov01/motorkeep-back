@@ -38,4 +38,17 @@ class CarDocsController extends Controller
 
         return response()->json(['success' => true, 'docs' => $doc]);
     }
+    public function deleteDoc(Request $request): JsonResponse
+    {
+        try {
+            $doc = CarDocs::where([
+                'id' => $request->input('doc_id'),
+                'user_id' => $request->user()->id,
+            ])->delete();
+        } catch (Throwable $e) {
+            return response()->json(['success' => false]);
+        }
+
+        return response()->json(['success' => true, 'docs' => $doc]);
+    }
 }

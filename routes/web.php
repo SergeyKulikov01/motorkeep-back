@@ -28,6 +28,7 @@ Route::prefix('api')->middleware(['auth', 'verified'])->group(function () {
     Route::delete('/car-history', [CarHistoryController::class, 'deleteCarHistory']);
     Route::post('/car-docs', [CarDocsController::class, 'addDoc']);
     Route::get('/car-docs', [CarDocsController::class, 'getDoc']);
+    Route::delete('/car-docs', [CarDocsController::class, 'deleteDoc']);
 });
 
 Route::get('/', function () {

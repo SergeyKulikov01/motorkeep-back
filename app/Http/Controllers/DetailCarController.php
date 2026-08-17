@@ -13,6 +13,8 @@ class DetailCarController extends Controller
     public function index(int $id)
     {
         $currentYear = now()->year;
+        $currentMonth = now()->month;
+        $thisMonthHistory = 0;
         $history = CarHistory::where('car_id', $id)
             ->whereIn(DB::raw('YEAR(date)'), [$currentYear, $currentYear - 1])
             ->select('price','date')
@@ -20,13 +22,20 @@ class DetailCarController extends Controller
         $thisYearTotal = 0;
         $prevYearTotal = 0;
         foreach ($history as $elem) {
+            if ($elem->date->month == $currentMonth) {
+                $thisMonthHistory++;
+            }
             if ($elem->date->year == $currentYear) {
                 $thisYearTotal += $elem->price;
             } else {
                 $prevYearTotal += $elem->price;
             }
         }
-        $diffPercent = ($thisYearTotal - $prevYearTotal)/$prevYearTotal * 100;
+        $diffPercent = 0;
+        if ($prevYearTotal > 0){
+            $diffPercent = ($thisYearTotal - $prevYearTotal)/$prevYearTotal * 100;
+        }
+
         $car = Cars::with(['brand', 'model', 'colorInfo', 'bodyInfo'])->where('user_id', auth()->id())->where('id', $id)->firstOrFail();
         $mileagePercent = $car->mileage / 1000000 * 100;
         $data = [
@@ -35,6 +44,7 @@ class DetailCarController extends Controller
             'mileagePercent' => $mileagePercent,
             'TotalSpend' => $thisYearTotal,
             'diffPercent' => (int) $diffPercent,
+            'thisMonthHistoryCount' => (int) $thisMonthHistory,
         ];
 
         return view('pages.dashboard.detail.page', $data);

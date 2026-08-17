@@ -21,7 +21,7 @@ class CarHistory
             'place' => $data['place'] ?? null,
             'volume' => $data['volume'] ?? null,
             'mileage' => $data['mileage'] ?? 0,
-            'price' => $data['cost'] ?? 0,
+            'price' => $data['price'] ?? 0,
             'date' => $data['date'],
             'type' => $data['type'],
             'comment' => $data['comment'] ?? null,

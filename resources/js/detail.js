@@ -205,12 +205,23 @@ function loadDocs() {
 function handleDocDelete(e) {
     const card = e.currentTarget.closest('.mk-doc-card');
     if (!confirm('Удалить документ?')) return;
-    const list = card.closest('#docsList');
-    card.remove();
-    if (list && !list.querySelector('.mk-doc-card')) {
-        list.innerHTML = `<div class="mk-empty-state">Нет документов. Добавьте первый!</div>`;
-    }
-    showDetailToast('Документ удалён');
+    const params = new URLSearchParams({ doc_id: card.dataset.id });
+
+    fetchJson(`/api/car-docs?${params}`, { method: 'DELETE' })
+        .then(function (result) {
+            if (!result.ok || !result.data.success) {
+                return Promise.reject(result.data);
+            }
+            const list = card.closest('#docsList');
+            card.remove();
+            if (list && !list.querySelector('.mk-doc-card')) {
+                list.innerHTML = `<div class="mk-empty-state">Нет документов. Добавьте первый!</div>`;
+            }
+            showDetailToast('Документ удалён');
+        })
+        .catch(function () {
+            showDetailToast('Не удалось удалить документ. Попробуйте позже.');
+        });
 }
 
 function computeDocStatus(date) {
