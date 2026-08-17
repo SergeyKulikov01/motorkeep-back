@@ -188,7 +188,7 @@
             </div>
 
             <!-- Блок "История и напоминания" -->
-            <section class="mk-garage-extra mk-wip">
+            <section class="mk-garage-extra">
                 <div class="mk-garage-extra__grid">
                     <!-- Колонка: История -->
                     <div class="mk-garage-extra__col">
