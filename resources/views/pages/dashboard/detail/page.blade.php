@@ -1,6 +1,5 @@
 @include('layouts.public.landing-head')
 <body>
-<!-- Серверное время рендера: {{ now() }} -->
 <!-- СКРИМ -->
 <div class="mk-scrim" id="mkScrim"></div>
 
@@ -102,8 +101,8 @@
                         </span>
                         <span class="mk-stat__label">Расходы за год</span>
                     </div>
-                    <div class="mk-stat__value">214 600 ₽</div>
-                    <div class="mk-stat__delta up">+8% к прошлому</div>
+                    <div class="mk-stat__value">{{ number_format($TotalSpend, 0, ',', ' ') }} ₽</div>
+                    <div class="mk-stat__delta up">+{{$diffPercent}}% к прошлому</div>
                 </div>
                 <div class="mk-stat">
                     <div class="mk-stat__head">

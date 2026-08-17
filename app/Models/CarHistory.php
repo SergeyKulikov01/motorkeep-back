@@ -4,8 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+
 class CarHistory extends Model
 {
+    protected $casts = [
+        'date' => 'date'
+    ];
     protected $fillable = [
         'user_id',
         'car_id',
