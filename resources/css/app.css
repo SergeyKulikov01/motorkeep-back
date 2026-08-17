@@ -694,6 +694,10 @@ code,
     transform: translateY(-1px);
 }
 
+.mk-record {
+    cursor: pointer;
+}
+
 .mk-record::before {
     content: '';
     position: absolute;
@@ -764,13 +768,14 @@ code,
     gap: 4px;
 }
 
-.mk-record__right {
+.mk-record__side {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: 4px;
     justify-content: space-between;
     height: 100%;
+    position: relative;
 }
 
 .mk-record__cost {
@@ -790,11 +795,119 @@ code,
     border: none;
     color: var(--mk-ink-3);
     cursor: pointer;
-    padding: 0 4px;
+    padding: 2px 6px;
+    border-radius: var(--mk-r-sm, 6px);
+    font-size: 18px;
+    line-height: 1;
 }
 
-.mk-record__more:hover {
+.mk-record__more:hover,
+.mk-record__more[aria-expanded="true"] {
     color: var(--mk-ink);
+    background: var(--mk-surface-2);
+}
+
+/* Единое меню на всю ленту записей, position: fixed и позиционируется из JS
+   (left/top под конкретную кнопку «⋯»). Так оно не зависит от stacking-контекста
+   своей карточки и никогда не обрезается соседними .mk-record — они flex-элементы
+   .mk-feed, и абсолютно спозиционированный потомок одного из них рискует быть
+   перекрыт следующим по порядку элементом, даже имея больший z-index. */
+.mk-record__dropdown {
+    display: none;
+    position: fixed;
+    min-width: 168px;
+    background: var(--mk-surface);
+    border: 1px solid var(--mk-border);
+    border-radius: var(--mk-r-md);
+    box-shadow: var(--mk-shadow-md);
+    padding: 6px;
+    z-index: 1000;
+}
+
+.mk-record__dropdown.open {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.mk-record__dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 10px;
+    background: none;
+    border: none;
+    border-radius: var(--mk-r-sm, 6px);
+    font-size: 13.5px;
+    color: var(--mk-ink);
+    text-align: left;
+    cursor: pointer;
+    transition: background var(--mk-transition);
+}
+
+.mk-record__dropdown-item:hover {
+    background: var(--mk-surface-2);
+}
+
+.mk-record__dropdown-item--danger {
+    color: var(--mk-danger);
+}
+
+/* ----- Модалка подробностей записи .mk-record-detail ----- */
+.mk-record-detail__tag {
+    display: inline-flex;
+    align-self: flex-start;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 0 10px;
+    line-height: 22px;
+    border-radius: var(--mk-r-pill);
+    background: var(--tag-bg, var(--mk-surface-2));
+    color: var(--tag-color, var(--mk-ink-2));
+    margin-bottom: 10px;
+}
+
+.mk-record-detail__desc {
+    font-size: 14px;
+    color: var(--mk-ink-2);
+    line-height: 1.5;
+    margin-bottom: 16px;
+    white-space: pre-line;
+}
+
+.mk-record-detail__grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.mk-record-detail__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    background: var(--mk-surface-2);
+    border-radius: var(--mk-r-md);
+}
+
+.mk-record-detail__row[hidden] {
+    display: none;
+}
+
+.mk-record-detail__label {
+    font-size: 12.5px;
+    color: var(--mk-ink-3);
+}
+
+.mk-record-detail__value {
+    font-family: var(--mk-font-display);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--mk-ink);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
 }
 
 /* ----- Заголовок секции .mk-section-head ----- */
@@ -1932,7 +2045,7 @@ body.is-collapsed .mk-sidebar .mk-collapse span {
         width: 4px;
     }
 
-    .mk-record__right {
+    .mk-record__side {
         flex-direction: row;
         align-items: center;
         justify-content: space-between;

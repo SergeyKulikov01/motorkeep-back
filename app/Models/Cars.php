@@ -20,7 +20,7 @@ class Cars extends Model
         'plate_number',
         'plate_region',
         'mileage',
-        'comment'
+        'comment',
     ];
 
     public function user()
@@ -32,9 +32,20 @@ class Cars extends Model
     {
         return $this->belongsTo(Brand::class);
     }
+
     public function model()
     {
         return $this->belongsTo(CarModel::class, 'car_model_id');
+    }
+
+    public function colorInfo()
+    {
+        return $this->belongsTo(Color::class, 'color');
+    }
+
+    public function bodyInfo()
+    {
+        return $this->belongsTo(BodyTypes::class, 'body_type_id');
     }
 
     protected function mileageFormatted(): Attribute

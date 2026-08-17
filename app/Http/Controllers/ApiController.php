@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\Brand;
@@ -19,6 +21,7 @@ class ApiController extends Controller
 
         return response()->json($brands);
     }
+
     public function getModelsList(Request $request)
     {
         $brandId = $request->query('brand_id');

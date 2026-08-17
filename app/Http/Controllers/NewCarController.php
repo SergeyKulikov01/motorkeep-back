@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\BodyTypes;
@@ -10,15 +12,18 @@ use Throwable;
 
 class NewCarController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         $types = BodyTypes::all();
         $colors = Color::all();
         $data = [
             'body' => $types,
-            'colors' => $colors
+            'colors' => $colors,
         ];
-        return view('pages.dashboard.add.page',$data);
+
+        return view('pages.dashboard.add.page', $data);
     }
+
     public function addCar(Request $request)
     {
         try {
