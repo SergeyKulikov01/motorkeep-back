@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('total_history', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
-            $table->foreignId('user_id')->after('id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('car_id')->after('user_id')->constrained('cars')->onDelete('cascade');
-            $table->enum('action', ['add', 'edit', 'delete']);
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('car_id')->constrained('cars')->onDelete('cascade');
+            $table->enum('action', ['add', 'edit', 'delete'])->default('add');
+            $table->enum('action_type', ['service', 'repair', 'buy', 'fuel', 'note'])->nullable();
             $table->text('description')->nullable();
+            $table->timestamps();
         });
     }
 

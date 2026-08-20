@@ -17,7 +17,8 @@ class CarHistoryController extends Controller
     {
         try {
             $record = $this->carHistoryService->addRecord($request->user(), $request->validated());
-        } catch (Throwable $e) {
+        }
+        catch (Throwable $e) {
             return response()->json(['success' => false]);
         }
 
