@@ -89,7 +89,7 @@ class Cars extends Model
                     return 0;
                 }
 
-                return ($this->months_spend - $prev) / $prev * 100;
+                return round(($this->months_spend - $prev) / $prev * 100);
             },
         );
     }

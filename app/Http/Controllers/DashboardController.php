@@ -34,13 +34,12 @@ class DashboardController extends Controller
                 default => $createdAt->format('d.m.Y, H:i'),
             };
         }
-        $reminders = Reminders::where('user_id', auth()->id())->with('car')->get();
-        echo '<pre>';
-        print_r($reminders);
-        echo '</pre>';
+        $reminders = Reminders::where('user_id', auth()->id())->with('car.brand')->with('car.model')->get();
+
         $data = [
             'cars' => $cars,
             'history' => $history,
+            'reminders' => $reminders,
         ];
 
         return view('pages.dashboard.index', $data);

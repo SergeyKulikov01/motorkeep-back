@@ -220,36 +220,27 @@
                                data-target="reminders">Все</a>
                         </div>
                         <div class="mk-reminder-list" id="reminder-list">
-                            <div class="mk-reminder-item mk-reminder-item--urgent" data-id="1">
-                                <div class="mk-reminder-item__info">
-                                    <span class="mk-reminder-item__title">Замена масла</span>
-                                    <span class="mk-reminder-item__meta">BMW 320i · до 15.07.2026</span>
+                            @foreach($reminders as $reminder)
+                                <div class="mk-reminder-item @if($reminder->status_class) mk-reminder-item--{{ $reminder->status_class }} @endif" data-id="{{$reminder->id}}">
+                                    <div class="mk-reminder-item__info">
+                                        <span class="mk-reminder-item__title">{{$reminder->name}}</span>
+                                        <span class="mk-reminder-item__meta">{{$reminder->car->brand->name}} {{$reminder->car->model->name}} · до {{ $reminder->date_of_exec->format('d.m.Y') }}</span>
+                                    </div>
+                                    <div class="mk-reminder-item__actions">
+                                        <button class="mk-reminder-item__done" title="Отметить выполненным">
+                                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M20 6 9 17l-5-5"/>
+                                            </svg>
+                                        </button>
+                                        <button class="mk-reminder-item__postpone" title="Перенести">
+                                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                                <polygon points="5 4 15 12 5 20 5 4"/>
+                                                <line x1="19" y1="5" x2="19" y2="19"/>
+                                            </svg>
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="mk-reminder-item__actions">
-                                    <button class="mk-reminder-item__done" title="Отметить выполненным">✅</button>
-                                    <button class="mk-reminder-item__postpone" title="Перенести на +1 день">⏩</button>
-                                </div>
-                            </div>
-                            <div class="mk-reminder-item" data-id="2">
-                                <div class="mk-reminder-item__info">
-                                    <span class="mk-reminder-item__title">Проверить свечи</span>
-                                    <span class="mk-reminder-item__meta">Toyota Camry · до 01.08.2026</span>
-                                </div>
-                                <div class="mk-reminder-item__actions">
-                                    <button class="mk-reminder-item__done" title="Отметить выполненным">✅</button>
-                                    <button class="mk-reminder-item__postpone" title="Перенести на +1 день">⏩</button>
-                                </div>
-                            </div>
-                            <div class="mk-reminder-item mk-reminder-item--overdue" data-id="3">
-                                <div class="mk-reminder-item__info">
-                                    <span class="mk-reminder-item__title">Замена шин</span>
-                                    <span class="mk-reminder-item__meta">Lada Vesta · до 20.08.2026</span>
-                                </div>
-                                <div class="mk-reminder-item__actions">
-                                    <button class="mk-reminder-item__done" title="Отметить выполненным">✅</button>
-                                    <button class="mk-reminder-item__postpone" title="Перенести на +1 день">⏩</button>
-                                </div>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>

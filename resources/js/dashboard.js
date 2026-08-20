@@ -137,6 +137,30 @@ export function initQuickActions() {
 }
 
 // ---------- НАПОМИНАНИЯ ----------
+function getCsrfToken() {
+    const meta = document.querySelector('meta[name="csrf-token"]');
+    return meta ? meta.content : '';
+}
+
+// Та же обёртка над fetch, что и в detail.js: CSRF-заголовок + безопасный
+// разбор JSON-ответа (даже если тело пустое).
+function fetchReminderApi(url, options = {}) {
+    const { headers, ...rest } = options;
+    return fetch(url, {
+        credentials: 'same-origin',
+        ...rest,
+        headers: {
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': getCsrfToken(),
+            ...headers,
+        },
+    }).then(function (res) {
+        return res.json().catch(function () { return {}; }).then(function (json) {
+            return { ok: res.ok, data: json };
+        });
+    });
+}
+
 export function updateReminderCount() {
     const reminderList = document.getElementById('reminder-list');
     const reminderCount = document.getElementById('reminder-count');
@@ -144,36 +168,31 @@ export function updateReminderCount() {
     reminderCount.textContent = items.length;
 }
 
+// Отправляет действие на /api/reminders (тот же PATCH, что и на детальной
+// странице авто — action=done|move). Бэкенд сам пересчитывает дату/статус,
+// поэтому после успешного ответа просто перезагружаем список напоминаний.
+function sendReminderAction(item, action, pendingLabel) {
+    const params = new URLSearchParams({ id: item.dataset.id, action });
+
+    fetchReminderApi(`/api/reminders?${params}`, { method: 'PATCH' })
+        .then(function (result) {
+            if (!result.ok) return Promise.reject(result.data);
+            showToast(pendingLabel, action === 'done' ? 'success' : 'warning');
+            setTimeout(() => window.location.reload(), 600);
+        })
+        .catch(function () {
+            showToast('Не удалось обновить напоминание. Попробуйте позже.', 'error');
+        });
+}
+
 export function handleReminderDone(item) {
-    item.classList.toggle('mk-reminder-item--done');
     const title = item.querySelector('.mk-reminder-item__title')?.textContent || 'Напоминание';
-    if (item.classList.contains('mk-reminder-item--done')) {
-        showToast(`✅ "${title}" выполнено!`, 'success');
-    } else {
-        showToast(`↩️ "${title}" возвращено в список`, 'info');
-    }
-    updateReminderCount();
+    sendReminderAction(item, 'done', `«${title}» отмечено выполненным`);
 }
 
 export function handleReminderPostpone(item) {
-    const meta = item.querySelector('.mk-reminder-item__meta');
-    if (!meta) return;
-
-    const match = meta.textContent.match(/\d{2}\.\d{2}\.\d{4}/);
-    if (match) {
-        const dateParts = match[0].split('.');
-        const dateObj = new Date(parseInt(dateParts[2]), parseInt(dateParts[1]) - 1, parseInt(dateParts[0]));
-        dateObj.setDate(dateObj.getDate() + 1);
-        const newDate = String(dateObj.getDate()).padStart(2, '0') + '.' + String(dateObj.getMonth() + 1).padStart(2, '0') + '.' + dateObj.getFullYear();
-        meta.textContent = meta.textContent.replace(/\d{2}\.\d{2}\.\d{4}/, newDate);
-        showToast(`⏩ Дата перенесена на ${newDate}`, 'warning');
-    } else {
-        const now = new Date();
-        now.setDate(now.getDate() + 1);
-        const newDate = String(now.getDate()).padStart(2, '0') + '.' + String(now.getMonth() + 1).padStart(2, '0') + '.' + now.getFullYear();
-        meta.textContent += ` (перенесено на ${newDate})`;
-        showToast(`⏩ Дата перенесена на ${newDate}`, 'warning');
-    }
+    const title = item.querySelector('.mk-reminder-item__title')?.textContent || 'Напоминание';
+    sendReminderAction(item, 'move', `«${title}» перенесено`);
 }
 
 export function handleReminderListClick(e) {
