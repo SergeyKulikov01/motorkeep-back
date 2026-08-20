@@ -194,44 +194,19 @@
                     <div class="mk-garage-extra__col">
                         <div class="mk-section-head">
                             <h2>Последние действия</h2>
-                            <span class="count">6</span>
+                            <span class="count">{{count($history)}}</span>
                             <div class="spacer"></div>
                             <a href="#" class="mk-btn mk-btn--ghost mk-btn--sm js-show-all"
                                data-target="activity">Все</a>
                         </div>
                         <div class="mk-activity-list" id="activity-list">
-                            <div class="mk-activity-item mk-activity-item--add">
-                                <span class="mk-activity-item__time">Сегодня, 14:23</span>
-                                <span class="mk-activity-item__badge">Добавление</span>
-                                <span class="mk-activity-item__text">Запись «ТО» для <strong>BMW 320i</strong></span>
-                            </div>
-                            <div class="mk-activity-item mk-activity-item--edit">
-                                <span class="mk-activity-item__time">Сегодня, 11:05</span>
-                                <span class="mk-activity-item__badge">Изменение</span>
-                                <span class="mk-activity-item__text">Пробег у <strong>Toyota Camry</strong> → 42 150 км</span>
-                            </div>
-                            <div class="mk-activity-item mk-activity-item--delete">
-                                <span class="mk-activity-item__time">Вчера, 18:40</span>
-                                <span class="mk-activity-item__badge">Удаление</span>
-                                <span
-                                    class="mk-activity-item__text">Запись о заправке для <strong>Lada Vesta</strong></span>
-                            </div>
-                            <div class="mk-activity-item mk-activity-item--add">
-                                <span class="mk-activity-item__time">Вчера, 09:12</span>
-                                <span class="mk-activity-item__badge">Добавление</span>
-                                <span
-                                    class="mk-activity-item__text">Запись «Ремонт» для <strong>BMW 320i</strong></span>
-                            </div>
-                            <div class="mk-activity-item mk-activity-item--add">
-                                <span class="mk-activity-item__time">20.06.2026, 16:03</span>
-                                <span class="mk-activity-item__badge">Добавление</span>
-                                <span class="mk-activity-item__text">Запись «Заправка» для <strong>Toyota Camry</strong></span>
-                            </div>
-                            <div class="mk-activity-item mk-activity-item--edit">
-                                <span class="mk-activity-item__time">19.06.2026, 10:30</span>
-                                <span class="mk-activity-item__badge">Изменение</span>
-                                <span class="mk-activity-item__text">Дата ТО для <strong>Lada Vesta</strong></span>
-                            </div>
+                            @foreach($history as $item)
+                                <div class="mk-activity-item mk-activity-item--{{$item['action']}}">
+                                    <span class="mk-activity-item__time">{{ $item['time_label'] }}</span>
+                                    <span class="mk-activity-item__badge">{{$item['action_text']}}</span>
+                                    <span class="mk-activity-item__text">{!! $item['description'] !!}</span>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
 

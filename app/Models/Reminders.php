@@ -15,4 +15,9 @@ class Reminders extends Model
         'date_of_exec',
         'cycle',
     ];
+
+    public function car()
+    {
+        return $this->belongsTo(Cars::class, 'car_id');
+    }
 }
