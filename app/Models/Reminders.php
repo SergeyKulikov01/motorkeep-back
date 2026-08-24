@@ -39,7 +39,7 @@ class Reminders extends Model
 
                 return match (true) {
                     $execDate->lt($today) => 'overdue',
-                    $execDate->diffInDays($today) <= 3 => 'urgent',
+                    $today->diffInDays($execDate, true) <= 3 => 'urgent',
                     default => '',
                 };
             },

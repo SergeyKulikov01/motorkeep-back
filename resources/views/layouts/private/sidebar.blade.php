@@ -5,6 +5,11 @@
             <span class="mk-logo__text">MOTOR<span class="mk-logo__text-accent">KEEP</span></span>
         </a>
     </div>
+    <?
+//    echo '<pre>';
+//    print_r($sidebarCars);
+//    echo '</pre>';
+    ?>
     <nav class="mk-sidebar__nav">
         <div class="mk-navlabel">Меню</div>
         <a href="garage.html" class="mk-navitem mk-navitem--active" data-tip="Гараж">
@@ -31,28 +36,15 @@
             </svg>
             <span class="lbl">Статистика</span>
         </a>
-        <div class="mk-navlabel">Автомобили</div>
-        <a href="garage.html" class="mk-navitem mk-navitem--active" data-tip="Гараж">
-            <span class="mk-userchip__avatar">LG</span>
-            <span class="lbl">LADA Granta</span>
-        </a>
-        <a href="#" class="mk-navitem" data-tip="Автомобили" data-section="cars">
-            <svg viewBox="0 0 24 24">
-                <rect x="2" y="6" width="20" height="12" rx="2"/>
-                <circle cx="8" cy="18" r="2"/>
-                <circle cx="16" cy="18" r="2"/>
-                <path d="M2 10h20"/>
-            </svg>
-            <span class="lbl">Автомобили</span>
-        </a>
-        <a href="#" class="mk-navitem" data-tip="Статистика" data-section="stats">
-            <svg viewBox="0 0 24 24">
-                <line x1="18" y1="20" x2="18" y2="10"/>
-                <line x1="12" y1="20" x2="12" y2="4"/>
-                <line x1="6" y1="20" x2="6" y2="14"/>
-            </svg>
-            <span class="lbl">Статистика</span>
-        </a>
+        @if(count($sidebarCars) > 0)
+            <div class="mk-navlabel">Автомобили</div>
+        @foreach($sidebarCars as $car)
+                <a href="garage.html" class="mk-navitem mk-navitem--active" data-tip="Гараж">
+                    <span class="mk-userchip__avatar">LG</span>
+                    <span class="lbl">{{$car->brand->name}} {{$car->model->name}}</span>
+                </a>
+        @endforeach
+        @endif
         <div class="mk-navlabel">Гараж</div>
         <a href="#" class="mk-navitem" data-tip="Напоминания" data-section="reminders">
             <svg viewBox="0 0 24 24">

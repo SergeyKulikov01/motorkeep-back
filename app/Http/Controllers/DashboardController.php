@@ -14,7 +14,7 @@ class DashboardController extends Controller
     public function index()
     {
         $cars = Cars::with(['brand', 'model', 'history'])->where('user_id', auth()->id())->get();
-        $history = TotalHistory::where('user_id', auth()->id())->get()->toArray();
+        $history = TotalHistory::where('user_id', auth()->id())->orderBy('created_at', 'desc')->get()->toArray();
         foreach ($history as &$item) {
             switch ($item['action']) {
                 case 'add':

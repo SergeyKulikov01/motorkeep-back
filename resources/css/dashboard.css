@@ -740,12 +740,12 @@ body.nav-open .mk-scrim { display: block; }
     border-left-color: var(--mk-success);
 }
 .mk-reminder-item--urgent {
-    border-left-color: var(--mk-danger);
-    background: #FFF5F5;
-}
-.mk-reminder-item--overdue {
     border-left-color: var(--mk-warning);
     background: #FFFBF0;
+}
+.mk-reminder-item--overdue {
+    border-left-color: var(--mk-danger);
+    background: #FFF5F5;
 }
 .mk-reminder-item__info {
     display: flex;
@@ -922,11 +922,11 @@ body.nav-open .mk-scrim { display: block; }
     transform: translateY(-2px);
 }
 .mk-reminder-card--urgent {
-    border-left: 4px solid var(--mk-danger);
+    border-left: 4px solid var(--mk-warning);
 }
 .mk-reminder-card--overdue {
-    border-left: 4px solid var(--mk-warning);
-    background: #FFFBF0;
+    border-left: 4px solid var(--mk-danger);
+    background: #FFF5F5;
 }
 .mk-reminder-card__header {
     display: flex;

@@ -57,7 +57,7 @@
                             <span class="mk-garage-summary__meta">ОСАГО — до 15.08.2026</span>
                         </div>
                     </div>
-                    <div class="mk-garage-summary__card js-summary-card mk-wip" data-summary="notes"
+                    <div class="mk-garage-summary__card js-summary-card" data-summary="notes"
                          style="--card-color: var(--mk-c-note); --card-bg: var(--mk-c-note-soft);">
                         <div class="mk-garage-summary__icon">
                             <svg viewBox="0 0 24 24">
@@ -67,8 +67,12 @@
                         </div>
                         <div class="mk-garage-summary__content">
                             <span class="mk-garage-summary__label">Напоминания</span>
-                            <span class="mk-garage-summary__value">3</span>
-                            <span class="mk-garage-summary__meta">Замена свечей, шин, масла</span>
+                            <span class="mk-garage-summary__value">{{count($reminders)}}</span>
+                            <span class="mk-garage-summary__meta">
+                                <? if (count($reminders) > 0) {
+                                    echo $reminders->first()->name . ' и др.';
+                                } ?>
+                            </span>
                         </div>
                     </div>
                     <div class="mk-garage-summary__card js-summary-card" data-summary="costs"
@@ -93,7 +97,7 @@
             <section class="mk-quick-actions">
                 <h2 class="mk-quick-actions__title">Быстрые действия</h2>
                 <div class="mk-quick-actions__grid">
-                    <button class="mk-quick-action mk-wip" data-type="service"
+                    <button class="mk-quick-action" data-type="service"
                             style="--action-color: var(--mk-c-service); --action-bg: var(--mk-c-service-soft);">
                         <svg viewBox="0 0 24 24">
                             <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
@@ -103,7 +107,7 @@
                         </svg>
                         <span>ТО</span>
                     </button>
-                    <button class="mk-quick-action mk-wip" data-type="fuel"
+                    <button class="mk-quick-action" data-type="fuel"
                             style="--action-color: var(--mk-c-fuel); --action-bg: var(--mk-c-fuel-soft);">
                         <svg viewBox="0 0 24 24">
                             <rect x="2" y="6" width="16" height="14" rx="2"/>
@@ -113,7 +117,7 @@
                         </svg>
                         <span>Заправка</span>
                     </button>
-                    <button class="mk-quick-action mk-wip" data-type="repair"
+                    <button class="mk-quick-action" data-type="repair"
                             style="--action-color: var(--mk-c-repair); --action-bg: var(--mk-c-repair-soft);">
                         <svg viewBox="0 0 24 24">
                             <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
@@ -121,16 +125,14 @@
                         </svg>
                         <span>Ремонт</span>
                     </button>
-                    <button class="mk-quick-action mk-wip" data-type="note"
-                            style="--action-color: var(--mk-c-note); --action-bg: var(--mk-c-note-soft);">
+                    <button class="mk-quick-action" data-type="buy"
+                            style="--action-color: var(--mk-c-buy); --action-bg: var(--mk-c-buy-soft);">
                         <svg viewBox="0 0 24 24">
-                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
-                            <polyline points="14 2 14 8 20 8"/>
-                            <line x1="16" y1="13" x2="8" y2="13"/>
-                            <line x1="16" y1="17" x2="8" y2="17"/>
-                            <polyline points="10 9 9 9 8 9"/>
+                            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/>
+                            <path d="M3 6h18"/>
+                            <path d="M16 10a4 4 0 0 1-8 0"/>
                         </svg>
-                        <span>Заметка</span>
+                        <span>Покупка</span>
                     </button>
                 </div>
             </section>
@@ -439,6 +441,67 @@
             <div id="popup-content-default" style="display:block;">
                 <p>Информация</p>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- ======== МОДАЛКА: НОВАЯ ЗАПИСЬ (быстрые действия) ======== -->
+<div class="mk-overlay" id="quick-record-overlay">
+    <div class="mk-modal">
+        <div class="mk-modal__head">
+            <h3 class="mk-modal__title" id="quick-record-title">Новая запись</h3>
+            <button class="mk-modal__close" type="button" id="quick-record-close">&times;</button>
+        </div>
+        <div class="mk-modal__body">
+            <form id="quick-record-form">
+                <input type="hidden" name="type" id="quickRecordType" value="service">
+                <div class="mk-form-group">
+                    <label class="mk-form-label" for="quickRecordCar">Автомобиль <span class="mk-form-required">*</span></label>
+                    <select class="mk-select" name="car_id" id="quickRecordCar" required>
+                        @foreach($cars as $car)
+                            <option value="{{ $car->id }}" data-mileage="{{ $car->mileage }}" @if($loop->first) selected @endif>
+                                {{ $car->brand->name }} {{ $car->model->name }} · {{ $car->plate_number }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="mk-form-group">
+                    <label class="mk-form-label" for="quickRecordName">Название <span class="mk-form-required">*</span></label>
+                    <input class="mk-input" type="text" name="name" id="quickRecordName" placeholder="Например: Замена масла" required>
+                </div>
+                <div class="mk-form-row">
+                    <div class="mk-form-group">
+                        <label class="mk-form-label" for="quickRecordDate">Дата <span class="mk-form-required">*</span></label>
+                        <input class="mk-input" type="date" name="date" id="quickRecordDate" required>
+                    </div>
+                    <div class="mk-form-group" data-record-field="odometer">
+                        <label class="mk-form-label" for="quickRecordMileage">Пробег, км</label>
+                        <input class="mk-input mk-input--right" type="text" inputmode="numeric" name="mileage" id="quickRecordMileage" placeholder="86 420">
+                    </div>
+                </div>
+                <div class="mk-form-row">
+                    <div class="mk-form-group" data-record-field="cost">
+                        <label class="mk-form-label" for="quickRecordPrice">Сумма, ₽</label>
+                        <input class="mk-input mk-input--right" type="text" inputmode="numeric" name="price" id="quickRecordPrice" placeholder="0">
+                    </div>
+                    <div class="mk-form-group" data-record-field="place">
+                        <label class="mk-form-label" for="quickRecordPlace" id="quickRecordPlaceLabel">Автосервис</label>
+                        <input class="mk-input" type="text" name="place" id="quickRecordPlace" placeholder="Название СТО">
+                    </div>
+                </div>
+                <div class="mk-form-group" data-record-field="volume">
+                    <label class="mk-form-label" for="quickRecordVolume">Объём, л</label>
+                    <input class="mk-input mk-input--right" type="text" inputmode="numeric" name="volume" id="quickRecordVolume" placeholder="45">
+                </div>
+                <div class="mk-form-group">
+                    <label class="mk-form-label" for="quickRecordComment">Комментарий</label>
+                    <textarea class="mk-textarea" name="comment" id="quickRecordComment" rows="3" placeholder="Дополнительные детали…"></textarea>
+                </div>
+                <div class="mk-modal__footer">
+                    <button type="button" class="mk-btn mk-btn--ghost" id="quick-record-cancel">Отмена</button>
+                    <button type="submit" class="mk-btn mk-btn--primary">Сохранить</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
