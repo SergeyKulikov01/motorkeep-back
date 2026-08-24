@@ -5,14 +5,9 @@
             <span class="mk-logo__text">MOTOR<span class="mk-logo__text-accent">KEEP</span></span>
         </a>
     </div>
-    <?
-//    echo '<pre>';
-//    print_r($sidebarCars);
-//    echo '</pre>';
-    ?>
     <nav class="mk-sidebar__nav">
         <div class="mk-navlabel">Меню</div>
-        <a href="garage.html" class="mk-navitem mk-navitem--active" data-tip="Гараж">
+        <a href="{{ route('dashboard') }}" class="mk-navitem <?= (request()->routeIs('dashboard'))? 'mk-navitem--active' : '' ?>" data-tip="Гараж">
             <svg viewBox="0 0 24 24">
                 <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
                 <polyline points="9 22 9 12 15 12 15 22"/>
@@ -39,8 +34,9 @@
         @if(count($sidebarCars) > 0)
             <div class="mk-navlabel">Автомобили</div>
         @foreach($sidebarCars as $car)
-                <a href="garage.html" class="mk-navitem mk-navitem--active" data-tip="Гараж">
-                    <span class="mk-userchip__avatar">LG</span>
+                @php $isActive = request()->routeIs('dashboard.cardetail') && (int) request()->route('id') === $car->id; @endphp
+                <a href="{{ route('dashboard.cardetail',['id' => $car->id])  }}" class="mk-navitem {{ $isActive ? 'mk-navitem--active' : '' }}" data-tip="{{ $car->brand->name }} {{ $car->model->name }}">
+                    <span class="mk-userchip__avatar">{{mb_substr($car->brand->name, 0, 1, 'UTF-8')}}{{mb_substr($car->model->name, 0, 1, 'UTF-8')}}</span>
                     <span class="lbl">{{$car->brand->name}} {{$car->model->name}}</span>
                 </a>
         @endforeach
