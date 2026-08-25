@@ -30,20 +30,17 @@ class CarHistory
     }
     public function getRecord(User $user, int $car_id, ?string $type = null): Collection
     {
-        $user->cars()->findOrFail($car_id);
-
         return CarHistoryModel::where('user_id', $user->id)
             ->where('car_id', $car_id)
             ->when($type, fn ($query) => $query->where('type', $type))
             ->get();
     }
-    public function deleteRecord(User $user, int $car_id, int $id): int
+    public function deleteRecord(User $user, int $car_id, int $id): bool
     {
-        $user->cars()->findOrFail($car_id);
-
         return CarHistoryModel::where('user_id', $user->id)
             ->where('car_id', $car_id)
             ->where('id', $id)
+            ->firstOrFail()
             ->delete();
     }
 }

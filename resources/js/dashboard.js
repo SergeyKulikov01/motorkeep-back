@@ -125,18 +125,155 @@ export function initSummaryCards() {
 }
 
 // ---------- БЫСТРЫЕ ДЕЙСТВИЯ ----------
+// Поля и подписи по типу записи — как на детальной странице авто
+// (RECORD_TYPE_FIELDS в detail.js), но без сегмент-переключателя: тип
+// задаётся самой кнопкой быстрого действия.
+const QUICK_RECORD_TITLES = {
+    service: 'Новая запись «ТО»',
+    repair: 'Новая запись «Ремонт»',
+    fuel: 'Новая запись «Заправка»',
+    buy: 'Новая запись «Покупка»',
+};
+
+const QUICK_RECORD_NAME_PLACEHOLDERS = {
+    service: 'Например: Замена масла',
+    repair: 'Например: Замена тормозных колодок',
+    fuel: 'Например: АИ-95',
+    buy: 'Например: Комплект ковриков',
+};
+
+const QUICK_RECORD_TYPE_FIELDS = {
+    service: ['odometer', 'cost', 'place'],
+    repair: ['odometer', 'cost', 'place'],
+    fuel: ['odometer', 'cost', 'place', 'volume'],
+    buy: ['cost', 'place'],
+};
+
+const QUICK_RECORD_PLACE_LABELS = { service: 'Автосервис', repair: 'Автосервис', fuel: 'АЗС', buy: 'Магазин' };
+const QUICK_RECORD_PLACE_PLACEHOLDERS = { service: 'Название СТО', repair: 'Название СТО', fuel: 'Название АЗС', buy: 'Название магазина' };
+
 export function initQuickActions() {
     document.querySelectorAll('.mk-quick-action').forEach(btn => {
         btn.addEventListener('click', function () {
             const type = this.dataset.type;
-            const typeNames = { service: 'ТО', fuel: 'Заправку', repair: 'Ремонт', note: 'Заметку' };
-            const name = typeNames[type] || type;
-            showToast(`Добавить запись "${name}"`, 'info');
+            if (QUICK_RECORD_TITLES[type]) {
+                openQuickRecordModal(type);
+                return;
+            }
+            showToast(`Добавить запись "${type}"`, 'info');
         });
     });
 }
 
+// ---------- БЫСТРОЕ ДОБАВЛЕНИЕ ЗАПИСИ ----------
+function applyQuickRecordTypeFields(type) {
+    const fields = QUICK_RECORD_TYPE_FIELDS[type] || [];
+
+    document.querySelectorAll('#quick-record-form [data-record-field]').forEach(group => {
+        group.hidden = !fields.includes(group.dataset.recordField);
+    });
+
+    document.querySelectorAll('#quick-record-form .mk-form-row').forEach(row => {
+        const groups = row.querySelectorAll('.mk-form-group');
+        row.hidden = groups.length > 0 && Array.from(groups).every(g => g.hidden);
+    });
+
+    const placeLabel = document.getElementById('quickRecordPlaceLabel');
+    const placeInput = document.getElementById('quickRecordPlace');
+    if (placeLabel) placeLabel.textContent = QUICK_RECORD_PLACE_LABELS[type] || 'Место';
+    if (placeInput) placeInput.placeholder = QUICK_RECORD_PLACE_PLACEHOLDERS[type] || 'Название места';
+
+    const nameInput = document.getElementById('quickRecordName');
+    if (nameInput) nameInput.placeholder = QUICK_RECORD_NAME_PLACEHOLDERS[type] || '';
+}
+
+function openQuickRecordModal(type) {
+    const overlay = document.getElementById('quick-record-overlay');
+    const form = document.getElementById('quick-record-form');
+    const carSelect = document.getElementById('quickRecordCar');
+    const mileageInput = document.getElementById('quickRecordMileage');
+    if (!overlay || !form) return;
+
+    form.reset();
+    document.getElementById('quickRecordType').value = type;
+    document.getElementById('quick-record-title').textContent = QUICK_RECORD_TITLES[type] || 'Новая запись';
+    document.getElementById('quickRecordDate').value = new Date().toISOString().split('T')[0];
+    applyQuickRecordTypeFields(type);
+    if (carSelect && mileageInput) {
+        mileageInput.value = carSelect.selectedOptions[0]?.dataset.mileage || '';
+    }
+
+    overlay.classList.add('mk-overlay--open');
+}
+
+function closeQuickRecordModal() {
+    document.getElementById('quick-record-overlay')?.classList.remove('mk-overlay--open');
+}
+
+function handleQuickRecordSubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+    const payload = Object.fromEntries(new FormData(form).entries());
+
+    fetchReminderApi('/api/car-history', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+    })
+        .then(function (result) {
+            if (!result.ok || !result.data.success) return Promise.reject(result.data);
+            closeQuickRecordModal();
+            showToast('Запись добавлена', 'success');
+            setTimeout(() => window.location.reload(), 600);
+        })
+        .catch(function () {
+            showToast('Не удалось добавить запись. Попробуйте позже.', 'error');
+        });
+}
+
+function initQuickRecordModal() {
+    const overlay = document.getElementById('quick-record-overlay');
+    const form = document.getElementById('quick-record-form');
+    const carSelect = document.getElementById('quickRecordCar');
+    const mileageInput = document.getElementById('quickRecordMileage');
+    if (!overlay || !form) return;
+
+    document.getElementById('quick-record-close')?.addEventListener('click', closeQuickRecordModal);
+    document.getElementById('quick-record-cancel')?.addEventListener('click', closeQuickRecordModal);
+    overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) closeQuickRecordModal();
+    });
+    carSelect?.addEventListener('change', function () {
+        if (mileageInput) mileageInput.value = this.selectedOptions[0]?.dataset.mileage || '';
+    });
+    form.addEventListener('submit', handleQuickRecordSubmit);
+}
+
 // ---------- НАПОМИНАНИЯ ----------
+function getCsrfToken() {
+    const meta = document.querySelector('meta[name="csrf-token"]');
+    return meta ? meta.content : '';
+}
+
+// Та же обёртка над fetch, что и в detail.js: CSRF-заголовок + безопасный
+// разбор JSON-ответа (даже если тело пустое).
+function fetchReminderApi(url, options = {}) {
+    const { headers, ...rest } = options;
+    return fetch(url, {
+        credentials: 'same-origin',
+        ...rest,
+        headers: {
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': getCsrfToken(),
+            ...headers,
+        },
+    }).then(function (res) {
+        return res.json().catch(function () { return {}; }).then(function (json) {
+            return { ok: res.ok, data: json };
+        });
+    });
+}
+
 export function updateReminderCount() {
     const reminderList = document.getElementById('reminder-list');
     const reminderCount = document.getElementById('reminder-count');
@@ -144,36 +281,31 @@ export function updateReminderCount() {
     reminderCount.textContent = items.length;
 }
 
+// Отправляет действие на /api/reminders (тот же PATCH, что и на детальной
+// странице авто — action=done|move). Бэкенд сам пересчитывает дату/статус,
+// поэтому после успешного ответа просто перезагружаем список напоминаний.
+function sendReminderAction(item, action, pendingLabel) {
+    const params = new URLSearchParams({ id: item.dataset.id, action });
+
+    fetchReminderApi(`/api/reminders?${params}`, { method: 'PATCH' })
+        .then(function (result) {
+            if (!result.ok) return Promise.reject(result.data);
+            showToast(pendingLabel, action === 'done' ? 'success' : 'warning');
+            setTimeout(() => window.location.reload(), 600);
+        })
+        .catch(function () {
+            showToast('Не удалось обновить напоминание. Попробуйте позже.', 'error');
+        });
+}
+
 export function handleReminderDone(item) {
-    item.classList.toggle('mk-reminder-item--done');
     const title = item.querySelector('.mk-reminder-item__title')?.textContent || 'Напоминание';
-    if (item.classList.contains('mk-reminder-item--done')) {
-        showToast(`✅ "${title}" выполнено!`, 'success');
-    } else {
-        showToast(`↩️ "${title}" возвращено в список`, 'info');
-    }
-    updateReminderCount();
+    sendReminderAction(item, 'done', `«${title}» отмечено выполненным`);
 }
 
 export function handleReminderPostpone(item) {
-    const meta = item.querySelector('.mk-reminder-item__meta');
-    if (!meta) return;
-
-    const match = meta.textContent.match(/\d{2}\.\d{2}\.\d{4}/);
-    if (match) {
-        const dateParts = match[0].split('.');
-        const dateObj = new Date(parseInt(dateParts[2]), parseInt(dateParts[1]) - 1, parseInt(dateParts[0]));
-        dateObj.setDate(dateObj.getDate() + 1);
-        const newDate = String(dateObj.getDate()).padStart(2, '0') + '.' + String(dateObj.getMonth() + 1).padStart(2, '0') + '.' + dateObj.getFullYear();
-        meta.textContent = meta.textContent.replace(/\d{2}\.\d{2}\.\d{4}/, newDate);
-        showToast(`⏩ Дата перенесена на ${newDate}`, 'warning');
-    } else {
-        const now = new Date();
-        now.setDate(now.getDate() + 1);
-        const newDate = String(now.getDate()).padStart(2, '0') + '.' + String(now.getMonth() + 1).padStart(2, '0') + '.' + now.getFullYear();
-        meta.textContent += ` (перенесено на ${newDate})`;
-        showToast(`⏩ Дата перенесена на ${newDate}`, 'warning');
-    }
+    const title = item.querySelector('.mk-reminder-item__title')?.textContent || 'Напоминание';
+    sendReminderAction(item, 'move', `«${title}» перенесено`);
 }
 
 export function handleReminderListClick(e) {
@@ -206,6 +338,7 @@ export function initDashboardPage() {
     initShowAllLinks();
     initSummaryCards();
     initQuickActions();
+    initQuickRecordModal();
     initReminders();
 
     console.log('Гараж инициализирован');

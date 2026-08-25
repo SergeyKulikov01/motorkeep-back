@@ -15,7 +15,7 @@
             <div class="mk-garage-head">
                 <div>
                     <h1 class="mk-garage-head__title">Мой гараж</h1>
-                    <p class="mk-garage-head__sub">{{ $cars->count() }} автомобиля · 42 000 ₽ расходов за месяц</p>
+                    <p class="mk-garage-head__sub">{{ $cars->count() }} автомобиля · {{ number_format($cars->sum(fn ($car) => $car->months_spend), 0, '', ' ') }} ₽ расходов за месяц</p>
                 </div>
                 <a href="{{ route('dashboard.add') }}" class="mk-btn mk-btn--primary" id="add-car-btn">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="currentColor" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -57,7 +57,7 @@
                             <span class="mk-garage-summary__meta">ОСАГО — до 15.08.2026</span>
                         </div>
                     </div>
-                    <div class="mk-garage-summary__card js-summary-card mk-wip" data-summary="notes"
+                    <div class="mk-garage-summary__card js-summary-card" data-summary="notes"
                          style="--card-color: var(--mk-c-note); --card-bg: var(--mk-c-note-soft);">
                         <div class="mk-garage-summary__icon">
                             <svg viewBox="0 0 24 24">
@@ -67,11 +67,15 @@
                         </div>
                         <div class="mk-garage-summary__content">
                             <span class="mk-garage-summary__label">Напоминания</span>
-                            <span class="mk-garage-summary__value">3</span>
-                            <span class="mk-garage-summary__meta">Замена свечей, шин, масла</span>
+                            <span class="mk-garage-summary__value">{{count($reminders)}}</span>
+                            <span class="mk-garage-summary__meta">
+                                <? if (count($reminders) > 0) {
+                                    echo $reminders->first()->name . ' и др.';
+                                } ?>
+                            </span>
                         </div>
                     </div>
-                    <div class="mk-garage-summary__card js-summary-card mk-wip" data-summary="costs"
+                    <div class="mk-garage-summary__card js-summary-card" data-summary="costs"
                          style="--card-color: var(--mk-c-fuel); --card-bg: var(--mk-c-fuel-soft);">
                         <div class="mk-garage-summary__icon">
                             <svg viewBox="0 0 24 24">
@@ -82,8 +86,8 @@
                         </div>
                         <div class="mk-garage-summary__content">
                             <span class="mk-garage-summary__label">Расходы за месяц</span>
-                            <span class="mk-garage-summary__value">42 000 ₽</span>
-                            <span class="mk-garage-summary__meta">+8% к прошлому месяцу</span>
+                            <span class="mk-garage-summary__value">{{ number_format($cars->sum(fn ($car) => $car->months_spend), 0, '', ' ') }} ₽</span>
+                            <span class="mk-garage-summary__meta">{{($cars->sum(fn ($car) => $car->diff_percent_spend))}}% к прошлому месяцу</span>
                         </div>
                     </div>
                 </div>
@@ -93,7 +97,7 @@
             <section class="mk-quick-actions">
                 <h2 class="mk-quick-actions__title">Быстрые действия</h2>
                 <div class="mk-quick-actions__grid">
-                    <button class="mk-quick-action mk-wip" data-type="service"
+                    <button class="mk-quick-action" data-type="service"
                             style="--action-color: var(--mk-c-service); --action-bg: var(--mk-c-service-soft);">
                         <svg viewBox="0 0 24 24">
                             <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
@@ -103,7 +107,7 @@
                         </svg>
                         <span>ТО</span>
                     </button>
-                    <button class="mk-quick-action mk-wip" data-type="fuel"
+                    <button class="mk-quick-action" data-type="fuel"
                             style="--action-color: var(--mk-c-fuel); --action-bg: var(--mk-c-fuel-soft);">
                         <svg viewBox="0 0 24 24">
                             <rect x="2" y="6" width="16" height="14" rx="2"/>
@@ -113,7 +117,7 @@
                         </svg>
                         <span>Заправка</span>
                     </button>
-                    <button class="mk-quick-action mk-wip" data-type="repair"
+                    <button class="mk-quick-action" data-type="repair"
                             style="--action-color: var(--mk-c-repair); --action-bg: var(--mk-c-repair-soft);">
                         <svg viewBox="0 0 24 24">
                             <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
@@ -121,16 +125,14 @@
                         </svg>
                         <span>Ремонт</span>
                     </button>
-                    <button class="mk-quick-action mk-wip" data-type="note"
-                            style="--action-color: var(--mk-c-note); --action-bg: var(--mk-c-note-soft);">
+                    <button class="mk-quick-action" data-type="buy"
+                            style="--action-color: var(--mk-c-buy); --action-bg: var(--mk-c-buy-soft);">
                         <svg viewBox="0 0 24 24">
-                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
-                            <polyline points="14 2 14 8 20 8"/>
-                            <line x1="16" y1="13" x2="8" y2="13"/>
-                            <line x1="16" y1="17" x2="8" y2="17"/>
-                            <polyline points="10 9 9 9 8 9"/>
+                            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/>
+                            <path d="M3 6h18"/>
+                            <path d="M16 10a4 4 0 0 1-8 0"/>
                         </svg>
-                        <span>Заметка</span>
+                        <span>Покупка</span>
                     </button>
                 </div>
             </section>
@@ -159,13 +161,13 @@
                             <span class="mk-odo__track" aria-hidden="true"></span>
                         </div>
                         <div class="mk-garage-card__stats">
-                            <div class="mk-wip">
+                            <div>
                                 <span class="mk-garage-card__stat-label">Расходы за год</span>
-                                <span class="mk-garage-card__stat-value">214 600 ₽</span>
+                                <span class="mk-garage-card__stat-value">{{ $car->year_spend_formatted }} ₽</span>
                             </div>
-                            <div class="mk-wip">
+                            <div>
                                 <span class="mk-garage-card__stat-label">Записей</span>
-                                <span class="mk-garage-card__stat-value">12</span>
+                                <span class="mk-garage-card__stat-value">{{ count($car->history)}}</span>
                             </div>
                             <div class="mk-wip">
                                 <span class="mk-garage-card__stat-label">До ТО</span>
@@ -188,50 +190,25 @@
             </div>
 
             <!-- Блок "История и напоминания" -->
-            <section class="mk-garage-extra mk-wip">
+            <section class="mk-garage-extra">
                 <div class="mk-garage-extra__grid">
                     <!-- Колонка: История -->
                     <div class="mk-garage-extra__col">
                         <div class="mk-section-head">
                             <h2>Последние действия</h2>
-                            <span class="count">6</span>
+                            <span class="count">{{count($history)}}</span>
                             <div class="spacer"></div>
                             <a href="#" class="mk-btn mk-btn--ghost mk-btn--sm js-show-all"
                                data-target="activity">Все</a>
                         </div>
                         <div class="mk-activity-list" id="activity-list">
-                            <div class="mk-activity-item mk-activity-item--add">
-                                <span class="mk-activity-item__time">Сегодня, 14:23</span>
-                                <span class="mk-activity-item__badge">Добавление</span>
-                                <span class="mk-activity-item__text">Запись «ТО» для <strong>BMW 320i</strong></span>
-                            </div>
-                            <div class="mk-activity-item mk-activity-item--edit">
-                                <span class="mk-activity-item__time">Сегодня, 11:05</span>
-                                <span class="mk-activity-item__badge">Изменение</span>
-                                <span class="mk-activity-item__text">Пробег у <strong>Toyota Camry</strong> → 42 150 км</span>
-                            </div>
-                            <div class="mk-activity-item mk-activity-item--delete">
-                                <span class="mk-activity-item__time">Вчера, 18:40</span>
-                                <span class="mk-activity-item__badge">Удаление</span>
-                                <span
-                                    class="mk-activity-item__text">Запись о заправке для <strong>Lada Vesta</strong></span>
-                            </div>
-                            <div class="mk-activity-item mk-activity-item--add">
-                                <span class="mk-activity-item__time">Вчера, 09:12</span>
-                                <span class="mk-activity-item__badge">Добавление</span>
-                                <span
-                                    class="mk-activity-item__text">Запись «Ремонт» для <strong>BMW 320i</strong></span>
-                            </div>
-                            <div class="mk-activity-item mk-activity-item--add">
-                                <span class="mk-activity-item__time">20.06.2026, 16:03</span>
-                                <span class="mk-activity-item__badge">Добавление</span>
-                                <span class="mk-activity-item__text">Запись «Заправка» для <strong>Toyota Camry</strong></span>
-                            </div>
-                            <div class="mk-activity-item mk-activity-item--edit">
-                                <span class="mk-activity-item__time">19.06.2026, 10:30</span>
-                                <span class="mk-activity-item__badge">Изменение</span>
-                                <span class="mk-activity-item__text">Дата ТО для <strong>Lada Vesta</strong></span>
-                            </div>
+                            @foreach($history as $item)
+                                <div class="mk-activity-item mk-activity-item--{{$item['action']}}">
+                                    <span class="mk-activity-item__time">{{ $item['time_label'] }}</span>
+                                    <span class="mk-activity-item__badge">{{$item['action_text']}}</span>
+                                    <span class="mk-activity-item__text">{!! $item['description'] !!}</span>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
 
@@ -245,36 +222,27 @@
                                data-target="reminders">Все</a>
                         </div>
                         <div class="mk-reminder-list" id="reminder-list">
-                            <div class="mk-reminder-item mk-reminder-item--urgent" data-id="1">
-                                <div class="mk-reminder-item__info">
-                                    <span class="mk-reminder-item__title">Замена масла</span>
-                                    <span class="mk-reminder-item__meta">BMW 320i · до 15.07.2026</span>
+                            @foreach($reminders as $reminder)
+                                <div class="mk-reminder-item @if($reminder->status_class) mk-reminder-item--{{ $reminder->status_class }} @endif" data-id="{{$reminder->id}}">
+                                    <div class="mk-reminder-item__info">
+                                        <span class="mk-reminder-item__title">{{$reminder->name}}</span>
+                                        <span class="mk-reminder-item__meta">{{$reminder->car->brand->name}} {{$reminder->car->model->name}} · до {{ $reminder->date_of_exec->format('d.m.Y') }}</span>
+                                    </div>
+                                    <div class="mk-reminder-item__actions">
+                                        <button class="mk-reminder-item__done" title="Отметить выполненным">
+                                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M20 6 9 17l-5-5"/>
+                                            </svg>
+                                        </button>
+                                        <button class="mk-reminder-item__postpone" title="Перенести">
+                                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                                <polygon points="5 4 15 12 5 20 5 4"/>
+                                                <line x1="19" y1="5" x2="19" y2="19"/>
+                                            </svg>
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="mk-reminder-item__actions">
-                                    <button class="mk-reminder-item__done" title="Отметить выполненным">✅</button>
-                                    <button class="mk-reminder-item__postpone" title="Перенести на +1 день">⏩</button>
-                                </div>
-                            </div>
-                            <div class="mk-reminder-item" data-id="2">
-                                <div class="mk-reminder-item__info">
-                                    <span class="mk-reminder-item__title">Проверить свечи</span>
-                                    <span class="mk-reminder-item__meta">Toyota Camry · до 01.08.2026</span>
-                                </div>
-                                <div class="mk-reminder-item__actions">
-                                    <button class="mk-reminder-item__done" title="Отметить выполненным">✅</button>
-                                    <button class="mk-reminder-item__postpone" title="Перенести на +1 день">⏩</button>
-                                </div>
-                            </div>
-                            <div class="mk-reminder-item mk-reminder-item--overdue" data-id="3">
-                                <div class="mk-reminder-item__info">
-                                    <span class="mk-reminder-item__title">Замена шин</span>
-                                    <span class="mk-reminder-item__meta">Lada Vesta · до 20.08.2026</span>
-                                </div>
-                                <div class="mk-reminder-item__actions">
-                                    <button class="mk-reminder-item__done" title="Отметить выполненным">✅</button>
-                                    <button class="mk-reminder-item__postpone" title="Перенести на +1 день">⏩</button>
-                                </div>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -473,6 +441,67 @@
             <div id="popup-content-default" style="display:block;">
                 <p>Информация</p>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- ======== МОДАЛКА: НОВАЯ ЗАПИСЬ (быстрые действия) ======== -->
+<div class="mk-overlay" id="quick-record-overlay">
+    <div class="mk-modal">
+        <div class="mk-modal__head">
+            <h3 class="mk-modal__title" id="quick-record-title">Новая запись</h3>
+            <button class="mk-modal__close" type="button" id="quick-record-close">&times;</button>
+        </div>
+        <div class="mk-modal__body">
+            <form id="quick-record-form">
+                <input type="hidden" name="type" id="quickRecordType" value="service">
+                <div class="mk-form-group">
+                    <label class="mk-form-label" for="quickRecordCar">Автомобиль <span class="mk-form-required">*</span></label>
+                    <select class="mk-select" name="car_id" id="quickRecordCar" required>
+                        @foreach($cars as $car)
+                            <option value="{{ $car->id }}" data-mileage="{{ $car->mileage }}" @if($loop->first) selected @endif>
+                                {{ $car->brand->name }} {{ $car->model->name }} · {{ $car->plate_number }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="mk-form-group">
+                    <label class="mk-form-label" for="quickRecordName">Название <span class="mk-form-required">*</span></label>
+                    <input class="mk-input" type="text" name="name" id="quickRecordName" placeholder="Например: Замена масла" required>
+                </div>
+                <div class="mk-form-row">
+                    <div class="mk-form-group">
+                        <label class="mk-form-label" for="quickRecordDate">Дата <span class="mk-form-required">*</span></label>
+                        <input class="mk-input" type="date" name="date" id="quickRecordDate" required>
+                    </div>
+                    <div class="mk-form-group" data-record-field="odometer">
+                        <label class="mk-form-label" for="quickRecordMileage">Пробег, км</label>
+                        <input class="mk-input mk-input--right" type="text" inputmode="numeric" name="mileage" id="quickRecordMileage" placeholder="86 420">
+                    </div>
+                </div>
+                <div class="mk-form-row">
+                    <div class="mk-form-group" data-record-field="cost">
+                        <label class="mk-form-label" for="quickRecordPrice">Сумма, ₽</label>
+                        <input class="mk-input mk-input--right" type="text" inputmode="numeric" name="price" id="quickRecordPrice" placeholder="0">
+                    </div>
+                    <div class="mk-form-group" data-record-field="place">
+                        <label class="mk-form-label" for="quickRecordPlace" id="quickRecordPlaceLabel">Автосервис</label>
+                        <input class="mk-input" type="text" name="place" id="quickRecordPlace" placeholder="Название СТО">
+                    </div>
+                </div>
+                <div class="mk-form-group" data-record-field="volume">
+                    <label class="mk-form-label" for="quickRecordVolume">Объём, л</label>
+                    <input class="mk-input mk-input--right" type="text" inputmode="numeric" name="volume" id="quickRecordVolume" placeholder="45">
+                </div>
+                <div class="mk-form-group">
+                    <label class="mk-form-label" for="quickRecordComment">Комментарий</label>
+                    <textarea class="mk-textarea" name="comment" id="quickRecordComment" rows="3" placeholder="Дополнительные детали…"></textarea>
+                </div>
+                <div class="mk-modal__footer">
+                    <button type="button" class="mk-btn mk-btn--ghost" id="quick-record-cancel">Отмена</button>
+                    <button type="submit" class="mk-btn mk-btn--primary">Сохранить</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

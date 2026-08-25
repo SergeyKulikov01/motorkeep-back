@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,5 +24,8 @@ class AppServiceProvider extends ServiceProvider
         if (config('app.env') === 'production') {
             URL::forceScheme('https');
         }
+        Facades\View::composer('layouts.private.sidebar', function ($view) {
+            $view->with('sidebarCars',auth()->user()->cars()->with(['brand','model'])->get());
+        });
     }
 }

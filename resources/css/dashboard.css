@@ -740,12 +740,12 @@ body.nav-open .mk-scrim { display: block; }
     border-left-color: var(--mk-success);
 }
 .mk-reminder-item--urgent {
-    border-left-color: var(--mk-danger);
-    background: #FFF5F5;
-}
-.mk-reminder-item--overdue {
     border-left-color: var(--mk-warning);
     background: #FFFBF0;
+}
+.mk-reminder-item--overdue {
+    border-left-color: var(--mk-danger);
+    background: #FFF5F5;
 }
 .mk-reminder-item__info {
     display: flex;
@@ -769,14 +769,20 @@ body.nav-open .mk-scrim { display: block; }
 }
 .mk-reminder-item__done,
 .mk-reminder-item__postpone {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background: none;
     border: none;
-    font-size: 18px;
     cursor: pointer;
-    padding: 4px 8px;
+    padding: 6px;
     border-radius: var(--mk-r-sm);
-    transition: background var(--mk-transition), transform var(--mk-transition);
+    color: var(--mk-ink-3);
+    transition: background var(--mk-transition), color var(--mk-transition), transform var(--mk-transition);
     line-height: 1;
+}
+.mk-reminder-item__done {
+    color: var(--mk-success);
 }
 .mk-reminder-item__done:hover {
     background: #E4F8EE;
@@ -784,6 +790,7 @@ body.nav-open .mk-scrim { display: block; }
 }
 .mk-reminder-item__postpone:hover {
     background: #FEF2E0;
+    color: var(--mk-warning);
     transform: scale(1.1);
 }
 
@@ -915,11 +922,11 @@ body.nav-open .mk-scrim { display: block; }
     transform: translateY(-2px);
 }
 .mk-reminder-card--urgent {
-    border-left: 4px solid var(--mk-danger);
+    border-left: 4px solid var(--mk-warning);
 }
 .mk-reminder-card--overdue {
-    border-left: 4px solid var(--mk-warning);
-    background: #FFFBF0;
+    border-left: 4px solid var(--mk-danger);
+    background: #FFF5F5;
 }
 .mk-reminder-card__header {
     display: flex;
