@@ -1,0 +1,126 @@
+/* ============================================================
+   garage.css — стили для страницы «Мой гараж» (список автомобилей)
+   ============================================================ */
+
+/* ---------- Карточка автомобиля ---------- */
+.mk-car-card {
+    display: block;
+    background: var(--mk-surface);
+    border-radius: var(--mk-r-lg);
+    box-shadow: var(--mk-shadow-sm);
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    transition: box-shadow var(--mk-transition), transform var(--mk-transition);
+}
+.mk-car-card:hover {
+    box-shadow: var(--mk-shadow-md);
+    transform: translateY(-3px);
+}
+.mk-car-card__media {
+    position: relative;
+    height: 160px;
+    background: linear-gradient(135deg, var(--mk-primary-soft), #DCE8F8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.mk-car-card__media svg {
+    width: 80%;
+    height: 80%;
+    opacity: 0.6;
+}
+.mk-car-card__plate {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    padding: 4px 16px;
+    border-radius: var(--mk-r-pill);
+    font-family: var(--mk-font-mono);
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: var(--mk-shadow-sm);
+}
+.mk-car-card__body {
+    padding: 16px 20px 20px;
+}
+.mk-car-card__name {
+    font-family: var(--mk-font-display);
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+.mk-car-card__model {
+    font-size: 14px;
+    color: var(--mk-ink-2);
+    margin-bottom: 12px;
+}
+.mk-car-card__odo {
+    margin-bottom: 12px;
+}
+.mk-car-card__stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--mk-border);
+}
+.mk-car-card__stat {
+    text-align: center;
+}
+.mk-car-card__stat-value {
+    font-family: var(--mk-font-display);
+    font-size: 18px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+.mk-car-card__stat-label {
+    font-size: 11px;
+    color: var(--mk-ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* ---------- Одометр (компактный) ---------- */
+.mk-odo-small {
+    margin: 4px 0;
+}
+.mk-odo-small__label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--mk-ink-3);
+}
+.mk-odo-small__value {
+    font-family: var(--mk-font-display);
+    font-size: 22px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+.mk-odo-small__unit {
+    font-size: 14px;
+    color: var(--mk-ink-3);
+    margin-left: 4px;
+}
+.mk-odo-small__track {
+    display: block;
+    height: 4px;
+    width: 100%;
+    margin-top: 4px;
+    border-radius: 3px;
+    background: repeating-linear-gradient(90deg, var(--mk-primary) 0px, var(--mk-primary) 6px, var(--mk-border) 6px, var(--mk-border) 9px);
+    background-size: 9px 100%;
+}
+
+/* ---------- Адаптив ---------- */
+@media (max-width: 900px) {
+    .mk-shell { margin-left: 0; }
+    body.is-collapsed .mk-shell { margin-left: 0; }
+}
+
+@media (max-width: 768px) {
+    .mk-car-card__stats { grid-template-columns: 1fr 1fr; }
+}

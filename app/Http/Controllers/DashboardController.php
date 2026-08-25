@@ -44,4 +44,13 @@ class DashboardController extends Controller
 
         return view('pages.dashboard.index', $data);
     }
+
+    public function carsList()
+    {
+        $cars = Cars::with(['brand', 'model', 'history'])->where('user_id', auth()->id())->get();
+        $data = [
+            'cars' => $cars,
+        ];
+        return view('pages.dashboard.cars.page', $data);
+    }
 }

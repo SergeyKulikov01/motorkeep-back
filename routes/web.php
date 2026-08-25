@@ -43,6 +43,7 @@ Route::get('/contacts/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/cars', [DashboardController::class, 'carsList'])->name('dashboard.cars');
     Route::get('/dashboard/add', [NewCarController::class, 'index'])->name('dashboard.add');
     Route::get('/dashboard/detail/{id}', [DetailCarController::class, 'index'])->whereNumber('id')->name('dashboard.cardetail');
 });
