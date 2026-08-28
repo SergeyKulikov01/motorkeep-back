@@ -4,6 +4,13 @@ import './add.js';
 import './detail.js';
 import './forgot-pass.js';
 import './pass-reset.js';
+import './stats.js';
+
+// ---------- ФОРМАТИРОВАНИЕ ЧИСЕЛ ----------
+// Общий формат для сумм и пробега (разряды через пробел, ru-RU).
+export function formatNumber(num) {
+    return new Intl.NumberFormat('ru-RU').format(num);
+}
 
 // ---------- ТОСТЫ ----------
 // Единственная реализация на всё приложение — остальные файлы

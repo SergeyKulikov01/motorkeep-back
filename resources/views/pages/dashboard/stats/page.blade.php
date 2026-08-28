@@ -9,75 +9,171 @@
 <!-- ====== ОБОЛОЧКА ====== -->
 <div class="mk-shell" id="mkShell">
     <!-- ХЕДЕР (без изменений) -->
-    @include('layouts.private.header', ['pageTitle' => 'Мой гараж', 'pageCrumb' => 'Все автомобили'])
+    @include('layouts.private.header', ['pageTitle' => 'Мой гараж', 'pageCrumb' => 'Статистика'])
     <!-- ОСНОВНОЙ КОНТЕНТ -->
-    <main class="mk-main" id="mkMain">
+    <main class="mk-main" role="main">
         <div class="mk-container">
-            <!-- Заголовок секции -->
+
+            <!-- Заголовок страницы: без него секции начинались сразу под хедером,
+                 без якоря — рядом с полным сайдбаром это смотрелось так, будто
+                 контент "слипся" с ним. -->
             <div class="mk-section-head">
                 <div>
-                    <h2>Все автомобили</h2>
-                    <span class="count">{{ $cars->count() }} машины</span>
+                    <h2>Статистика</h2>
+                    <span class="count">Расходы и пробег по всему автопарку</span>
                 </div>
-                <a href="{{ route('dashboard.add') }}" class="mk-btn mk-btn--primary" id="add-car-btn">
-                    <i class="bi bi-plus-lg"></i> Добавить авто
-                </a>
             </div>
 
-            <!-- Сетка карточек -->
-            <div class="mk-garage-grid">
-                @foreach ($cars as $car)
-                    <a href="{{ route('dashboard.cardetail', ['id' => $car->id]) }}" class="mk-car-card">
-                        <div class="mk-car-card__media">
-                            <svg viewBox="0 0 400 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <rect width="400" height="160" rx="12" fill="url(#carGrad-{{ $car->id }})" />
-                                <g transform="translate(40, 10)">
-                                    <path d="M240 100 L220 100 L210 80 L190 80 L180 100 L160 100 L150 120 L290 120 L280 100 L270 100 L240 100Z" fill="#2F6BFF" opacity="0.2" />
-                                    <path d="M165 120 L275 120 L270 140 L170 140 L165 120Z" fill="#2F6BFF" opacity="0.12" />
-                                    <circle cx="195" cy="150" r="18" fill="none" stroke="#2F6BFF" stroke-width="3" opacity="0.3" />
-                                    <circle cx="245" cy="150" r="18" fill="none" stroke="#2F6BFF" stroke-width="3" opacity="0.3" />
-                                    <rect x="145" y="88" width="14" height="5" rx="2.5" fill="#2F6BFF" opacity="0.4" />
-                                    <rect x="277" y="88" width="14" height="5" rx="2.5" fill="#2F6BFF" opacity="0.4" />
-                                </g>
-                                <defs>
-                                    <linearGradient id="carGrad-{{ $car->id }}" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stop-color="#EAF1FF" />
-                                        <stop offset="100%" stop-color="#DCE8F8" />
-                                    </linearGradient>
-                                </defs>
-                            </svg>
-                            <span class="mk-car-card__plate">{{ $car->plate }}</span>
-                        </div>
-                        <div class="mk-car-card__body">
-                            <h3 class="mk-car-card__name">{{ $car->brand->name }}</h3>
-                            <div class="mk-car-card__model">{{ $car->model->name }} · {{ $car->year }}</div>
-
-                            <div class="mk-car-card__odo">
-                                <div class="mk-odo-small">
-                                    <span class="mk-odo-small__label">Пробег</span>
-                                    <span class="mk-odo-small__value">{{ $car->mileage_formatted }} <span class="mk-odo-small__unit">км</span></span>
-                                    <span class="mk-odo-small__track" aria-hidden="true"></span>
-                                </div>
-                            </div>
-
-                            <div class="mk-car-card__stats">
-                                <div class="mk-car-card__stat">
-                                    <div class="mk-car-card__stat-value">{{ count($car->history)}}</div>
-                                    <div class="mk-car-card__stat-label">записей</div>
-                                </div>
-                                <div class="mk-car-card__stat">
-                                    <div class="mk-car-card__stat-value">{{ $car->year_spend_formatted }} ₽</div>
-                                    <div class="mk-car-card__stat-label">расходы</div>
-                                </div>
-                                <div class="mk-car-card__stat">
-                                    <div class="mk-car-card__stat-value">{{ $car->next_service_formatted }}</div>
-                                    <div class="mk-car-card__stat-label">до ТО, км</div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                @endforeach
+            <!-- ===== ПЕРИОД ===== -->
+            <div class="mk-period-selector">
+                <button class="mk-period-btn active">За всё время</button>
+                <button class="mk-period-btn">За год</button>
+                <button class="mk-period-btn">За месяц</button>
+                <button class="mk-period-btn">За неделю</button>
             </div>
+
+            <!-- ===== КЛЮЧЕВЫЕ ПОКАЗАТЕЛИ ===== -->
+            <div class="mk-stats-grid" id="key-stats">
+                <div class="mk-stat-card">
+                    <div class="mk-stat-card__icon" style="--ic-color:var(--mk-primary);--ic-bg:var(--mk-primary-soft);">
+                        <i class="bi bi-wallet2"></i>
+                    </div>
+                    <div class="mk-stat-card__content">
+                        <span class="mk-stat-card__label">Общие расходы</span>
+                        <span class="mk-stat-card__value" id="total-cost">257 700 ₽</span>
+                        <span class="mk-stat-card__change up">+12.4%</span>
+                    </div>
+                </div>
+
+                <div class="mk-stat-card">
+                    <div class="mk-stat-card__icon" style="--ic-color:var(--mk-c-fuel);--ic-bg:var(--mk-c-fuel-soft);">
+                        <i class="bi bi-fuel-pump"></i>
+                    </div>
+                    <div class="mk-stat-card__content">
+                        <span class="mk-stat-card__label">Расходы на топливо</span>
+                        <span class="mk-stat-card__value">89 400 ₽</span>
+                        <span class="mk-stat-card__change ok">−2.1%</span>
+                    </div>
+                </div>
+
+                <div class="mk-stat-card">
+                    <div class="mk-stat-card__icon" style="--ic-color:var(--mk-c-service);--ic-bg:var(--mk-c-service-soft);">
+                        <i class="bi bi-tools"></i>
+                    </div>
+                    <div class="mk-stat-card__content">
+                        <span class="mk-stat-card__label">ТО и ремонты</span>
+                        <span class="mk-stat-card__value">112 300 ₽</span>
+                        <span class="mk-stat-card__change up">+5.8%</span>
+                    </div>
+                </div>
+
+                <div class="mk-stat-card">
+                    <div class="mk-stat-card__icon" style="--ic-color:var(--mk-c-buy);--ic-bg:var(--mk-c-buy-soft);">
+                        <i class="bi bi-bag"></i>
+                    </div>
+                    <div class="mk-stat-card__content">
+                        <span class="mk-stat-card__label">Покупки</span>
+                        <span class="mk-stat-card__value">56 000 ₽</span>
+                        <span class="mk-stat-card__change ok">0.0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ГРАФИКИ (2 колонки) ===== -->
+            <div class="mk-charts-row">
+                <!-- График расходов по месяцам -->
+                <div class="mk-chart-card">
+                    <div class="mk-chart-card__header">
+                        <h3>Расходы по месяцам</h3>
+                        <span class="mk-chart-card__sub">₽</span>
+                    </div>
+                    <div class="mk-chart" id="cost-chart">
+                        <!-- Бар-чарт будет построен JS -->
+                    </div>
+                </div>
+
+                <!-- График пробега по месяцам -->
+                <div class="mk-chart-card">
+                    <div class="mk-chart-card__header">
+                        <h3>Пробег по месяцам</h3>
+                        <span class="mk-chart-card__sub">км</span>
+                    </div>
+                    <div class="mk-chart" id="mileage-chart">
+                        <!-- Бар-чарт будет построен JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== РАСПРЕДЕЛЕНИЕ РАСХОДОВ ===== -->
+            <div class="mk-charts-row">
+                <div class="mk-chart-card">
+                    <div class="mk-chart-card__header">
+                        <h3>Распределение расходов по типам</h3>
+                    </div>
+                    <div class="mk-donut" id="donut-chart">
+                        <!-- Donut будет построен JS -->
+                    </div>
+                    <div class="mk-donut-legend" id="donut-legend">
+                        <!-- Легенда будет построена JS -->
+                    </div>
+                </div>
+
+                <!-- Топ-5 самых дорогих записей -->
+                <div class="mk-chart-card">
+                    <div class="mk-chart-card__header">
+                        <h3>Самые дорогие записи</h3>
+                        <span class="mk-chart-card__sub">₽</span>
+                    </div>
+                    <div class="mk-top-list" id="top-records">
+                        <!-- Список будет построен JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== СТАТИСТИКА ПО АВТОМОБИЛЯМ ===== -->
+            <div class="mk-section-head" style="margin-top:32px;">
+                <div>
+                    <h2>Статистика по автомобилям</h2>
+                    <span class="count">Детальная аналитика</span>
+                </div>
+            </div>
+
+            <div class="mk-car-stats" id="car-stats">
+                <!-- Карточки статистики по авто будут построены JS -->
+            </div>
+
+            <!-- ===== ДОПОЛНИТЕЛЬНАЯ ИНФОРМАЦИЯ ===== -->
+            <div class="mk-extra-stats">
+                <div class="mk-extra-card">
+                    <div class="mk-extra-card__icon"><i class="bi bi-calendar-event"></i></div>
+                    <div>
+                        <span class="mk-extra-card__label">Средний расход на 100 км</span>
+                        <span class="mk-extra-card__value">8.4 л</span>
+                    </div>
+                </div>
+                <div class="mk-extra-card">
+                    <div class="mk-extra-card__icon"><i class="bi bi-clock-history"></i></div>
+                    <div>
+                        <span class="mk-extra-card__label">Средний пробег в месяц</span>
+                        <span class="mk-extra-card__value">1 240 км</span>
+                    </div>
+                </div>
+                <div class="mk-extra-card">
+                    <div class="mk-extra-card__icon"><i class="bi bi-piggy-bank"></i></div>
+                    <div>
+                        <span class="mk-extra-card__label">Средние расходы в месяц</span>
+                        <span class="mk-extra-card__value">14 300 ₽</span>
+                    </div>
+                </div>
+                <div class="mk-extra-card">
+                    <div class="mk-extra-card__icon"><i class="bi bi-clock"></i></div>
+                    <div>
+                        <span class="mk-extra-card__label">Следующее ТО через</span>
+                        <span class="mk-extra-card__value">2 400 км</span>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </main>
 

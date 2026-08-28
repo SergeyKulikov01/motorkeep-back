@@ -53,4 +53,9 @@ class DashboardController extends Controller
         ];
         return view('pages.dashboard.cars.page', $data);
     }
+
+    public function statistic()
+    {
+        return view('pages.dashboard.stats.page');
+    }
 }

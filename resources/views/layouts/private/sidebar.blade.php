@@ -23,7 +23,7 @@
             </svg>
             <span class="lbl">Все автомобили</span>
         </a>
-        <a href="#" class="mk-navitem" data-tip="Статистика" data-section="stats">
+        <a href="{{ route('dashboard.stats')  }}" class="mk-navitem <?= (request()->routeIs('dashboard.stats'))? 'mk-navitem--active' : '' ?>" data-tip="Статистика" data-section="stats">
             <svg viewBox="0 0 24 24">
                 <line x1="18" y1="20" x2="18" y2="10"/>
                 <line x1="12" y1="20" x2="12" y2="4"/>
