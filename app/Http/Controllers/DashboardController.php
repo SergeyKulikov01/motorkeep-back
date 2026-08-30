@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Models\Cars;
 use App\Models\Reminders;
 use App\Models\TotalHistory;
+use App\Models\CarHistory;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
@@ -56,6 +57,18 @@ class DashboardController extends Controller
 
     public function statistic()
     {
-        return view('pages.dashboard.stats.page');
+        $cars = Cars::with(['brand', 'model', 'history'])->where('user_id', auth()->id())->get();
+        $histories = CarHistory::where('user_id', auth()->id())->get();
+        foreach ($histories as $item) {
+            $month = (int) Carbon::parse($item['created_at'])->format('n');
+            $history[$month] = ($history[$month] ?? 0) + $item->price;
+        }
+        $averageSpend = array_sum($history) / count($history);
+        $data = [
+            'cars' => $cars,
+            'history' => $history,
+            'averageSpend' => $averageSpend,
+        ];
+        return view('pages.dashboard.stats.page',$data);
     }
 }

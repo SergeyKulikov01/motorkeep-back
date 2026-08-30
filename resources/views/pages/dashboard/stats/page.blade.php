@@ -88,7 +88,54 @@
                         <span class="mk-chart-card__sub">₽</span>
                     </div>
                     <div class="mk-chart" id="cost-chart">
-                        <!-- Бар-чарт будет построен JS -->
+                        <div class="mk-bar" style="height:55.47%;background:var(--mk-c-service)">
+                            <span class="mk-bar__value">18 500 ₽</span>
+                            <span class="mk-bar__label">Янв</span>
+                        </div>
+                        <div class="mk-bar" style="height:57.55%;background:var(--mk-c-service)">
+                            <span class="mk-bar__value">19 200 ₽</span>
+                            <span class="mk-bar__label">Фев</span>
+                        </div>
+                        <div class="mk-bar" style="height:53.36%;background:var(--mk-c-service)">
+                            <span class="mk-bar__value">17 800 ₽</span>
+                            <span class="mk-bar__label">Мар</span>
+                        </div>
+                        <div class="mk-bar" style="height:64.45%;background:var(--mk-c-service)">
+                            <span class="mk-bar__value">21 500 ₽</span>
+                            <span class="mk-bar__label">Апр</span>
+                        </div>
+                        <div class="mk-bar" style="height:70.14%;background:var(--mk-c-service)">
+                            <span class="mk-bar__value">23 400 ₽</span>
+                            <span class="mk-bar__label">Май</span>
+                        </div>
+                        <div class="mk-bar" style="height:76.74%;background:var(--mk-c-service)">
+                            <span class="mk-bar__value">25 600 ₽</span>
+                            <span class="mk-bar__label">Июн</span>
+                        </div>
+                        <div class="mk-bar" style="height:83.33%;background:var(--mk-c-service)">
+                            <span class="mk-bar__value">27 800 ₽</span>
+                            <span class="mk-bar__label">Июл</span>
+                        </div>
+                        <div class="mk-bar" style="height:75.54%;background:var(--mk-c-service)">
+                            <span class="mk-bar__value">25 200 ₽</span>
+                            <span class="mk-bar__label">Авг</span>
+                        </div>
+                        <div class="mk-bar" style="height:69.24%;background:var(--mk-c-service)">
+                            <span class="mk-bar__value">23 100 ₽</span>
+                            <span class="mk-bar__label">Сен</span>
+                        </div>
+                        <div class="mk-bar" style="height:59.35%;background:var(--mk-c-service)">
+                            <span class="mk-bar__value">19 800 ₽</span>
+                            <span class="mk-bar__label">Окт</span>
+                        </div>
+                        <div class="mk-bar" style="height:52.76%;background:var(--mk-c-service)">
+                            <span class="mk-bar__value">17 600 ₽</span>
+                            <span class="mk-bar__label">Ноя</span>
+                        </div>
+                        <div class="mk-bar" style="height:42.87%;background:var(--mk-c-service)">
+                            <span class="mk-bar__value">14 300 ₽</span>
+                            <span class="mk-bar__label">Дек</span>
+                        </div>
                     </div>
                 </div>
 
@@ -99,7 +146,54 @@
                         <span class="mk-chart-card__sub">км</span>
                     </div>
                     <div class="mk-chart" id="mileage-chart">
-                        <!-- Бар-чарт будет построен JS -->
+                        <div class="mk-bar" style="height:47.48%;background:var(--mk-c-fuel)">
+                            <span class="mk-bar__value">980 км</span>
+                            <span class="mk-bar__label">Янв</span>
+                        </div>
+                        <div class="mk-bar" style="height:53.29%;background:var(--mk-c-fuel)">
+                            <span class="mk-bar__value">1 100 км</span>
+                            <span class="mk-bar__label">Фев</span>
+                        </div>
+                        <div class="mk-bar" style="height:58.14%;background:var(--mk-c-fuel)">
+                            <span class="mk-bar__value">1 200 км</span>
+                            <span class="mk-bar__label">Мар</span>
+                        </div>
+                        <div class="mk-bar" style="height:65.41%;background:var(--mk-c-fuel)">
+                            <span class="mk-bar__value">1 350 км</span>
+                            <span class="mk-bar__label">Апр</span>
+                        </div>
+                        <div class="mk-bar" style="height:68.80%;background:var(--mk-c-fuel)">
+                            <span class="mk-bar__value">1 420 км</span>
+                            <span class="mk-bar__label">Май</span>
+                        </div>
+                        <div class="mk-bar" style="height:76.55%;background:var(--mk-c-fuel)">
+                            <span class="mk-bar__value">1 580 км</span>
+                            <span class="mk-bar__label">Июн</span>
+                        </div>
+                        <div class="mk-bar" style="height:83.33%;background:var(--mk-c-fuel)">
+                            <span class="mk-bar__value">1 720 км</span>
+                            <span class="mk-bar__label">Июл</span>
+                        </div>
+                        <div class="mk-bar" style="height:79.94%;background:var(--mk-c-fuel)">
+                            <span class="mk-bar__value">1 650 км</span>
+                            <span class="mk-bar__label">Авг</span>
+                        </div>
+                        <div class="mk-bar" style="height:71.69%;background:var(--mk-c-fuel)">
+                            <span class="mk-bar__value">1 480 км</span>
+                            <span class="mk-bar__label">Сен</span>
+                        </div>
+                        <div class="mk-bar" style="height:62.98%;background:var(--mk-c-fuel)">
+                            <span class="mk-bar__value">1 300 км</span>
+                            <span class="mk-bar__label">Окт</span>
+                        </div>
+                        <div class="mk-bar" style="height:55.72%;background:var(--mk-c-fuel)">
+                            <span class="mk-bar__value">1 150 км</span>
+                            <span class="mk-bar__label">Ноя</span>
+                        </div>
+                        <div class="mk-bar" style="height:41.67%;background:var(--mk-c-fuel)">
+                            <span class="mk-bar__value">860 км</span>
+                            <span class="mk-bar__label">Дек</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -111,10 +205,46 @@
                         <h3>Распределение расходов по типам</h3>
                     </div>
                     <div class="mk-donut" id="donut-chart">
-                        <!-- Donut будет построен JS -->
+                        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="100" cy="100" r="70" fill="none" stroke="#F1F5FB" stroke-width="28" />
+                            <circle cx="100" cy="100" r="70" fill="none" stroke="var(--mk-c-service)" stroke-width="28"
+                                    stroke-dasharray="153.94 439.82" stroke-dashoffset="0"
+                                    transform="rotate(0 100 100)" />
+                            <circle cx="100" cy="100" r="70" fill="none" stroke="var(--mk-c-repair)" stroke-width="28"
+                                    stroke-dasharray="109.96 439.82" stroke-dashoffset="0"
+                                    transform="rotate(126 100 100)" />
+                            <circle cx="100" cy="100" r="70" fill="none" stroke="var(--mk-c-fuel)" stroke-width="28"
+                                    stroke-dasharray="96.76 439.82" stroke-dashoffset="0"
+                                    transform="rotate(216 100 100)" />
+                            <circle cx="100" cy="100" r="70" fill="none" stroke="var(--mk-c-buy)" stroke-width="28"
+                                    stroke-dasharray="52.78 439.82" stroke-dashoffset="0"
+                                    transform="rotate(295.2 100 100)" />
+                            <circle cx="100" cy="100" r="70" fill="none" stroke="var(--mk-c-note)" stroke-width="28"
+                                    stroke-dasharray="26.39 439.82" stroke-dashoffset="0"
+                                    transform="rotate(338.4 100 100)" />
+                        </svg>
                     </div>
                     <div class="mk-donut-legend" id="donut-legend">
-                        <!-- Легенда будет построена JS -->
+                        <span class="mk-donut-legend-item">
+                            <span class="dot" style="background:var(--mk-c-service)"></span>
+                            ТО (35%)
+                        </span>
+                        <span class="mk-donut-legend-item">
+                            <span class="dot" style="background:var(--mk-c-repair)"></span>
+                            Ремонты (25%)
+                        </span>
+                        <span class="mk-donut-legend-item">
+                            <span class="dot" style="background:var(--mk-c-fuel)"></span>
+                            Заправки (22%)
+                        </span>
+                        <span class="mk-donut-legend-item">
+                            <span class="dot" style="background:var(--mk-c-buy)"></span>
+                            Покупки (12%)
+                        </span>
+                        <span class="mk-donut-legend-item">
+                            <span class="dot" style="background:var(--mk-c-note)"></span>
+                            Прочее (6%)
+                        </span>
                     </div>
                 </div>
 
@@ -125,7 +255,51 @@
                         <span class="mk-chart-card__sub">₽</span>
                     </div>
                     <div class="mk-top-list" id="top-records">
-                        <!-- Список будет построен JS -->
+                        <div class="mk-top-item">
+                            <div class="mk-top-item__info">
+                                <span class="mk-top-item__tag" style="background:var(--mk-c-repair-soft);color:var(--mk-c-repair)">
+                                    Ремонт
+                                </span>
+                                <span class="mk-top-item__name">Замена двигателя</span>
+                            </div>
+                            <span class="mk-top-item__cost">45 600 ₽</span>
+                        </div>
+                        <div class="mk-top-item">
+                            <div class="mk-top-item__info">
+                                <span class="mk-top-item__tag" style="background:var(--mk-c-service-soft);color:var(--mk-c-service)">
+                                    ТО
+                                </span>
+                                <span class="mk-top-item__name">Комплексное ТО</span>
+                            </div>
+                            <span class="mk-top-item__cost">23 400 ₽</span>
+                        </div>
+                        <div class="mk-top-item">
+                            <div class="mk-top-item__info">
+                                <span class="mk-top-item__tag" style="background:var(--mk-c-buy-soft);color:var(--mk-c-buy)">
+                                    Покупка
+                                </span>
+                                <span class="mk-top-item__name">Шины зимние</span>
+                            </div>
+                            <span class="mk-top-item__cost">18 200 ₽</span>
+                        </div>
+                        <div class="mk-top-item">
+                            <div class="mk-top-item__info">
+                                <span class="mk-top-item__tag" style="background:var(--mk-c-repair-soft);color:var(--mk-c-repair)">
+                                    Ремонт
+                                </span>
+                                <span class="mk-top-item__name">Ремонт КПП</span>
+                            </div>
+                            <span class="mk-top-item__cost">15 600 ₽</span>
+                        </div>
+                        <div class="mk-top-item">
+                            <div class="mk-top-item__info">
+                                <span class="mk-top-item__tag" style="background:var(--mk-c-fuel-soft);color:var(--mk-c-fuel)">
+                                    Заправка
+                                </span>
+                                <span class="mk-top-item__name">Заправка (полный бак)</span>
+                            </div>
+                            <span class="mk-top-item__cost">4 800 ₽</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -137,21 +311,47 @@
                     <span class="count">Детальная аналитика</span>
                 </div>
             </div>
-
             <div class="mk-car-stats" id="car-stats">
-                <!-- Карточки статистики по авто будут построены JS -->
+                @foreach($cars as $car)
+                    <div class="mk-car-stat-card">
+                        <div class="mk-car-stat-card__header">
+                            <span class="mk-car-stat-card__name">{{ $car->brand->name }} {{ $car->model->name }}</span>
+                            <span class="mk-car-stat-card__plate">{{ $car->plate_number . $car->plate_region}}</span>
+                        </div>
+                        <div class="mk-car-stat-card__stats">
+                            <div class="mk-car-stat-card__stat">
+                                <div class="mk-car-stat-card__stat-value">{{$car->mileage_formatted}}</div>
+                                <div class="mk-car-stat-card__stat-label">км</div>
+                            </div>
+                            <div class="mk-car-stat-card__stat">
+                                <div class="mk-car-stat-card__stat-value">{{ number_format($car->totalSpend, 0, ',', ' ') }} ₽</div>
+                                <div class="mk-car-stat-card__stat-label">расходы</div>
+                            </div>
+                            <div class="mk-car-stat-card__stat">
+                                <div class="mk-car-stat-card__stat-value">{{{count($car->history)}}}</div>
+                                <div class="mk-car-stat-card__stat-label">записей</div>
+                            </div>
+                            <div class="mk-car-stat-card__stat mk-wip" style="grid-column: span 3; border-top: 1px solid var(--mk-border); padding-top: 8px;">
+                                <div class="mk-car-stat-card__stat-value" style="font-size:16px;font-weight:500;color:var(--mk-ink-2);">
+                                    8.2 л / 100 км
+                                </div>
+                                <div class="mk-car-stat-card__stat-label">средний расход</div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
 
             <!-- ===== ДОПОЛНИТЕЛЬНАЯ ИНФОРМАЦИЯ ===== -->
             <div class="mk-extra-stats">
-                <div class="mk-extra-card">
+                <div class="mk-extra-card mk-wip">
                     <div class="mk-extra-card__icon"><i class="bi bi-calendar-event"></i></div>
                     <div>
                         <span class="mk-extra-card__label">Средний расход на 100 км</span>
                         <span class="mk-extra-card__value">8.4 л</span>
                     </div>
                 </div>
-                <div class="mk-extra-card">
+                <div class="mk-extra-card mk-wip">
                     <div class="mk-extra-card__icon"><i class="bi bi-clock-history"></i></div>
                     <div>
                         <span class="mk-extra-card__label">Средний пробег в месяц</span>
@@ -162,10 +362,10 @@
                     <div class="mk-extra-card__icon"><i class="bi bi-piggy-bank"></i></div>
                     <div>
                         <span class="mk-extra-card__label">Средние расходы в месяц</span>
-                        <span class="mk-extra-card__value">14 300 ₽</span>
+                        <span class="mk-extra-card__value">{{ number_format($averageSpend, 0, ',', ' ') }} ₽</span>
                     </div>
                 </div>
-                <div class="mk-extra-card">
+                <div class="mk-extra-card mk-wip">
                     <div class="mk-extra-card__icon"><i class="bi bi-clock"></i></div>
                     <div>
                         <span class="mk-extra-card__label">Следующее ТО через</span>
@@ -173,7 +373,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </main>
 

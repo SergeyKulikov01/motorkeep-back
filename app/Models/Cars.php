@@ -68,6 +68,12 @@ class Cars extends Model
                 ->sum('price'),
         );
     }
+    protected function totalSpend(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->history->sum('price'),
+        );
+    }
     protected function monthsSpend(): Attribute
     {
         return Attribute::make(

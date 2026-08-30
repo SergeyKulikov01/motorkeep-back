@@ -8,6 +8,7 @@ use App\Http\Controllers\DetailCarController;
 use App\Http\Controllers\NewCarController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RemindersController;
+use App\Http\Controllers\StatController;
 use App\Http\Controllers\UserNotesController;
 use App\Http\Controllers\CarDocsController;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,7 @@ Route::prefix('api')->middleware(['auth', 'verified'])->group(function () {
     Route::post('/car-docs', [CarDocsController::class, 'addDoc']);
     Route::get('/car-docs', [CarDocsController::class, 'getDoc']);
     Route::delete('/car-docs', [CarDocsController::class, 'deleteDoc']);
+    Route::get('/stats', [StatController::class, 'getStat']);
 });
 
 Route::get('/', function () {

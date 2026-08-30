@@ -6,6 +6,33 @@ import './forgot-pass.js';
 import './pass-reset.js';
 import './stats.js';
 
+// ---------- CSRF / FETCH ----------
+export function getCsrfToken() {
+    const meta = document.querySelector('meta[name="csrf-token"]');
+    return meta ? meta.content : '';
+}
+
+// Единая обёртка над fetch: подставляет CSRF-заголовок, credentials
+// и всегда безопасно разбирает JSON-ответ (даже если тело пустое).
+// Общая для всех страниц — остальные файлы импортируют её из app.js
+// вместо того, чтобы определять свою копию.
+export function fetchJson(url, options = {}) {
+    const { headers, ...rest } = options;
+    return fetch(url, {
+        credentials: 'same-origin',
+        ...rest,
+        headers: {
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': getCsrfToken(),
+            ...headers,
+        },
+    }).then(function (res) {
+        return res.json().catch(function () { return {}; }).then(function (json) {
+            return { ok: res.ok, data: json };
+        });
+    });
+}
+
 // ---------- ФОРМАТИРОВАНИЕ ЧИСЕЛ ----------
 // Общий формат для сумм и пробега (разряды через пробел, ru-RU).
 export function formatNumber(num) {
