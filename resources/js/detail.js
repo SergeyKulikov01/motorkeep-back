@@ -1,3 +1,5 @@
+import { fetchJson } from './app.js';
+
 // =====================================================================
 // КОНСТАНТЫ / СЛОВАРИ
 // =====================================================================
@@ -91,11 +93,6 @@ function formatDate(dateStr) {
     return `${day} ${month} ${year}`;
 }
 
-function getCsrfToken() {
-    const meta = document.querySelector('meta[name="csrf-token"]');
-    return meta ? meta.content : '';
-}
-
 function escapeHtml(value) {
     return String(value ?? '').replace(/[&<>"']/g, ch => ({
         '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
@@ -105,25 +102,6 @@ function escapeHtml(value) {
 function formatThousands(value) {
     const num = Math.round(Number(value) || 0);
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-}
-
-// Единая обёртка над fetch: подставляет CSRF-заголовок, credentials
-// и всегда безопасно разбирает JSON-ответ (даже если тело пустое).
-function fetchJson(url, options = {}) {
-    const { headers, ...rest } = options;
-    return fetch(url, {
-        credentials: 'same-origin',
-        ...rest,
-        headers: {
-            'Accept': 'application/json',
-            'X-CSRF-TOKEN': getCsrfToken(),
-            ...headers,
-        },
-    }).then(function (res) {
-        return res.json().catch(function () { return {}; }).then(function (json) {
-            return { ok: res.ok, data: json };
-        });
-    });
 }
 
 // =====================================================================

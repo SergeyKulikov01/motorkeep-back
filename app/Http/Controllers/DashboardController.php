@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Models\Cars;
 use App\Models\Reminders;
 use App\Models\TotalHistory;
+use App\Models\CarHistory;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
@@ -43,5 +44,36 @@ class DashboardController extends Controller
         ];
 
         return view('pages.dashboard.index', $data);
+    }
+
+    public function carsList()
+    {
+        $cars = Cars::with(['brand', 'model', 'history'])->where('user_id', auth()->id())->get();
+        $data = [
+            'cars' => $cars,
+        ];
+        return view('pages.dashboard.cars.page', $data);
+    }
+
+    public function statistic()
+    {
+        $cars = Cars::with(['brand', 'model', 'history'])->where('user_id', auth()->id())->get();
+        $histories = CarHistory::where('user_id', auth()->id())
+            ->whereYear('date', Carbon::now()->year)
+            ->orderByDesc('price')
+            ->get();
+        $history = [];
+        foreach ($histories as $item) {
+            $month = (int) Carbon::parse($item['date'])->format('n');
+            $history[$month] = ($history[$month] ?? 0) + $item->price;
+        }
+        $averageSpend = !empty($history) ? array_sum($history) / count($history) : 0;
+        $data = [
+            'cars' => $cars,
+            'history' => $history,
+            'averageSpend' => $averageSpend,
+            'historyList' => $histories,
+        ];
+        return view('pages.dashboard.stats.page',$data);
     }
 }

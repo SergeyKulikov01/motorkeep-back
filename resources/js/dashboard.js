@@ -1,4 +1,4 @@
-import { showToast } from './app.js';
+import { showToast, fetchJson } from './app.js';
 
 // Сворачивание сайдбара и мобильный бургер уже обрабатываются
 // общим app.js (он подключается на всех страницах, включая дашборд).
@@ -215,7 +215,7 @@ function handleQuickRecordSubmit(e) {
     const form = e.target;
     const payload = Object.fromEntries(new FormData(form).entries());
 
-    fetchReminderApi('/api/car-history', {
+    fetchJson('/api/car-history', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -250,30 +250,6 @@ function initQuickRecordModal() {
 }
 
 // ---------- НАПОМИНАНИЯ ----------
-function getCsrfToken() {
-    const meta = document.querySelector('meta[name="csrf-token"]');
-    return meta ? meta.content : '';
-}
-
-// Та же обёртка над fetch, что и в detail.js: CSRF-заголовок + безопасный
-// разбор JSON-ответа (даже если тело пустое).
-function fetchReminderApi(url, options = {}) {
-    const { headers, ...rest } = options;
-    return fetch(url, {
-        credentials: 'same-origin',
-        ...rest,
-        headers: {
-            'Accept': 'application/json',
-            'X-CSRF-TOKEN': getCsrfToken(),
-            ...headers,
-        },
-    }).then(function (res) {
-        return res.json().catch(function () { return {}; }).then(function (json) {
-            return { ok: res.ok, data: json };
-        });
-    });
-}
-
 export function updateReminderCount() {
     const reminderList = document.getElementById('reminder-list');
     const reminderCount = document.getElementById('reminder-count');
@@ -287,7 +263,7 @@ export function updateReminderCount() {
 function sendReminderAction(item, action, pendingLabel) {
     const params = new URLSearchParams({ id: item.dataset.id, action });
 
-    fetchReminderApi(`/api/reminders?${params}`, { method: 'PATCH' })
+    fetchJson(`/api/reminders?${params}`, { method: 'PATCH' })
         .then(function (result) {
             if (!result.ok) return Promise.reject(result.data);
             showToast(pendingLabel, action === 'done' ? 'success' : 'warning');

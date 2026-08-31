@@ -8,6 +8,7 @@ use App\Http\Controllers\DetailCarController;
 use App\Http\Controllers\NewCarController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RemindersController;
+use App\Http\Controllers\StatController;
 use App\Http\Controllers\UserNotesController;
 use App\Http\Controllers\CarDocsController;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,7 @@ Route::prefix('api')->middleware(['auth', 'verified'])->group(function () {
     Route::post('/car-docs', [CarDocsController::class, 'addDoc']);
     Route::get('/car-docs', [CarDocsController::class, 'getDoc']);
     Route::delete('/car-docs', [CarDocsController::class, 'deleteDoc']);
+    Route::get('/stats', [StatController::class, 'getStat']);
 });
 
 Route::get('/', function () {
@@ -43,6 +45,8 @@ Route::get('/contacts/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/cars', [DashboardController::class, 'carsList'])->name('dashboard.cars');
+    Route::get('/dashboard/stats', [DashboardController::class, 'statistic'])->name('dashboard.stats');
     Route::get('/dashboard/add', [NewCarController::class, 'index'])->name('dashboard.add');
     Route::get('/dashboard/detail/{id}', [DetailCarController::class, 'index'])->whereNumber('id')->name('dashboard.cardetail');
 });

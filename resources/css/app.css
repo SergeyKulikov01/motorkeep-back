@@ -8,6 +8,8 @@
 @import "./detail.css";
 @import "./forgot-pass.css";
 @import "./pass-reset.css";
+@import "./garage.css";
+@import "./stats.css";
 
 /* ---------- Сброс и базовые настройки ---------- */
 *,
@@ -2095,6 +2097,21 @@ body.is-collapsed .mk-sidebar .mk-collapse span {
     }
 
     .mk-fab span {
+        display: none;
+    }
+
+    .mk-search .mk-kbd {
+        display: none;
+    }
+}
+
+/* <= 400px */
+@media (max-width: 400px) {
+    .mk-search {
+        display: none;
+    }
+
+    .mk-userchip {
         display: none;
     }
 }

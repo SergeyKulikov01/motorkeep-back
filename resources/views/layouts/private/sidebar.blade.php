@@ -14,16 +14,16 @@
             </svg>
             <span class="lbl">Гараж</span>
         </a>
-        <a href="#" class="mk-navitem" data-tip="Автомобили" data-section="cars">
+        <a href="{{ route('dashboard.cars') }}" class="mk-navitem <?= (request()->routeIs('dashboard.cars'))? 'mk-navitem--active' : '' ?>" data-section="cars">
             <svg viewBox="0 0 24 24">
                 <rect x="2" y="6" width="20" height="12" rx="2"/>
                 <circle cx="8" cy="18" r="2"/>
                 <circle cx="16" cy="18" r="2"/>
                 <path d="M2 10h20"/>
             </svg>
-            <span class="lbl">Автомобили</span>
+            <span class="lbl">Все автомобили</span>
         </a>
-        <a href="#" class="mk-navitem" data-tip="Статистика" data-section="stats">
+        <a href="{{ route('dashboard.stats')  }}" class="mk-navitem <?= (request()->routeIs('dashboard.stats'))? 'mk-navitem--active' : '' ?>" data-tip="Статистика" data-section="stats">
             <svg viewBox="0 0 24 24">
                 <line x1="18" y1="20" x2="18" y2="10"/>
                 <line x1="12" y1="20" x2="12" y2="4"/>
