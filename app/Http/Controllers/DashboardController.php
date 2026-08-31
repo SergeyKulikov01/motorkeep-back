@@ -58,16 +58,21 @@ class DashboardController extends Controller
     public function statistic()
     {
         $cars = Cars::with(['brand', 'model', 'history'])->where('user_id', auth()->id())->get();
-        $histories = CarHistory::where('user_id', auth()->id())->get();
+        $histories = CarHistory::where('user_id', auth()->id())
+            ->whereYear('date', Carbon::now()->year)
+            ->orderByDesc('price')
+            ->get();
+        $history = [];
         foreach ($histories as $item) {
-            $month = (int) Carbon::parse($item['created_at'])->format('n');
+            $month = (int) Carbon::parse($item['date'])->format('n');
             $history[$month] = ($history[$month] ?? 0) + $item->price;
         }
-        $averageSpend = array_sum($history) / count($history);
+        $averageSpend = !empty($history) ? array_sum($history) / count($history) : 0;
         $data = [
             'cars' => $cars,
             'history' => $history,
             'averageSpend' => $averageSpend,
+            'historyList' => $histories,
         ];
         return view('pages.dashboard.stats.page',$data);
     }

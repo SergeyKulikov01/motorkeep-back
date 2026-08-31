@@ -11,7 +11,10 @@ export function getCsrfToken() {
     const meta = document.querySelector('meta[name="csrf-token"]');
     return meta ? meta.content : '';
 }
-
+// Форматирует целое число в "12 345 ₽" (разбиение по 3 знака + знак рубля)
+export function formatRub(amount) {
+    return `${new Intl.NumberFormat('ru-RU').format(amount)} ₽`;
+}
 // Единая обёртка над fetch: подставляет CSRF-заголовок, credentials
 // и всегда безопасно разбирает JSON-ответ (даже если тело пустое).
 // Общая для всех страниц — остальные файлы импортируют её из app.js

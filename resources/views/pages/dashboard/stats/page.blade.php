@@ -26,10 +26,10 @@
 
             <!-- ===== ПЕРИОД ===== -->
             <div class="mk-period-selector">
-                <button class="mk-period-btn active">За всё время</button>
-                <button class="mk-period-btn">За год</button>
-                <button class="mk-period-btn">За месяц</button>
-                <button class="mk-period-btn">За неделю</button>
+                <button class="mk-period-btn active" data-period="all">За всё время</button>
+                <button class="mk-period-btn" data-period="year">За год</button>
+                <button class="mk-period-btn" data-period="month">За месяц</button>
+                <button class="mk-period-btn" data-period="week">За неделю</button>
             </div>
 
             <!-- ===== КЛЮЧЕВЫЕ ПОКАЗАТЕЛИ ===== -->
@@ -40,8 +40,8 @@
                     </div>
                     <div class="mk-stat-card__content">
                         <span class="mk-stat-card__label">Общие расходы</span>
-                        <span class="mk-stat-card__value" id="total-cost">257 700 ₽</span>
-                        <span class="mk-stat-card__change up">+12.4%</span>
+                        <span class="mk-stat-card__value" data-spendtype="total"></span>
+                        <span class="mk-stat-card__change up" data-changetype="total"></span>
                     </div>
                 </div>
 
@@ -51,8 +51,8 @@
                     </div>
                     <div class="mk-stat-card__content">
                         <span class="mk-stat-card__label">Расходы на топливо</span>
-                        <span class="mk-stat-card__value">89 400 ₽</span>
-                        <span class="mk-stat-card__change ok">−2.1%</span>
+                        <span class="mk-stat-card__value" data-spendtype="fuel"></span>
+                        <span class="mk-stat-card__change ok" data-changetype="fuel"></span>
                     </div>
                 </div>
 
@@ -62,8 +62,8 @@
                     </div>
                     <div class="mk-stat-card__content">
                         <span class="mk-stat-card__label">ТО и ремонты</span>
-                        <span class="mk-stat-card__value">112 300 ₽</span>
-                        <span class="mk-stat-card__change up">+5.8%</span>
+                        <span class="mk-stat-card__value" data-spendtype="service"></span>
+                        <span class="mk-stat-card__change up" data-changetype="service"></span>
                     </div>
                 </div>
 
@@ -73,8 +73,8 @@
                     </div>
                     <div class="mk-stat-card__content">
                         <span class="mk-stat-card__label">Покупки</span>
-                        <span class="mk-stat-card__value">56 000 ₽</span>
-                        <span class="mk-stat-card__change ok">0.0%</span>
+                        <span class="mk-stat-card__value" data-spendtype="buy"></span>
+                        <span class="mk-stat-card__change ok" data-changetype="buy"></span>
                     </div>
                 </div>
             </div>
@@ -88,59 +88,25 @@
                         <span class="mk-chart-card__sub">₽</span>
                     </div>
                     <div class="mk-chart" id="cost-chart">
-                        <div class="mk-bar" style="height:55.47%;background:var(--mk-c-service)">
-                            <span class="mk-bar__value">18 500 ₽</span>
-                            <span class="mk-bar__label">Янв</span>
-                        </div>
-                        <div class="mk-bar" style="height:57.55%;background:var(--mk-c-service)">
-                            <span class="mk-bar__value">19 200 ₽</span>
-                            <span class="mk-bar__label">Фев</span>
-                        </div>
-                        <div class="mk-bar" style="height:53.36%;background:var(--mk-c-service)">
-                            <span class="mk-bar__value">17 800 ₽</span>
-                            <span class="mk-bar__label">Мар</span>
-                        </div>
-                        <div class="mk-bar" style="height:64.45%;background:var(--mk-c-service)">
-                            <span class="mk-bar__value">21 500 ₽</span>
-                            <span class="mk-bar__label">Апр</span>
-                        </div>
-                        <div class="mk-bar" style="height:70.14%;background:var(--mk-c-service)">
-                            <span class="mk-bar__value">23 400 ₽</span>
-                            <span class="mk-bar__label">Май</span>
-                        </div>
-                        <div class="mk-bar" style="height:76.74%;background:var(--mk-c-service)">
-                            <span class="mk-bar__value">25 600 ₽</span>
-                            <span class="mk-bar__label">Июн</span>
-                        </div>
-                        <div class="mk-bar" style="height:83.33%;background:var(--mk-c-service)">
-                            <span class="mk-bar__value">27 800 ₽</span>
-                            <span class="mk-bar__label">Июл</span>
-                        </div>
-                        <div class="mk-bar" style="height:75.54%;background:var(--mk-c-service)">
-                            <span class="mk-bar__value">25 200 ₽</span>
-                            <span class="mk-bar__label">Авг</span>
-                        </div>
-                        <div class="mk-bar" style="height:69.24%;background:var(--mk-c-service)">
-                            <span class="mk-bar__value">23 100 ₽</span>
-                            <span class="mk-bar__label">Сен</span>
-                        </div>
-                        <div class="mk-bar" style="height:59.35%;background:var(--mk-c-service)">
-                            <span class="mk-bar__value">19 800 ₽</span>
-                            <span class="mk-bar__label">Окт</span>
-                        </div>
-                        <div class="mk-bar" style="height:52.76%;background:var(--mk-c-service)">
-                            <span class="mk-bar__value">17 600 ₽</span>
-                            <span class="mk-bar__label">Ноя</span>
-                        </div>
-                        <div class="mk-bar" style="height:42.87%;background:var(--mk-c-service)">
-                            <span class="mk-bar__value">14 300 ₽</span>
-                            <span class="mk-bar__label">Дек</span>
-                        </div>
+                        @php
+                            $monthLabels = ['', 'Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'];
+                            $maxMonthSpend = !empty($history) ? max($history) : 0;
+                        @endphp
+                        @for ($month = 1; $month <= 12; $month++)
+                            @php
+                                $monthSpend = $history[$month] ?? 0;
+                                $barHeight = $maxMonthSpend > 0 ? round($monthSpend / $maxMonthSpend * 100, 2) : 0;
+                            @endphp
+                            <div class="mk-bar" style="height:{{ $barHeight }}%;background:var(--mk-c-service)">
+                                <span class="mk-bar__value">{{ number_format($monthSpend, 0, ',', ' ') }} ₽</span>
+                                <span class="mk-bar__label">{{ $monthLabels[$month] }}</span>
+                            </div>
+                        @endfor
                     </div>
                 </div>
 
                 <!-- График пробега по месяцам -->
-                <div class="mk-chart-card">
+                <div class="mk-chart-card mk-wip">
                     <div class="mk-chart-card__header">
                         <h3>Пробег по месяцам</h3>
                         <span class="mk-chart-card__sub">км</span>
@@ -200,7 +166,7 @@
 
             <!-- ===== РАСПРЕДЕЛЕНИЕ РАСХОДОВ ===== -->
             <div class="mk-charts-row">
-                <div class="mk-chart-card">
+                <div class="mk-chart-card mk-wip">
                     <div class="mk-chart-card__header">
                         <h3>Распределение расходов по типам</h3>
                     </div>
@@ -255,51 +221,17 @@
                         <span class="mk-chart-card__sub">₽</span>
                     </div>
                     <div class="mk-top-list" id="top-records">
-                        <div class="mk-top-item">
-                            <div class="mk-top-item__info">
-                                <span class="mk-top-item__tag" style="background:var(--mk-c-repair-soft);color:var(--mk-c-repair)">
-                                    Ремонт
+                        @foreach($historyList as $item)
+                            <div class="mk-top-item">
+                                <div class="mk-top-item__info">
+                                <span class="mk-top-item__tag" style="background:var({{ $item->labelColor }}-soft);color:var({{ $item->labelColor }})">
+                                    {{ $item->readableType }}
                                 </span>
-                                <span class="mk-top-item__name">Замена двигателя</span>
+                                    <span class="mk-top-item__name">{{ $item->name }}</span>
+                                </div>
+                                <span class="mk-top-item__cost">{{ number_format($item->price, 0, ',', ' ') }} ₽</span>
                             </div>
-                            <span class="mk-top-item__cost">45 600 ₽</span>
-                        </div>
-                        <div class="mk-top-item">
-                            <div class="mk-top-item__info">
-                                <span class="mk-top-item__tag" style="background:var(--mk-c-service-soft);color:var(--mk-c-service)">
-                                    ТО
-                                </span>
-                                <span class="mk-top-item__name">Комплексное ТО</span>
-                            </div>
-                            <span class="mk-top-item__cost">23 400 ₽</span>
-                        </div>
-                        <div class="mk-top-item">
-                            <div class="mk-top-item__info">
-                                <span class="mk-top-item__tag" style="background:var(--mk-c-buy-soft);color:var(--mk-c-buy)">
-                                    Покупка
-                                </span>
-                                <span class="mk-top-item__name">Шины зимние</span>
-                            </div>
-                            <span class="mk-top-item__cost">18 200 ₽</span>
-                        </div>
-                        <div class="mk-top-item">
-                            <div class="mk-top-item__info">
-                                <span class="mk-top-item__tag" style="background:var(--mk-c-repair-soft);color:var(--mk-c-repair)">
-                                    Ремонт
-                                </span>
-                                <span class="mk-top-item__name">Ремонт КПП</span>
-                            </div>
-                            <span class="mk-top-item__cost">15 600 ₽</span>
-                        </div>
-                        <div class="mk-top-item">
-                            <div class="mk-top-item__info">
-                                <span class="mk-top-item__tag" style="background:var(--mk-c-fuel-soft);color:var(--mk-c-fuel)">
-                                    Заправка
-                                </span>
-                                <span class="mk-top-item__name">Заправка (полный бак)</span>
-                            </div>
-                            <span class="mk-top-item__cost">4 800 ₽</span>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
