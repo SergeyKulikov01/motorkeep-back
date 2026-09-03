@@ -91,8 +91,10 @@
                         </span>
                         <span class="mk-stat__label">Всего записей</span>
                     </div>
-                    <div class="mk-stat__value" data-history-count>48</div>
-                    <div class="mk-stat__delta ok">+{{$thisMonthHistoryCount}} за месяц</div>
+                    <div class="mk-stat__value" data-history-count></div>
+                    @if($thisMonthHistoryCount)
+                        <div class="mk-stat__delta ok">+{{$thisMonthHistoryCount}} за месяц</div>
+                    @endif
                 </div>
                 <div class="mk-stat">
                     <div class="mk-stat__head">

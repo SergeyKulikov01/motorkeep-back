@@ -43,25 +43,17 @@
                 <div class="mk-settings-card">
                     <h2>Личная информация</h2>
                     <p class="mk-settings-card__sub">Данные, которые будут отображаться в профиле</p>
-
                     <div class="mk-settings-form">
                         <div class="mk-form-row">
                             <div class="mk-form-group">
                                 <label for="first-name">Имя</label>
-                                <input type="text" id="first-name" value="Алексей" />
+                                <input type="text" id="first-name" value="{{$user->name}}" />
                             </div>
                             <div class="mk-form-group">
                                 <label for="last-name">Фамилия</label>
-                                <input type="text" id="last-name" value="Смирнов" />
+                                <input type="text" id="last-name" value="{{$user->last_name}}" />
                             </div>
                         </div>
-
-                        <div class="mk-form-group">
-                            <label for="display-name">Отображаемое имя</label>
-                            <input type="text" id="display-name" value="Алексей Смирнов" />
-                            <span class="mk-form-hint">Имя, которое видят другие пользователи</span>
-                        </div>
-
                         <div class="mk-form-row">
                             <div class="mk-form-group">
                                 <label for="birth-date">Дата рождения</label>
@@ -100,7 +92,7 @@
                     <div class="mk-settings-form">
                         <div class="mk-form-group">
                             <label for="email">Электронная почта</label>
-                            <input type="email" id="email" value="alexey@example.ru" />
+                            <input type="email" id="email" value="{{$user->email}}" />
                             <span class="mk-form-hint">На этот адрес будут приходить уведомления</span>
                         </div>
 

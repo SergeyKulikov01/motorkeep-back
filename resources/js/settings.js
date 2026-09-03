@@ -1,6 +1,8 @@
 // Логика, специфичная только для страницы «Настройки».
 // Сайдбар (сворачивание/drawer), поиск и его хоткей — общие для всех
 // страниц и уже инициализируются в app.js, здесь не дублируются.
+import { fetchJson } from './app.js';
+
 (function() {
     'use strict';
 
@@ -69,11 +71,22 @@
         });
     });
 
-    // ===== ДЕМОНСТРАЦИЯ: УДАЛЕНИЕ АККАУНТА =====
+    // ===== УДАЛЕНИЕ АККАУНТА =====
     document.querySelector('.mk-danger-zone .mk-btn')?.addEventListener('click', function() {
-        if (confirm('Вы уверены, что хотите удалить аккаунт? Это действие необратимо.')) {
-            alert('Аккаунт удалён (демонстрация).');
+        if (!confirm('Вы уверены, что хотите удалить аккаунт? Это действие необратимо.')) {
+            return;
         }
+
+        fetchJson('/api/settings', { method: 'DELETE' })
+            .then(function (result) {
+                if (!result.ok || !result.data.success) {
+                    return Promise.reject(result.data);
+                }
+                window.location.href = '/';
+            })
+            .catch(function () {
+                alert('Не удалось удалить аккаунт. Попробуйте позже.');
+            });
     });
 
     // ===== ДЕМОНСТРАЦИЯ: ИЗМЕНЕНИЕ ПАРОЛЯ =====
