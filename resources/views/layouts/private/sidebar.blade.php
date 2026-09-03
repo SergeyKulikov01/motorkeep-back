@@ -60,7 +60,7 @@
         </a>
     </nav>
     <div class="mk-sidebar__foot">
-        <a href="#" class="mk-navitem" data-tip="Настройки" data-section="settings">
+        <a href="{{ route('dashboard.settings') }}" class="mk-navitem" data-tip="Настройки" data-section="settings">
             <svg viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="3"/>
                 <path

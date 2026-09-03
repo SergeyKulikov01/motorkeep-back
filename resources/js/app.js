@@ -5,6 +5,7 @@ import './detail.js';
 import './forgot-pass.js';
 import './pass-reset.js';
 import './stats.js';
+import './settings.js';
 
 // ---------- CSRF / FETCH ----------
 export function getCsrfToken() {
