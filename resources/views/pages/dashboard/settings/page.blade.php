@@ -523,22 +523,6 @@
                             <label for="confirm-password">Подтвердите пароль</label>
                             <input type="password" id="confirm-password" placeholder="Повторите новый пароль" />
                         </div>
-
-                        <!-- Двухфакторная аутентификация -->
-                        <div class="mk-form-group" style="margin-top:8px;">
-                            <label>Двухфакторная аутентификация</label>
-                            <div class="mk-toggle-row" style="border-bottom:none;padding:8px 0;">
-                                <div>
-                                    <span class="mk-toggle-row__label">Включить 2FA</span>
-                                    <span class="mk-toggle-row__desc">Дополнительная защита аккаунта</span>
-                                </div>
-                                <label class="mk-toggle">
-                                    <input type="checkbox" />
-                                    <span class="mk-toggle__slider"></span>
-                                </label>
-                            </div>
-                        </div>
-
                         <div class="mk-form-actions">
                             <button class="mk-btn mk-btn--primary">Изменить пароль</button>
                         </div>
@@ -548,36 +532,22 @@
                         <div class="mk-form-group">
                             <label>Активные сессии</label>
                             <div class="mk-session-list">
-                                <div class="mk-session-item">
-                                    <div class="mk-session-item__info">
-                                        <i class="bi bi-laptop"></i>
-                                        <div>
-                                            <span class="mk-session-item__device">Chrome на Windows</span>
-                                            <span class="mk-session-item__location">Москва, Россия</span>
+                                @foreach($sessions as $session)
+                                    <div class="mk-session-item">
+                                        <div class="mk-session-item__info">
+                                            @if($session->isDesktop)
+                                                <i class="bi bi-laptop"></i>
+                                            @else
+                                                <i class="bi bi-phone"></i>
+                                            @endif
+                                            <div>
+                                                <span class="mk-session-item__device">{{$session->userPlatform}} на {{$session->userBrowser}}</span>
+                                                <span class="mk-session-item__location">{{$session->ip_address}}</span>
+                                            </div>
                                         </div>
+                                        <span class="mk-session-item__status <?= ($session->isCurrent)? 'active' : '' ?>"><?= ($session->isCurrent)? 'Активен' : $session->dateDiff ?></span>
                                     </div>
-                                    <span class="mk-session-item__status active">Активен</span>
-                                </div>
-                                <div class="mk-session-item">
-                                    <div class="mk-session-item__info">
-                                        <i class="bi bi-phone"></i>
-                                        <div>
-                                            <span class="mk-session-item__device">Safari на iPhone</span>
-                                            <span class="mk-session-item__location">Москва, Россия</span>
-                                        </div>
-                                    </div>
-                                    <span class="mk-session-item__status">Вчера</span>
-                                </div>
-                                <div class="mk-session-item">
-                                    <div class="mk-session-item__info">
-                                        <i class="bi bi-browser-edge"></i>
-                                        <div>
-                                            <span class="mk-session-item__device">Edge на Windows</span>
-                                            <span class="mk-session-item__location">Санкт-Петербург, Россия</span>
-                                        </div>
-                                    </div>
-                                    <span class="mk-session-item__status">3 дня назад</span>
-                                </div>
+                                @endforeach
                             </div>
                             <button class="mk-btn mk-btn--ghost" style="margin-top:12px;border-color:var(--mk-danger);color:var(--mk-danger);">
                                 Завершить все сессии

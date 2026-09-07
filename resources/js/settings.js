@@ -1,7 +1,7 @@
 // Логика, специфичная только для страницы «Настройки».
 // Сайдбар (сворачивание/drawer), поиск и его хоткей — общие для всех
 // страниц и уже инициализируются в app.js, здесь не дублируются.
-import { fetchJson } from './app.js';
+import { fetchJson, showToast } from './app.js';
 
 (function() {
     'use strict';
@@ -56,7 +56,10 @@ import { fetchJson } from './app.js';
     }
 
     // ===== ДЕМОНСТРАЦИЯ: КНОПКИ СОХРАНЕНИЯ =====
+    // Кнопка изменения пароля (вкладка "Безопасность") исключена — для неё
+    // ниже подключён рабочий обработчик с реальным запросом к /api/settings.
     document.querySelectorAll('.mk-form-actions .mk-btn--primary').forEach(btn => {
+        if (btn.closest('#tab-security')) return;
         btn.addEventListener('click', function(e) {
             e.preventDefault();
             const originalText = this.textContent;
@@ -89,35 +92,70 @@ import { fetchJson } from './app.js';
             });
     });
 
-    // ===== ДЕМОНСТРАЦИЯ: ИЗМЕНЕНИЕ ПАРОЛЯ =====
+    // ===== ИЗМЕНЕНИЕ ПАРОЛЯ =====
     document.querySelector('#tab-security .mk-btn--primary')?.addEventListener('click', function(e) {
         e.preventDefault();
-        const current = document.getElementById('current-password').value;
-        const newPass = document.getElementById('new-password').value;
-        const confirm = document.getElementById('confirm-password').value;
+
+        const currentInput = document.getElementById('current-password');
+        const newInput = document.getElementById('new-password');
+        const confirmInput = document.getElementById('confirm-password');
+
+        const current = currentInput.value;
+        const newPass = newInput.value;
+        const confirm = confirmInput.value;
 
         if (!current || !newPass || !confirm) {
-            alert('Пожалуйста, заполните все поля.');
+            showToast('Пожалуйста, заполните все поля.', 'error');
             return;
         }
         if (newPass.length < 8) {
-            alert('Пароль должен содержать не менее 8 символов.');
+            showToast('Пароль должен содержать не менее 8 символов.', 'error');
             return;
         }
         if (newPass !== confirm) {
-            alert('Пароли не совпадают.');
+            showToast('Пароли не совпадают.', 'error');
             return;
         }
 
-        const originalText = this.textContent;
-        this.textContent = '✅ Пароль изменён!';
-        this.style.background = 'var(--mk-success)';
-        this.style.borderColor = 'var(--mk-success)';
-        setTimeout(() => {
-            this.textContent = originalText;
-            this.style.background = '';
-            this.style.borderColor = '';
-        }, 2000);
+        const btn = this;
+        const originalText = btn.textContent;
+        btn.disabled = true;
+
+        fetchJson('/api/settings', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                current_password: current,
+                password: newPass,
+                password_confirmation: confirm,
+            }),
+        })
+            .then(function (result) {
+                if (!result.ok || !result.data.success) return Promise.reject(result.data);
+
+                showToast('Пароль изменён', 'success');
+                btn.textContent = 'Пароль изменён!';
+                btn.style.background = 'var(--mk-success)';
+                btn.style.borderColor = 'var(--mk-success)';
+                [currentInput, newInput, confirmInput].forEach(function (input) {
+                    input.value = '';
+                });
+
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '';
+                    btn.style.borderColor = '';
+                }, 2000);
+            })
+            .catch(function (data) {
+                const message = data && data.errors
+                    ? Object.values(data.errors).flat().join(' ')
+                    : 'Не удалось изменить пароль. Проверьте текущий пароль и попробуйте снова.';
+                showToast(message, 'error');
+            })
+            .finally(function () {
+                btn.disabled = false;
+            });
     });
 
     // ===== ДЕМОНСТРАЦИЯ: ЗАВЕРШИТЬ ВСЕ СЕССИИ =====

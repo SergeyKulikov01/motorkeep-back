@@ -33,6 +33,7 @@ Route::prefix('api')->middleware(['auth', 'verified'])->group(function () {
     Route::delete('/car-docs', [CarDocsController::class, 'deleteDoc']);
     Route::get('/stats', [StatController::class, 'getStat']);
     Route::delete('/settings', [SettingsController::class, 'removeUser']);
+    Route::post('/settings', [SettingsController::class, 'changePwd']);
 });
 
 Route::get('/', function () {
