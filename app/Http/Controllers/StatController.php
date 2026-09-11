@@ -61,7 +61,7 @@ class StatController extends Controller
         $metrics = [
             'allPay' => '1=1',
             'fuel' => "type = 'fuel'",
-            'service' => "type = 'repair'",
+            'service' => "(type = 'repair' OR type = 'service')",
             'buy' => "type = 'buy'",
         ];
 

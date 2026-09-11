@@ -28,9 +28,6 @@
                 <button class="mk-tab" data-tab="notifications" role="tab" aria-selected="false" aria-controls="tab-notifications">
                     <i class="bi bi-bell"></i> Уведомления
                 </button>
-                <button class="mk-tab" data-tab="units" role="tab" aria-selected="false" aria-controls="tab-units">
-                    <i class="bi bi-rulers"></i> Единицы
-                </button>
                 <button class="mk-tab" data-tab="security" role="tab" aria-selected="false" aria-controls="tab-security">
                     <i class="bi bi-shield-lock"></i> Безопасность
                 </button>
@@ -218,33 +215,6 @@
                             <span class="mk-form-hint">Для турбированных двигателей рекомендуется менять масло чаще — каждые 5 000–7 500 км</span>
                         </div>
 
-                        <!-- Предпочтительный тип топлива -->
-                        <div class="mk-form-group">
-                            <label for="fuel-type">Предпочтительный тип топлива</label>
-                            <select id="fuel-type">
-                                <option value="92">АИ-92</option>
-                                <option value="95" selected>АИ-95</option>
-                                <option value="98">АИ-98</option>
-                                <option value="100">АИ-100</option>
-                                <option value="diesel">Дизель</option>
-                                <option value="gas">Газ</option>
-                                <option value="electric">Электричество</option>
-                            </select>
-                            <span class="mk-form-hint">Используется для расчёта среднего расхода и стоимости</span>
-                        </div>
-
-                        <!-- Средний расход топлива (по умолчанию) -->
-                        <div class="mk-form-row">
-                            <div class="mk-form-group">
-                                <label for="avg-fuel">Средний расход (л/100 км)</label>
-                                <input type="number" id="avg-fuel" value="8.4" step="0.1" min="0" />
-                            </div>
-                            <div class="mk-form-group">
-                                <label for="fuel-price">Средняя цена топлива (₽/л)</label>
-                                <input type="number" id="fuel-price" value="55" step="0.5" min="0" />
-                            </div>
-                        </div>
-
                         <!-- Напоминание о сезонной смене шин -->
                         <div class="mk-form-group">
                             <label>Напоминать о смене шин</label>
@@ -360,16 +330,6 @@
                                     <span class="mk-toggle__slider"></span>
                                 </label>
                             </div>
-                            <div class="mk-toggle-row">
-                                <div>
-                                    <span class="mk-toggle-row__label">Превышение бюджета</span>
-                                    <span class="mk-toggle-row__desc">Если расходы превысили лимит</span>
-                                </div>
-                                <label class="mk-toggle">
-                                    <input type="checkbox" checked />
-                                    <span class="mk-toggle__slider"></span>
-                                </label>
-                            </div>
                         </div>
 
                         <div class="mk-notification-group">
@@ -413,96 +373,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Вкладка: Единицы измерения -->
-            <div class="mk-tab-content" id="tab-units" role="tabpanel" aria-labelledby="tab-units">
-                <div class="mk-settings-card">
-                    <h2>Единицы измерения</h2>
-                    <p class="mk-settings-card__sub">Как отображать пробег, расход и температуру</p>
-
-                    <div class="mk-settings-form">
-                        <div class="mk-form-group">
-                            <label>Расстояние</label>
-                            <div class="mk-radio-group">
-                                <label class="mk-radio">
-                                    <input type="radio" name="distance" value="km" checked />
-                                    <span class="mk-radio__control"></span>
-                                    Километры (км)
-                                </label>
-                                <label class="mk-radio">
-                                    <input type="radio" name="distance" value="mi" />
-                                    <span class="mk-radio__control"></span>
-                                    Мили (mi)
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="mk-form-group">
-                            <label>Расход топлива</label>
-                            <div class="mk-radio-group">
-                                <label class="mk-radio">
-                                    <input type="radio" name="fuel" value="l/100km" checked />
-                                    <span class="mk-radio__control"></span>
-                                    Литров на 100 км
-                                </label>
-                                <label class="mk-radio">
-                                    <input type="radio" name="fuel" value="km/l" />
-                                    <span class="mk-radio__control"></span>
-                                    Км на литр
-                                </label>
-                                <label class="mk-radio">
-                                    <input type="radio" name="fuel" value="mpg" />
-                                    <span class="mk-radio__control"></span>
-                                    Миль на галлон (MPG)
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="mk-form-group">
-                            <label>Температура</label>
-                            <div class="mk-radio-group">
-                                <label class="mk-radio">
-                                    <input type="radio" name="temp" value="c" checked />
-                                    <span class="mk-radio__control"></span>
-                                    Цельсий (°C)
-                                </label>
-                                <label class="mk-radio">
-                                    <input type="radio" name="temp" value="f" />
-                                    <span class="mk-radio__control"></span>
-                                    Фаренгейт (°F)
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="mk-form-group">
-                            <label>Формат даты</label>
-                            <div class="mk-radio-group">
-                                <label class="mk-radio">
-                                    <input type="radio" name="date" value="dd.mm.yyyy" checked />
-                                    <span class="mk-radio__control"></span>
-                                    ДД.ММ.ГГГГ
-                                </label>
-                                <label class="mk-radio">
-                                    <input type="radio" name="date" value="mm/dd/yyyy" />
-                                    <span class="mk-radio__control"></span>
-                                    ММ/ДД/ГГГГ
-                                </label>
-                                <label class="mk-radio">
-                                    <input type="radio" name="date" value="yyyy-mm-dd" />
-                                    <span class="mk-radio__control"></span>
-                                    ГГГГ-ММ-ДД
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="mk-form-actions">
-                            <button class="mk-btn mk-btn--primary">Сохранить настройки</button>
-                            <button class="mk-btn mk-btn--ghost">Отмена</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Вкладка: Безопасность -->
             <div class="mk-tab-content" id="tab-security" role="tabpanel" aria-labelledby="tab-security">
                 <div class="mk-settings-card">

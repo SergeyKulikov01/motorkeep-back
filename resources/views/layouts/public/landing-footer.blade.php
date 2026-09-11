@@ -1,7 +1,7 @@
 <!-- ============================================================ -->
 <!--  ФУТЕР (расширенный)                                          -->
 <!-- ============================================================ -->
-<footer class="mk-footer" role="contentinfo">
+<footer class="mk-footer mk-footer--landing" role="contentinfo">
     <div class="mk-container">
         <div class="mk-footer__grid">
             <!-- Колонка 1: Бренд + описание -->

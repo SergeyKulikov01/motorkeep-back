@@ -1,7 +1,7 @@
 <footer class="mk-footer" role="contentinfo">
     <div class="mk-footer__inner">
         <div class="mk-footer__brand">
-            <a href="/" class="mk-logo mk-logo--small" aria-label="MOTORKEEP — на главную">
+            <a href="/" class="mk-logo mk-logo--sm" aria-label="MOTORKEEP — на главную">
                 <span class="mk-logo__mark"><i class="bi bi-car-front-fill"></i></span>
                 <span class="mk-logo__text">MOTOR<span>KEEP</span></span>
             </a>

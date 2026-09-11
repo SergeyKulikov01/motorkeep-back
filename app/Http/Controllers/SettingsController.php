@@ -12,7 +12,7 @@ class SettingsController extends Controller
 {
     public function index()
     {
-        $sessions = Sessions::where('user_id', Auth::id())->get();
+        $sessions = Sessions::where('user_id', Auth::id())->orderBy('last_activity','desc')->get();
         $data = [
             'user' => Auth::user(),
             'sessions' => $sessions
@@ -44,5 +44,8 @@ class SettingsController extends Controller
             'password' => Hash::make($data['password']),
         ]);
         return response()->json(['success' => true]);
+    }
+    public function deleteSessions(Request $request){
+
     }
 }
