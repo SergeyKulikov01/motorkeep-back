@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Sessions;
+use App\Models\UserSettings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -13,9 +14,24 @@ class SettingsController extends Controller
     public function index()
     {
         $sessions = Sessions::where('user_id', Auth::id())->orderBy('last_activity','desc')->get();
+        $settings = UserSettings::where('user_id', Auth::id())->get()->first();
+        $periodKm = [
+            5000,
+            7500,
+            10000,
+            15000,
+        ];
+        $changeTyreOptions = [
+            'auto' => 'Автоматически (по дате)',
+            'manual'=> 'Вручную (по пробегу)',
+            'off' => 'Не напоминать',
+        ];
         $data = [
             'user' => Auth::user(),
-            'sessions' => $sessions
+            'sessions' => $sessions,
+            'settings' => $settings,
+            'periodKm' => $periodKm,
+            'changeTyreOptions' => $changeTyreOptions,
         ];
         return view('pages.dashboard.settings.page',$data);
     }
