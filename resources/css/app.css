@@ -10,6 +10,7 @@
 @import "./pass-reset.css";
 @import "./garage.css";
 @import "./stats.css";
+@import "./settings.css";
 
 /* ---------- Сброс и базовые настройки ---------- */
 *,
@@ -2193,12 +2194,9 @@ body.is-collapsed .mk-sidebar .mk-collapse span {
     font-size: 15px;
 }
 
-/* ---------- ФУТЕР: новая сетка ---------- */
-.mk-footer {
-    background: var(--mk-surface);
-    border-top: 1px solid var(--mk-border);
+/* ---------- ФУТЕР: новая сетка (лендинг) ---------- */
+.mk-footer--landing {
     padding: 40px 0 16px 0;
-    margin-top: auto;
 }
 
 .mk-footer__grid {

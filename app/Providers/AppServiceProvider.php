@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades;
+use Carbon\Carbon;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,5 +28,6 @@ class AppServiceProvider extends ServiceProvider
         Facades\View::composer('layouts.private.sidebar', function ($view) {
             $view->with('sidebarCars',auth()->user()->cars()->with(['brand','model'])->get());
         });
+        Carbon::setLocale(app()->getLocale());
     }
 }

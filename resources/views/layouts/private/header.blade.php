@@ -80,10 +80,10 @@
                     </div>
                     <ul class="mk-popover__list">
                         <li><a href="#profile">Мой профиль</a></li>
-                        <li><a href="#settings">Настройки</a></li>
+                        <li><a href="{{ route('dashboard.settings') }}">Настройки</a></li>
                         <li><a href="#billing">Платежи</a></li>
                         <li class="mk-popover__divider"></li>
-                        <li><a href="#logout" style="color: var(--mk-danger);">Выйти</a></li>
+                        <li><a href="{{ route('logout') }}" style="color: var(--mk-danger);">Выйти</a></li>
                     </ul>
                 </div>
             </div>
