@@ -34,6 +34,7 @@ Route::prefix('api')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/stats', [StatController::class, 'getStat']);
     Route::delete('/settings', [SettingsController::class, 'removeUser']);
     Route::post('/settings', [SettingsController::class, 'changePwd']);
+    Route::post('/user-settings', [SettingsController::class, 'setSettings']);
 });
 
 Route::get('/', function () {

@@ -215,6 +215,7 @@
     opacity: 0;
 }
 .mk-radio__control {
+    display: inline-block;
     width: 18px;
     height: 18px;
     border-radius: 50%;

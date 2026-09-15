@@ -54,11 +54,11 @@
                         <div class="mk-form-row">
                             <div class="mk-form-group">
                                 <label for="birth-date">Дата рождения</label>
-                                <input type="date" id="birth-date" value="{{$settings->date_birth}}" />
+                                <input type="date" id="birth-date" value="{{$settings->date_birth}}" data-setting="date_birth" />
                             </div>
                             <div class="mk-form-group">
                                 <label for="gender">Пол</label>
-                                <select id="gender">
+                                <select id="gender" data-setting="gender">
                                     <option value="male" <?= ($settings->gender === 'male')? 'selected' : '' ?>>Мужской</option>
                                     <option value="female" <?= ($settings->gender === 'female')? 'selected' : '' ?>>Женский</option>
                                     <option value="unset" <?= ($settings->gender === 'unset')? 'selected' : '' ?>>Не указывать</option>
@@ -68,12 +68,7 @@
 
                         <div class="mk-form-group">
                             <label for="bio">О себе</label>
-                            <textarea id="bio" rows="3" placeholder="Расскажите немного о себе...">{{$settings->about}}</textarea>
-                        </div>
-
-                        <div class="mk-form-actions">
-                            <button class="mk-btn mk-btn--primary">Сохранить изменения</button>
-                            <button class="mk-btn mk-btn--ghost">Отмена</button>
+                            <textarea id="bio" rows="3" placeholder="Расскажите немного о себе..." data-setting="about">{{$settings->about}}</textarea>
                         </div>
                     </div>
                 </div>
@@ -91,7 +86,7 @@
                         </div>
                         <div class="mk-form-group">
                             <label for="phone">Телефон</label>
-                            <input type="tel" id="phone" value="{{$settings->phone}}" />
+                            <input type="tel" id="phone" value="{{$settings->phone}}" data-setting="phone" />
                             <span class="mk-form-hint">Для восстановления доступа и уведомлений</span>
                         </div>
                         <div class="mk-form-group mk-wip">
@@ -121,10 +116,6 @@
                                 <option value="EUR">Евро (€)</option>
                             </select>
                         </div>
-                        <div class="mk-form-actions">
-                            <button class="mk-btn mk-btn--primary">Сохранить изменения</button>
-                            <button class="mk-btn mk-btn--ghost">Отмена</button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -141,7 +132,7 @@
                             <div class="mk-radio-group">
                                 @foreach($periodKm as $period)
                                     <label class="mk-radio">
-                                        <input type="radio" name="to-interval" value="{{$period}}" <?= ($settings->service_period === $period)? 'checked' : '' ?>/>
+                                        <input type="radio" name="to-interval" value="{{$period}}" data-setting="service_period" <?= ($settings->service_period === $period)? 'checked' : '' ?>/>
                                         <span class="mk-radio__control"></span>
                                         Каждые {{$period}} км
                                     </label>
@@ -155,7 +146,7 @@
                             <div class="mk-form-row" style="margin-top:12px;display:none;" id="custom-to-row">
                                 <div class="mk-form-group">
                                     <label for="custom-to-km">Километры</label>
-                                    <input type="number" id="custom-to-km" placeholder="Например: 12000" />
+                                    <input type="number" id="custom-to-km" placeholder="Например: 12000" data-setting="service_period" />
                                 </div>
                                 <div class="mk-form-group">
                                     <label for="custom-to-months">Месяцы</label>
@@ -171,7 +162,7 @@
                             <div class="mk-radio-group">
                                 @foreach($periodKm as $period)
                                     <label class="mk-radio">
-                                        <input type="radio" name="oil-interval" value="{{$period}}" <?= ($settings->oil_period === $period)? 'checked' : '' ?>/>
+                                        <input type="radio" name="oil-interval" value="{{$period}}" data-setting="oil_period" <?= ($settings->oil_period === $period)? 'checked' : '' ?>/>
                                         <span class="mk-radio__control"></span>
                                         Каждые {{$period}} км
                                     </label>
@@ -186,7 +177,7 @@
                             <div class="mk-radio-group">
                                 @foreach($changeTyreOptions as $value => $option)
                                     <label class="mk-radio">
-                                        <input type="radio" name="tire-reminder" value="{{$value}}" <?= ($settings->change_tyre_notify === $value)? 'checked' : '' ?> />
+                                        <input type="radio" name="tire-reminder" value="{{$value}}" data-setting="change_tyre_notify" <?= ($settings->change_tyre_notify === $value)? 'checked' : '' ?> />
                                         <span class="mk-radio__control"></span>
                                         {{$option}}
                                     </label>
@@ -198,18 +189,14 @@
                         <div class="mk-form-row">
                             <div class="mk-form-group">
                                 <label for="summer-tires-date">Переход на летние шины</label>
-                                <input type="date" id="summer-tires-date" value="{{$settings->summer_tyre}}" />
+                                <input type="date" id="summer-tires-date" value="{{$settings->summer_tyre}}" data-setting="summer_tyre" />
                             </div>
                             <div class="mk-form-group">
                                 <label for="winter-tires-date">Переход на зимние шины</label>
-                                <input type="date" id="winter-tires-date" value="{{$settings->winter_tyre}}" />
+                                <input type="date" id="winter-tires-date" value="{{$settings->winter_tyre}}" data-setting="winter_tyre" />
                             </div>
                         </div>
 
-                        <div class="mk-form-actions">
-                            <button class="mk-btn mk-btn--primary">Сохранить настройки</button>
-                            <button class="mk-btn mk-btn--ghost">Отмена</button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -229,7 +216,7 @@
                                     <span class="mk-toggle-row__desc">За 7 дней до планового обслуживания</span>
                                 </div>
                                 <label class="mk-toggle">
-                                    <input type="checkbox" {{($settings->notify_next_service)? 'checked' : ''}} />
+                                    <input type="checkbox" data-setting="notify_next_service" {{($settings->notify_next_service)? 'checked' : ''}} />
                                     <span class="mk-toggle__slider"></span>
                                 </label>
                             </div>
@@ -239,7 +226,7 @@
                                     <span class="mk-toggle-row__desc">По пробегу или времени</span>
                                 </div>
                                 <label class="mk-toggle">
-                                    <input type="checkbox" {{($settings->notify_oil_change)? 'checked' : ''}} />
+                                    <input type="checkbox" data-setting="notify_oil_change" {{($settings->notify_oil_change)? 'checked' : ''}} />
                                     <span class="mk-toggle__slider"></span>
                                 </label>
                             </div>
@@ -249,7 +236,7 @@
                                     <span class="mk-toggle-row__desc">Весной и осенью</span>
                                 </div>
                                 <label class="mk-toggle">
-                                    <input type="checkbox" {{($settings->notify_tyres_change)? 'checked' : ''}} />
+                                    <input type="checkbox" data-setting="notify_tyres_change" {{($settings->notify_tyres_change)? 'checked' : ''}} />
                                     <span class="mk-toggle__slider"></span>
                                 </label>
                             </div>
@@ -259,7 +246,7 @@
                                     <span class="mk-toggle-row__desc">По пробегу (каждые 30 000 км)</span>
                                 </div>
                                 <label class="mk-toggle">
-                                    <input type="checkbox" {{($settings->notify_change_breakes)? 'checked' : ''}} />
+                                    <input type="checkbox" data-setting="notify_change_breakes" {{($settings->notify_change_breakes)? 'checked' : ''}} />
                                     <span class="mk-toggle__slider"></span>
                                 </label>
                             </div>
@@ -273,7 +260,7 @@
                                     <span class="mk-toggle-row__desc">Сводка расходов и пробега за неделю</span>
                                 </div>
                                 <label class="mk-toggle">
-                                    <input type="checkbox" {{($settings->stats_week)? 'checked' : ''}} />
+                                    <input type="checkbox" data-setting="stats_week" {{($settings->stats_week)? 'checked' : ''}} />
                                     <span class="mk-toggle__slider"></span>
                                 </label>
                             </div>
@@ -283,7 +270,7 @@
                                     <span class="mk-toggle-row__desc">Детальная аналитика за месяц</span>
                                 </div>
                                 <label class="mk-toggle">
-                                    <input type="checkbox" {{($settings->stats_months)? 'checked' : ''}} />
+                                    <input type="checkbox" data-setting="stats_months" {{($settings->stats_months)? 'checked' : ''}} />
                                     <span class="mk-toggle__slider"></span>
                                 </label>
                             </div>
@@ -297,7 +284,7 @@
                                     <span class="mk-toggle-row__desc">На электронную почту</span>
                                 </div>
                                 <label class="mk-toggle">
-                                    <input type="checkbox" {{($settings->notify_email)? 'checked' : ''}} />
+                                    <input type="checkbox" data-setting="notify_email" {{($settings->notify_email)? 'checked' : ''}} />
                                     <span class="mk-toggle__slider"></span>
                                 </label>
                             </div>
@@ -307,7 +294,7 @@
                                     <span class="mk-toggle-row__desc">В браузере или приложении</span>
                                 </div>
                                 <label class="mk-toggle">
-                                    <input type="checkbox" {{($settings->notify_push)? 'checked' : ''}} />
+                                    <input type="checkbox" data-setting="notify_push" {{($settings->notify_push)? 'checked' : ''}} />
                                     <span class="mk-toggle__slider"></span>
                                 </label>
                             </div>
@@ -317,17 +304,13 @@
                                     <span class="mk-toggle-row__desc">Подключите Telegram-бот</span>
                                 </div>
                                 <label class="mk-toggle">
-                                    <input type="checkbox" {{($settings->notify_telegram)? 'checked' : ''}}/>
+                                    <input type="checkbox" data-setting="notify_telegram" {{($settings->notify_telegram)? 'checked' : ''}}/>
                                     <span class="mk-toggle__slider"></span>
                                 </label>
                             </div>
                         </div>
                     </div>
 
-                    <div class="mk-form-actions">
-                        <button class="mk-btn mk-btn--primary">Сохранить настройки</button>
-                        <button class="mk-btn mk-btn--ghost">Отмена</button>
-                    </div>
                 </div>
             </div>
             <!-- Вкладка: Безопасность -->

@@ -55,6 +55,31 @@ import { fetchJson, showToast } from './app.js';
         customRow.style.display = 'grid';
     }
 
+    // ===== АВТОСОХРАНЕНИЕ НАСТРОЕК =====
+    // Любое поле с [data-setting="код_колонки"] при изменении сразу
+    // отправляется на /api/user-settings как { code, value }.
+    function saveSetting(code, value) {
+        fetchJson('/api/user-settings', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code: code, value: value }),
+        })
+            .then(function (result) {
+                if (!result.ok) return Promise.reject(result.data);
+                showToast('Сохранено', 'success');
+            })
+            .catch(function () {
+                showToast('Не удалось сохранить изменения', 'error');
+            });
+    }
+
+    document.querySelectorAll('[data-setting]').forEach(function (field) {
+        field.addEventListener('change', function () {
+            const value = this.type === 'checkbox' ? (this.checked ? 1 : 0) : this.value;
+            saveSetting(this.dataset.setting, value);
+        });
+    });
+
     // ===== ДЕМОНСТРАЦИЯ: КНОПКИ СОХРАНЕНИЯ =====
     // Кнопка изменения пароля (вкладка "Безопасность") исключена — для неё
     // ниже подключён рабочий обработчик с реальным запросом к /api/settings.

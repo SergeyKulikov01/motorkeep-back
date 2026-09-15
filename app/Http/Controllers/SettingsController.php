@@ -7,6 +7,7 @@ use App\Models\UserSettings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
 class SettingsController extends Controller
@@ -63,5 +64,27 @@ class SettingsController extends Controller
     }
     public function deleteSessions(Request $request){
 
+    }
+    public function setSettings(Request $request)
+    {
+        $allowedCodes = [
+            'gender', 'about', 'date_birth', 'phone',
+            'service_period', 'oil_period', 'change_tyre_notify',
+            'summer_tyre', 'winter_tyre',
+            'notify_next_service', 'notify_oil_change', 'notify_tyres_change', 'notify_change_breakes',
+            'stats_week', 'stats_months',
+            'notify_email', 'notify_push', 'notify_telegram',
+        ];
+
+        $data = $request->validate([
+            'code' => ['required', 'string', Rule::in($allowedCodes)],
+            'value' => ['required'],
+        ]);
+
+        UserSettings::where('user_id', Auth::id())->update([
+            $data['code'] => $data['value'],
+        ]);
+
+        return response()->json(['success' => true]);
     }
 }
