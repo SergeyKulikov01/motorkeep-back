@@ -32,6 +32,7 @@ class CarHistory
     {
         return CarHistoryModel::where('user_id', $user->id)
             ->where('car_id', $car_id)
+            ->orderBy('date', 'desc')
             ->when($type, fn ($query) => $query->where('type', $type))
             ->get();
     }

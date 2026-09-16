@@ -15,7 +15,7 @@ class DashboardController extends Controller
     public function index()
     {
         $cars = Cars::with(['brand', 'model', 'history'])->where('user_id', auth()->id())->get();
-        $history = TotalHistory::where('user_id', auth()->id())->orderBy('created_at', 'desc')->get()->toArray();
+        $history = TotalHistory::where('user_id', auth()->id())->orderBy('created_at', 'desc')->limit(10)->get()->toArray();
         foreach ($history as &$item) {
             switch ($item['action']) {
                 case 'add':
@@ -35,7 +35,7 @@ class DashboardController extends Controller
                 default => $createdAt->format('d.m.Y, H:i'),
             };
         }
-        $reminders = Reminders::where('user_id', auth()->id())->with('car.brand')->with('car.model')->get();
+        $reminders = Reminders::where('user_id', auth()->id())->with('car.brand')->with('car.model')->get()->take(5);
 
         $data = [
             'cars' => $cars,
