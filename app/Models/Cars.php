@@ -21,6 +21,7 @@ class Cars extends Model
         'plate_region',
         'mileage',
         'comment',
+        'report_id',
     ];
 
     public function user()

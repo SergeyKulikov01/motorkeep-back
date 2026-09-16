@@ -1,0 +1,727 @@
+/* ============================================================
+   MOTORKEEP — общий CSS
+   ============================================================ */
+
+/* Сброс, :root-токены, html/body, reduced-motion, .mk-mono/.mk-eyebrow,
+   логотип и базовые .mk-btn уже определены в detail.css / app.css —
+   report.css переопределяет только то, что уникально для страницы отчёта. */
+:root {
+    --mk-report-container: 1080px;
+}
+
+.mk-icon { width: 16px; height: 16px; flex-shrink: 0; }
+
+/* ---------- ШАПКА ---------- */
+.mk-report-body { background: var(--mk-bg); display: block; }
+.mk-report-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.75);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--mk-border);
+}
+.mk-report-header__inner {
+    max-width: var(--mk-container);
+    margin: 0 auto;
+    padding: 14px var(--mk-gutter);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.mk-report-header__crumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--mk-ink-3);
+    flex: 1;
+}
+.mk-report-header__crumb a { color: var(--mk-ink-3); text-decoration: none; transition: color var(--mk-transition); }
+.mk-report-header__crumb a:hover { color: var(--mk-ink-2); }
+.mk-report-header__crumb .mk-icon { width: 14px; height: 14px; }
+.mk-report-header__actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+/* ---------- КОНТЕЙНЕР ---------- */
+.mk-report-main { padding: 32px 0 48px; }
+.mk-report-container {
+    max-width: var(--mk-report-container);
+    margin: 0 auto;
+    padding: 0 var(--mk-gutter);
+}
+.mk-report-title { margin-bottom: 24px; }
+.mk-report-title__h1 {
+    font-family: var(--mk-font-display);
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.15;
+    margin: 2px 0 6px;
+}
+.mk-report-title__sub { font-size: 14px; color: var(--mk-ink-2); }
+
+.mk-report-badge-info {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    background: var(--mk-surface-2);
+    color: var(--mk-ink-2);
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: var(--mk-r-pill);
+    white-space: nowrap;
+}
+
+/* ---------- HERO ---------- */
+.mk-report-hero {
+    background: var(--mk-surface);
+    border-radius: var(--mk-r-xl);
+    box-shadow: var(--mk-shadow-md);
+    padding: 28px 32px;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 32px;
+    margin-bottom: 24px;
+}
+.mk-report-hero__media { position: relative; }
+.mk-report-hero__silhouette {
+    background: var(--mk-primary-soft);
+    border-radius: var(--mk-r-md);
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.mk-report-hero__silhouette svg { width: 100%; height: auto; max-height: 170px; }
+.mk-report-hero__plate {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--mk-ink);
+    color: #fff;
+    font-family: var(--mk-font-mono);
+    font-size: 14px;
+    font-weight: 500;
+    padding: 4px 14px;
+    border-radius: var(--mk-r-sm);
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+}
+.mk-report-hero__body { display: flex; flex-direction: column; gap: 8px; }
+
+/* .mk-odo* уже определён в detail.css */
+
+.mk-report-hero__meta {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    border-top: 1px solid var(--mk-border);
+    padding-top: 16px;
+    margin-top: 8px;
+}
+.mk-report-hero__meta-item { display: flex; flex-direction: column; gap: 2px; }
+.mk-report-hero__meta-item--wide { grid-column: span 2; }
+.mk-report-hero__meta-label {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--mk-ink-3);
+}
+.mk-report-hero__meta-value { font-weight: 500; font-size: 14px; }
+
+/* ---------- KPI ---------- */
+.mk-report-kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+}
+.mk-kpi {
+    background: var(--mk-surface);
+    border-radius: var(--mk-r-lg);
+    padding: 20px 22px;
+    box-shadow: var(--mk-shadow-sm);
+    transition: box-shadow var(--mk-transition), transform var(--mk-transition);
+}
+.mk-kpi:hover { box-shadow: var(--mk-shadow-md); transform: translateY(-1px); }
+.mk-kpi__label {
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--mk-ink-3);
+    margin-bottom: 6px;
+}
+.mk-kpi__value {
+    font-family: var(--mk-font-display);
+    font-size: 26px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.15;
+}
+.mk-kpi__value span {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--mk-ink-3);
+    margin-left: 2px;
+}
+.mk-kpi__hint { font-size: 12px; color: var(--mk-ink-3); margin-top: 4px; }
+
+/* ---------- СЕКЦИЯ ---------- */
+.mk-report-section {
+    background: var(--mk-surface);
+    border-radius: var(--mk-r-lg);
+    box-shadow: var(--mk-shadow-sm);
+    padding: 24px;
+    margin-bottom: 20px;
+}
+/* .mk-section-head* уже определён в detail.css */
+
+/* ---------- ТАБЛИЦА ---------- */
+.mk-report-table-wrap { overflow-x: auto; }
+.mk-report-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+.mk-report-table th {
+    text-align: left;
+    font-weight: 500;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--mk-ink-3);
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--mk-border);
+}
+.mk-report-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--mk-border);
+    vertical-align: middle;
+}
+.mk-report-table tbody tr:last-child td { border-bottom: 1px solid var(--mk-border); }
+.mk-report-table tfoot td {
+    border-bottom: none;
+    border-top: 2px solid var(--mk-ink);
+    padding-top: 14px;
+}
+.mk-report-table .num {
+    text-align: right;
+    font-family: var(--mk-font-display);
+    font-variant-numeric: tabular-nums;
+}
+.mk-report-table__dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+/* ---------- ДИАГРАММА ---------- */
+.mk-report-chart {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 8px;
+    height: 220px;
+    align-items: end;
+    padding: 8px 0 4px;
+    border-bottom: 1px solid var(--mk-border);
+}
+.mk-report-chart__col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    height: 100%;
+    justify-content: flex-end;
+}
+.mk-report-chart__bar-stack {
+    display: flex;
+    flex-direction: column-reverse;
+    width: 60%;
+    height: 100%;
+    justify-content: flex-start;
+    border-radius: var(--mk-r-sm);
+    overflow: hidden;
+}
+.mk-report-chart__bar { width: 100%; height: var(--h, 0%); }
+.mk-report-chart__label {
+    font-size: 11px;
+    color: var(--mk-ink-3);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+.mk-report-chart__legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: var(--mk-ink-2);
+}
+.mk-report-chart__legend > span { display: inline-flex; align-items: center; gap: 6px; }
+.mk-report-chart__dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; }
+.mk-report-chart__axis {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--mk-ink-3);
+    margin-top: 8px;
+}
+
+/* ============================================================
+   ПОСЕЩЕНИЕ СЕРВИСОВ (таймлайн)
+   ============================================================ */
+.mk-timeline {
+    position: relative;
+    padding-left: 4px;
+}
+.mk-timeline__item {
+    position: relative;
+    padding-left: 32px;
+    padding-bottom: 24px;
+    border-left: 2px solid var(--mk-border);
+    margin-left: 6px;
+}
+.mk-timeline__item:last-child {
+    border-left-color: transparent;
+    padding-bottom: 0;
+}
+.mk-timeline__marker {
+    position: absolute;
+    left: -8px;
+    top: 4px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid var(--mk-surface);
+    box-shadow: 0 0 0 1px var(--mk-border);
+}
+.mk-timeline__date {
+    font-family: var(--mk-font-mono);
+    font-size: 12px;
+    color: var(--mk-ink-3);
+    margin-bottom: 4px;
+}
+.mk-timeline__title {
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 3px;
+    color: var(--mk-ink);
+}
+.mk-timeline__desc {
+    font-size: 13.5px;
+    color: var(--mk-ink-2);
+    margin-bottom: 8px;
+    line-height: 1.45;
+}
+.mk-timeline__meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--mk-font-display);
+    font-weight: 700;
+    font-size: 15px;
+    font-variant-numeric: tabular-nums;
+}
+.mk-timeline__tag {
+    font-family: var(--mk-font-body);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 0 10px;
+    border-radius: var(--mk-r-pill);
+    line-height: 20px;
+    white-space: nowrap;
+}
+
+/* ---------- ДОКУМЕНТЫ ---------- */
+.mk-report-docs {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+}
+/* .mk-doc-card* также определён в detail.css, но там карточка белая
+   с постоянной тенью и кнопкой удаления. В отчёте карточки плоские
+   (--mk-surface-2, тень только по hover, без кнопки удаления) —
+   поэтому переопределяется целиком, а не наследуется. */
+.mk-doc-card {
+    background: var(--mk-surface-2);
+    border-radius: var(--mk-r-lg);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: box-shadow var(--mk-transition), transform var(--mk-transition);
+}
+.mk-doc-card:hover { box-shadow: var(--mk-shadow-sm); transform: translateY(-1px); }
+.mk-doc-card__icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--mk-r-md);
+    background: var(--mk-surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.mk-doc-card__icon svg { width: 24px; height: 24px; }
+.mk-doc-card__body { flex: 1; min-width: 0; }
+.mk-doc-card__title { font-weight: 600; font-size: 14px; }
+.mk-doc-card__meta { font-size: 12px; color: var(--mk-ink-3); }
+.mk-doc-card__status {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 0 10px;
+    border-radius: var(--mk-r-pill);
+    line-height: 20px;
+    margin-top: 4px;
+}
+.mk-doc-card__status.ok { background: var(--mk-c-fuel-soft); color: var(--mk-c-fuel); }
+.mk-doc-card__status.warning { background: var(--mk-c-buy-soft); color: var(--mk-c-buy); }
+.mk-doc-card__status.error { background: var(--mk-c-repair-soft); color: var(--mk-c-repair); }
+
+/* ---------- НАПОМИНАНИЯ ---------- */
+.mk-report-reminders {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 12px;
+}
+.mk-report-reminder {
+    background: var(--mk-surface-2);
+    border-radius: var(--mk-r-lg);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+.mk-report-reminder__icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--mk-r-md);
+    background: var(--ic-bg, var(--mk-surface));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.mk-report-reminder__icon svg { width: 22px; height: 22px; }
+.mk-report-reminder__body { flex: 1; min-width: 0; }
+.mk-report-reminder__title { font-weight: 600; font-size: 14px; }
+.mk-report-reminder__meta { font-size: 12px; color: var(--mk-ink-3); }
+.mk-report-reminder__badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 0 10px;
+    border-radius: var(--mk-r-pill);
+    line-height: 22px;
+    white-space: nowrap;
+}
+
+/* .mk-chips/.mk-chip* и .mk-feed уже определены в detail.css */
+
+/* ---------- ЛЕНТА ЗАПИСЕЙ ----------
+   .mk-record* в основном уже определён в detail.css. Страница отчёта
+   намеренно использует плоские карточки без тени в состоянии покоя
+   (тень появляется только по hover) — эти два правила отличаются
+   от detail.css и поэтому переопределяются здесь. */
+.mk-record {
+    background: var(--mk-surface-2);
+    border-radius: var(--mk-r-lg);
+    padding: 16px 20px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 16px 20px;
+    align-items: start;
+    position: relative;
+    overflow: hidden;
+    transition: box-shadow var(--mk-transition), transform var(--mk-transition);
+}
+.mk-record:hover { box-shadow: var(--mk-shadow-sm); transform: translateY(-1px); }
+/* Направленный дочерний селектор — в отличие от detail.css, не задевает
+   вложенный span внутри .mk-record__icon-text */
+.mk-record__metaline > span { display: flex; align-items: center; gap: 4px; }
+
+.mk-report-more { display: flex; justify-content: center; margin-top: 20px; }
+
+/* ---------- ВЛАДЕЛЕЦ ---------- */
+.mk-report-owner {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 20px;
+    align-items: center;
+    background: var(--mk-surface-2);
+    border-radius: var(--mk-r-lg);
+    padding: 20px;
+}
+.mk-report-owner__avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--mk-primary-soft);
+    color: var(--mk-primary);
+    font-family: var(--mk-font-display);
+    font-size: 22px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.mk-report-owner__name { font-weight: 600; font-size: 16px; }
+.mk-report-owner__meta { font-size: 13px; color: var(--mk-ink-2); }
+.mk-report-owner__contact { text-align: right; }
+.mk-report-owner__contact-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--mk-ink-3);
+    margin-bottom: 2px;
+}
+.mk-report-owner__contact-value { font-size: 13px; color: var(--mk-ink); }
+
+/* ---------- ПОДПИСЬ ---------- */
+.mk-report-sign {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 20px 4px 8px;
+    margin-top: 8px;
+    border-top: 1px dashed var(--mk-border);
+    font-size: 12px;
+    color: var(--mk-ink-3);
+    flex-wrap: wrap;
+}
+.mk-report-sign__text { max-width: 620px; line-height: 1.5; }
+.mk-report-sign__hash { white-space: nowrap; }
+
+/* .mk-footer* уже определён в detail.css / app.css.
+   На странице отчёта контент центрирован по ширине .mk-report-container —
+   применяем то же ограничение и к содержимому футера. */
+.mk-report-body .mk-footer__inner {
+    max-width: var(--mk-report-container);
+    margin: 0 auto;
+}
+
+/* ---------- ТОСТ ----------
+   Базовый вид .mk-toast уже определён в detail.css. На странице отчёта
+   нет плавающей FAB-кнопки, поэтому тост можно опустить ниже (32px вместо 100px). */
+.mk-report-body .mk-toast { bottom: 32px; }
+
+/* .mk-modal-overlay / .mk-modal / .mk-modal__* уже определены в detail.css */
+
+/* .mk-form-group / .mk-form-label / .mk-input уже определены в detail.css */
+
+/* ---------- МОДАЛКА "ПОДЕЛИТЬСЯ" ---------- */
+.mk-modal--share { max-width: 520px; }
+.mk-share-link { display: flex; gap: 8px; align-items: stretch; }
+.mk-share-link .mk-input {
+    flex: 1;
+    min-width: 0;
+    font-size: 13px;
+    color: var(--mk-ink-2);
+    background: var(--mk-surface-2);
+    border-style: dashed;
+}
+.mk-share-link .mk-btn { flex-shrink: 0; height: 44px; padding: 0 16px; }
+.mk-input--mono { font-family: var(--mk-font-mono); font-size: 13px !important; letter-spacing: 0.01em; }
+/* .mk-form-hint уже определён в settings.css */
+
+.mk-share-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+.mk-share-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 6px 10px;
+    background: var(--mk-surface);
+    border: 1px solid var(--mk-border);
+    border-radius: var(--mk-r-md);
+    text-decoration: none;
+    color: var(--mk-ink-2);
+    font-family: var(--mk-font-body);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color var(--mk-transition), transform var(--mk-transition), box-shadow var(--mk-transition);
+}
+.mk-share-tile:hover {
+    border-color: var(--mk-ink-2);
+    color: var(--mk-ink);
+    transform: translateY(-1px);
+    box-shadow: var(--mk-shadow-sm);
+}
+.mk-share-tile__ic {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: var(--mk-r-md);
+}
+.mk-share-tile__ic svg { width: 22px; height: 22px; }
+.mk-share-tile__label { line-height: 1.1; text-align: center; }
+
+.mk-access { display: flex; flex-direction: column; gap: 8px; }
+.mk-access__option { display: block; cursor: pointer; }
+.mk-access__option input { position: absolute; opacity: 0; pointer-events: none; }
+.mk-access__body {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    background: var(--mk-surface);
+    border: 1px solid var(--mk-border);
+    border-radius: var(--mk-r-md);
+    transition: border-color var(--mk-transition), background var(--mk-transition), box-shadow var(--mk-transition);
+}
+.mk-access__option:hover .mk-access__body { border-color: var(--mk-border-strong); }
+.mk-access__option input:focus-visible + .mk-access__body { box-shadow: var(--mk-ring); }
+.mk-access__option input:checked + .mk-access__body {
+    border-color: var(--mk-primary);
+    background: var(--mk-primary-soft);
+    box-shadow: 0 0 0 1px var(--mk-primary) inset;
+}
+.mk-access__ic {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--mk-r-md);
+    background: var(--mk-surface-2);
+    color: var(--mk-ink-2);
+    flex-shrink: 0;
+}
+.mk-access__ic svg { width: 20px; height: 20px; }
+.mk-access__option input:checked + .mk-access__body .mk-access__ic {
+    background: #fff;
+    color: var(--mk-primary);
+}
+.mk-access__text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.mk-access__title { font-size: 14px; font-weight: 600; color: var(--mk-ink); }
+.mk-access__desc { font-size: 12px; color: var(--mk-ink-2); line-height: 1.4; }
+
+.mk-share-revoke { margin-top: 4px; padding-top: 16px; border-top: 1px solid var(--mk-border); }
+.mk-btn--danger-ghost {
+    background: var(--mk-surface);
+    color: var(--mk-danger);
+    border: 1px solid var(--mk-danger);
+    border-radius: var(--mk-r-pill);
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: background var(--mk-transition), color var(--mk-transition);
+    font-family: var(--mk-font-body);
+}
+.mk-btn--danger-ghost:hover { background: var(--mk-c-repair-soft); }
+.mk-btn--danger-ghost svg { width: 16px; height: 16px; }
+
+/* ============================================================
+   АДАПТИВ
+   ============================================================ */
+@media (max-width: 1000px) {
+    .mk-report-hero { grid-template-columns: 1fr; gap: 20px; }
+    .mk-report-hero__media { max-width: 320px; margin: 0 auto; }
+    .mk-report-kpis { grid-template-columns: repeat(2, 1fr); }
+    .mk-report-hero__meta { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 900px) {
+    /* .mk-modal-overlay/.mk-modal/__header/__form на ≤900px уже переопределены в detail.css */
+    .mk-modal__footer { padding: 14px 20px 20px; }
+}
+
+@media (max-width: 680px) {
+    /* :root{--mk-gutter} и .mk-odo__value уже переопределены в detail.css на этом брейкпоинте */
+    .mk-report-header__crumb { display: none; }
+    .mk-report-header__inner { padding: 12px var(--mk-gutter); }
+    .mk-report-header__actions .mk-btn span { display: none; }
+    .mk-report-header__actions .mk-btn { padding: 8px 10px; }
+
+    .mk-report-title__h1 { font-size: 24px; }
+
+    .mk-report-hero { padding: 20px 16px; }
+    .mk-report-hero__meta { grid-template-columns: 1fr; gap: 12px; }
+    .mk-report-hero__meta-item--wide { grid-column: span 1; }
+
+    .mk-report-kpis { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .mk-kpi { padding: 16px; }
+    .mk-kpi__value { font-size: 22px; }
+
+    .mk-report-section { padding: 18px 16px; }
+
+    .mk-report-chart { height: 180px; gap: 4px; }
+    .mk-report-chart__bar-stack { width: 75%; }
+    .mk-report-chart__label { font-size: 10px; }
+
+    .mk-report-reminders { grid-template-columns: 1fr; }
+    .mk-report-docs { grid-template-columns: 1fr; }
+
+    /* .mk-record{grid-template-columns...} на ≤680px уже задан в detail.css;
+       здесь только text-align, которого в detail.css нет */
+    .mk-record__side {
+        grid-column: 2 / 3;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        text-align: left;
+    }
+
+    .mk-report-owner { grid-template-columns: auto 1fr; gap: 14px; }
+    .mk-report-owner__contact {
+        grid-column: 1 / -1;
+        text-align: left;
+        border-top: 1px solid var(--mk-border);
+        padding-top: 12px;
+    }
+
+    .mk-report-sign { flex-direction: column; gap: 8px; }
+    .mk-report-body .mk-toast { bottom: 16px; max-width: 90%; padding: 10px 16px; font-size: 14px; }
+
+    .mk-share-grid { grid-template-columns: repeat(2, 1fr); }
+    .mk-share-link { flex-direction: column; }
+    .mk-share-link .mk-btn { width: 100%; justify-content: center; }
+
+    .mk-timeline__item { padding-left: 24px; padding-bottom: 20px; }
+    .mk-timeline__meta { flex-wrap: wrap; gap: 8px; }
+}
+
+@media (max-width: 380px) {
+    .mk-report-kpis { grid-template-columns: 1fr; }
+    .mk-report-table th, .mk-report-table td { padding: 10px 6px; font-size: 13px; }
+    .mk-report-table th:nth-child(3),
+    .mk-report-table td:nth-child(3) { display: none; }
+    .mk-report-chart { height: 150px; }
+}
+
+/* ---------- ПЕЧАТЬ ---------- */
+@media print {
+    :root { --mk-bg: #fff; }
+    body { background: #fff; }
+    .mk-no-print { display: none !important; }
+    .mk-report-header { position: static; background: #fff; border-bottom: 1px solid var(--mk-border); backdrop-filter: none; }
+    .mk-report-main { padding: 16px 0; }
+    .mk-report-section,
+    .mk-report-hero,
+    .mk-kpi,
+    .mk-report-owner {
+        box-shadow: none !important;
+        border: 1px solid var(--mk-border);
+        break-inside: avoid;
+    }
+    .mk-report-section { margin-bottom: 12px; }
+    .mk-footer { border-top: 1px solid var(--mk-border); }
+    .mk-modal-overlay { display: none !important; }
+}

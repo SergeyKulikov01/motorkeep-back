@@ -6,6 +6,7 @@ import './forgot-pass.js';
 import './pass-reset.js';
 import './stats.js';
 import './settings.js';
+import './report.js';
 
 // ---------- CSRF / FETCH ----------
 export function getCsrfToken() {
@@ -76,6 +77,22 @@ export function showToast(message, type) {
             toast.remove();
         }, 300);
     }, 3500);
+}
+
+// ---------- ТОСТ (статичная разметка #mkToast) ----------
+// Для страниц со своим статичным блоком #mkToast в разметке (detail, report),
+// в отличие от showToast() выше, который создаёт элементы в .mk-toast-container.
+// Единственная реализация — detail.js и report.js импортируют её вместо
+// того, чтобы определять свою копию.
+let staticToastTimer;
+export function showStaticToast(message) {
+    const toast = document.getElementById('mkToast');
+    if (!toast) return;
+    const msg = toast.querySelector('.mk-toast__message');
+    if (msg) msg.textContent = message;
+    toast.classList.add('show');
+    clearTimeout(staticToastTimer);
+    staticToastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
 }
 
 // ---------- САЙДБАР: СВЁРТКА ----------

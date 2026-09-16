@@ -8,6 +8,7 @@ use App\Http\Controllers\DetailCarController;
 use App\Http\Controllers\NewCarController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RemindersController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\StatController;
 use App\Http\Controllers\UserNotesController;
@@ -19,6 +20,7 @@ Route::controller(ApiController::class)->prefix('api')->group(function () {
     Route::get('getModels', 'getModelsList');
 });
 Route::prefix('api')->middleware(['auth', 'verified'])->group(function () {
+    Route::post('/car', [NewCarController::class, 'addCar']);
     Route::post('/notes', [UserNotesController::class, 'addNote']);
     Route::get('/notes', [UserNotesController::class, 'getNote']);
     Route::delete('/notes', [UserNotesController::class, 'deleteNote']);
@@ -55,6 +57,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard/detail/{id}', [DetailCarController::class, 'index'])->whereNumber('id')->name('dashboard.cardetail');
     Route::get('/dashboard/settings', [SettingsController::class, 'index'])->name('dashboard.settings');
 });
+Route::get('/report/{id}',[ReportController::class, 'index'])->name('report');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

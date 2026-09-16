@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\BodyTypes;
+use App\Models\CarModel;
 use App\Models\Cars;
 use App\Models\Color;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Throwable;
 
@@ -27,8 +29,11 @@ class NewCarController extends Controller
     public function addCar(Request $request)
     {
         try {
+            $model = CarModel::findOrFail($request->modelId);
+            $reportId = $request->user()->id . '-' . $model->name . '-' . Str::random(8);
             Cars::create([
                 'user_id' => $request->user()->id,
+                'report_id' => $reportId,
                 'brand_id' => $request->brandId,
                 'car_model_id' => $request->modelId,
                 'year' => $request->year,
@@ -37,7 +42,7 @@ class NewCarController extends Controller
                 'engine_volume' => $request->engine,
                 'transmission_type' => $request->transmission,
                 'vin' => $request->vin,
-                'plate_number' => strtoupper($request->plate),
+                'plate_number' => is_string($request->plate)? strtoupper($request->plate) : '',
                 'plate_region' => $request->region,
                 'mileage' => $request->mileage,
                 'comment' => $request->comment,
