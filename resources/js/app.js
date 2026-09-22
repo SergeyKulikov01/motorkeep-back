@@ -76,7 +76,7 @@ export function showToast(message, type) {
         setTimeout(() => {
             toast.remove();
         }, 300);
-    }, 3500);
+    }, 3000);
 }
 
 // ---------- ТОСТ (статичная разметка #mkToast) ----------
@@ -92,7 +92,7 @@ export function showStaticToast(message) {
     if (msg) msg.textContent = message;
     toast.classList.add('show');
     clearTimeout(staticToastTimer);
-    staticToastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+    staticToastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
 // ---------- САЙДБАР: СВЁРТКА ----------

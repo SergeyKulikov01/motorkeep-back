@@ -6,6 +6,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\CarDocs;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 use Throwable;
 
 class CarDocsController extends Controller
@@ -13,6 +14,17 @@ class CarDocsController extends Controller
     public function addDoc(Request $request): JsonResponse
     {
         try {
+            $request->validate([
+                'car_id' => [
+                    'required',
+                    'integer',
+                    Rule::exists('cars', 'id')->where('user_id', $request->user()->id),
+                ],
+                'type' => ['required', Rule::in(['insurance', 'registration', 'review', 'TransportPassport', 'other'])],
+                'name' => ['required', 'string', 'max:255'],
+                'date' => ['nullable', 'date'],
+                'comment' => ['nullable', 'string'],
+            ]);
             $doc = CarDocs::create([
                 'car_id' => $request->input('car_id'),
                 'user_id' => $request->user()->id,
@@ -30,6 +42,13 @@ class CarDocsController extends Controller
     public function getDoc(Request $request): JsonResponse
     {
         try {
+            $request->validate([
+                'car_id' => [
+                    'required',
+                    'integer',
+                    Rule::exists('cars', 'id')->where('user_id', $request->user()->id),
+                ]
+            ]);
             $doc = CarDocs::where([
                 'car_id' => $request->input('car_id'),
                 'user_id' => $request->user()->id,

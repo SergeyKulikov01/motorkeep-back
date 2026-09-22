@@ -1385,7 +1385,7 @@ body.is-collapsed .mk-collapse svg {
 /* ============================================================
    ТОСТ
    ============================================================ */
-.mk-toast {
+#mkToast {
     position: fixed;
     bottom: 100px;
     left: 50%;
@@ -1404,7 +1404,7 @@ body.is-collapsed .mk-collapse svg {
     transition: opacity 0.3s ease, transform 0.3s ease;
     transform: translateX(-50%) translateY(20px);
 }
-.mk-toast.show {
+#mkToast.show {
     opacity: 1;
     pointer-events: auto;
     transform: translateX(-50%) translateY(0);
@@ -1571,7 +1571,7 @@ body.is-collapsed .mk-collapse svg {
         gap: 12px;
     }
 
-    .mk-toast {
+    #mkToast {
         bottom: 80px;
         max-width: 90%;
         padding: 10px 16px;
