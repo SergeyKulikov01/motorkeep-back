@@ -27,9 +27,23 @@ class NewCarController extends Controller
 
     public function addCar(Request $request)
     {
+        $request->validate([
+            'brand_id' => 'required|integer',
+            'car_model_id' => 'required|integer',
+            'year' => 'required|integer',
+            'body_type_id' => 'required|integer',
+            'color' => 'required|integer',
+            'engine_volume' => 'required|float',
+            'transmission_type' => 'required|string',
+            'vin' => 'required|string',
+            'plate_number' => 'required|string',
+            'plate_region' => 'required|integer',
+            'mileage' => 'required|integer',
+            'comment' => 'required|string',
+        ]);
+
         try {
             Cars::create([
-                'test' => 'test',
                 'user_id' => $request->user()->id,
                 'brand_id' => $request->brandId,
                 'car_model_id' => $request->modelId,
