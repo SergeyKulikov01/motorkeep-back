@@ -37,7 +37,7 @@ php artisan tinker
 
 Standard Laravel structure. Routes in `routes/web.php` + `routes/auth.php`. Auth scaffolded via Laravel Breeze (Blade stack), plus a custom Yandex OAuth flow (`AuthenticatedController` → `Auth/YandexAuthController`, `users.yandex_id`).
 
-**Database**: MySQL — the app's `.env` is configured with `DB_CONNECTION=mysql` (no SQLite file is used in dev/production). `.env.example` still ships with Laravel's default SQLite skeleton (`DB_CONNECTION=sqlite`); update it to `mysql` when provisioning a new environment. Tests are the one exception: `phpunit.xml` hard-codes `DB_CONNECTION=sqlite` / `DB_DATABASE=:memory:` regardless of `.env`, so the test suite still runs against in-memory SQLite. Queue and cache are database-backed in `.env` (`QUEUE_CONNECTION=database`, `CACHE_STORE=database`).
+**Database**: MySQL — the app's `.env` is configured with `DB_CONNECTION=mysql` (no SQLite file is used in dev/production). `.env.example` still ships with Laravel's default SQLite skeleton (`DB_CONNECTION=sqlite`); update it to `mysql` when provisioning a new environment. Tests are the one exception: `phpunit.xml` hard-codes `DB_CONNECTION=sqlite` / `DB_DATABASE=:memory:` regardless of `.env`, so the test suite still runs against in-memory SQLite. Queue and cache are database-backed in `.env` (`QUEUE_CONNECTION=database`, `CACHE_STORE=database`); `phpunit.xml` likewise overrides these to `QUEUE_CONNECTION=sync` and `CACHE_STORE=array` for tests, so queued jobs run synchronously and cache is never persisted when testing.
 
 **Web root**: The entry point is `public_html/index.php`, not `public/` — this is intentional for shared-hosting deployment. The `public_html/index.php` bootstraps from `../vendor/autoload.php` and `../bootstrap/app.php`.
 
@@ -51,18 +51,26 @@ Standard Laravel structure. Routes in `routes/web.php` + `routes/auth.php`. Auth
 - `TotalHistory` — append-only activity log, populated only via the `HistoryAdded` event above; never written to directly by controllers.
 - `Reminders` — upcoming service reminders per car; `statusClass` accessor drives `overdue`/`urgent` styling based on `date_of_exec`.
 - `UserNotes`, `CarDocs` — free-form notes and document metadata attached to a car.
+- `UserSettings` — per-user notification/reminder preferences (service & oil-change intervals, tyre-change notify flags, which channels to notify on — email/push/telegram).
+- `Sessions` — active login sessions; `userBrowser`/`userPlatform`/`isDesktop` accessors parse the stored `user_agent` via `jenssegers/agent`, `isCurrent` compares against `session()->getId()`.
+- `Logs` — application log entries (`level`, `message`, `context`), written exclusively by the custom `database` Monolog channel (see Logging below), never by application code directly.
 - `CarDocs` and `TotalHistory` use PHP attributes (`#[Fillable]`, `#[Table]`) instead of the `$fillable`/`$table` properties used elsewhere in the codebase — match the style already present in the file you're editing rather than mixing conventions.
+
+#### Logging
+
+`LOG_CHANNEL=database` in `.env` routes all `Log::*` calls (and framework-level error reporting) through the custom `database` channel in `config/logging.php` (`'driver' => 'custom', 'via' => App\Logging\DatabaseLogger::class`). `DatabaseLogger` builds a Monolog logger around `App\Logging\DatabaseHandler`, which writes each record into the `logs` table as a `Logs` model. `DatabaseHandler::normalizeContext` unpacks any `Throwable` passed in the log context (including the `previous` chain) into a plain array, since Monolog can't serialize exception objects to JSON directly. Write failures inside the handler are swallowed (not re-logged) to avoid recursion — there is no file-based fallback if the DB write fails. Logs are viewable/searchable at `/admin` via the `Logs` Filament resource (`app/Filament/Resources/Logs`).
 
 #### Routes (`routes/web.php`)
 
 - `GET /api/getBrands`, `GET /api/getModels` — public, unauthenticated typeahead lookups.
 - `/api/notes`, `/api/reminders`, `/api/car-history`, `/api/car-docs`, `/api/stats` — JSON endpoints behind `auth`+`verified`, one controller per resource (`UserNotesController`, `RemindersController`, `CarHistoryController`, `CarDocsController`, `StatController`).
-- `/dashboard`, `/dashboard/cars`, `/dashboard/stats`, `/dashboard/add`, `/dashboard/detail/{id}` — the authenticated Blade-rendered app shell, each backed by its own controller (`DashboardController`, `NewCarController`, `DetailCarController`).
+- `/api/settings` (DELETE to remove the account, POST to change password), `/api/user-settings` (POST) — also behind `auth`+`verified`, all handled by `SettingsController`, which covers account deletion, password change, and notification-preference updates rather than a single resource.
+- `/dashboard`, `/dashboard/cars`, `/dashboard/stats`, `/dashboard/add`, `/dashboard/detail/{id}`, `/dashboard/settings` — the authenticated Blade-rendered app shell, each backed by its own controller (`DashboardController`, `NewCarController`, `DetailCarController`, `SettingsController`).
 - All authenticated (non-API) users are scoped by `auth()->id()` inside controllers — there is no global authorization layer, so new car-scoped endpoints must filter by the current user explicitly.
 
 #### Admin panel
 
-Filament v5 admin panel is mounted at `/admin` (`app/Providers/Filament/AdminPanelProvider.php`), auto-discovering resources under `app/Filament/Resources` (currently `Brand`, `CarModel`) and widgets under `app/Filament/Widgets`. Access is gated by `User::canAccessPanel()`, which checks `users.is_admin`.
+Filament v5 admin panel is mounted at `/admin` (`app/Providers/Filament/AdminPanelProvider.php`), auto-discovering resources under `app/Filament/Resources` (currently `Brand`, `CarModel`, `Logs`) and widgets under `app/Filament/Widgets`. Access is gated by `User::canAccessPanel()`, which checks `users.is_admin`.
 
 ### Frontend
 
