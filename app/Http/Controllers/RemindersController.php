@@ -53,13 +53,15 @@ class RemindersController extends Controller
             Log::error($e->getMessage(),['text' => 'Добавление напоминания', 'exception' => $e]);
             return response()->json(['success' => false]);
         }
-
         return response()->json(['success' => true]);
     }
 
     public function getReminder(Request $request)
     {
         try {
+            $request->validate([
+                'car_id' => ['required', 'exists:cars,id'],
+            ]);
             $remind = Reminders::where([
                 'user_id' => $request->user()->id,
                 'car_id' => $request->input('car_id'),
@@ -70,13 +72,15 @@ class RemindersController extends Controller
             Log::warning($e->getMessage(), ['text' => 'Получение напоминания', 'exception' => $e]);
             return response()->json(['success' => false]);
         }
-
         return response()->json(['success' => true, 'remind' => $remind, 'count' => $remind->count()]);
     }
 
     public function deleteReminder(Request $request)
     {
         try {
+            $request->validate([
+                'id' => ['required', 'exists:reminders,id'],
+            ]);
             $remind = Reminders::where([
                 'id' => $request->input('id'),
                 'user_id' => $request->user()->id,
@@ -85,13 +89,15 @@ class RemindersController extends Controller
             Log::warning($e->getMessage(), ['exception' => $e]);
             return response()->json(['success' => false]);
         }
-
         return response()->json(['success' => true]);
     }
 
     public function updateReminder(Request $request)
     {
         try {
+            $request->validate([
+                'id' => ['required', 'exists:reminders,id'],
+            ]);
             $remind = Reminders::where([
                 'id' => $request->input('id'),
                 'user_id' => $request->user()->id,
@@ -123,7 +129,6 @@ class RemindersController extends Controller
             Log::warning($e->getMessage(), ['text' => 'Обновление напоминания', 'exception' => $e]);
             return response()->json(['success' => false]);
         }
-
         return response()->json(['success' => true]);
     }
 }
