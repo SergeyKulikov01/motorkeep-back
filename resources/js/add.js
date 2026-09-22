@@ -410,6 +410,17 @@ export function getCsrfToken() {
     return meta ? meta.content : '';
 }
 
+// Laravel возвращает 422 с телом { message, errors: { field: [msg, ...] } }.
+// Достаём из него читаемый текст для тоста; для сетевых сбоев/500 (где
+// errors нет) возвращаем null — тогда наверху покажется общий фолбэк.
+export function extractErrorMessage(error) {
+    if (error && typeof error === 'object' && error.errors && typeof error.errors === 'object') {
+        const messages = Object.values(error.errors).flat();
+        if (messages.length) return messages.join('; ');
+    }
+    return null;
+}
+
 export function submitCarData(form, carData) {
     const btn = form.querySelector('button[type="submit"]');
     const originalText = btn.textContent;
@@ -441,8 +452,8 @@ export function submitCarData(form, carData) {
                 window.location.href = '/dashboard';
             }, 1500);
         })
-        .catch(function () {
-            showToast('Не удалось сохранить автомобиль. Попробуйте ещё раз.', 'error');
+        .catch(function (error) {
+            showToast(extractErrorMessage(error) || 'Не удалось сохранить автомобиль. Попробуйте ещё раз.', 'error');
             btn.disabled = false;
             btn.textContent = originalText;
         });

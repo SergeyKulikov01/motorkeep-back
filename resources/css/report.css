@@ -506,9 +506,9 @@
 }
 
 /* ---------- ТОСТ ----------
-   Базовый вид .mk-toast уже определён в detail.css. На странице отчёта
+   Базовый вид #mkToast уже определён в detail.css. На странице отчёта
    нет плавающей FAB-кнопки, поэтому тост можно опустить ниже (32px вместо 100px). */
-.mk-report-body .mk-toast { bottom: 32px; }
+.mk-report-body #mkToast { bottom: 32px; }
 
 /* .mk-modal-overlay / .mk-modal / .mk-modal__* уже определены в detail.css */
 
@@ -688,7 +688,7 @@
     }
 
     .mk-report-sign { flex-direction: column; gap: 8px; }
-    .mk-report-body .mk-toast { bottom: 16px; max-width: 90%; padding: 10px 16px; font-size: 14px; }
+    .mk-report-body #mkToast { bottom: 16px; max-width: 90%; padding: 10px 16px; font-size: 14px; }
 
     .mk-share-grid { grid-template-columns: repeat(2, 1fr); }
     .mk-share-link { flex-direction: column; }

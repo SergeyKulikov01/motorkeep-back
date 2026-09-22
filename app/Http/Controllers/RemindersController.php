@@ -9,31 +9,37 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Throwable;
+use Illuminate\Validation\Rule;
 
 class RemindersController extends Controller
 {
     public function addReminder(Request $request)
     {
-        $request->user()->cars()->findOrFail($request->input('car_id'));
-        $date = $request->input('date');
-        switch ($request->input('reminder_cycle')) {
-            case 'week':
-                $date = Carbon::parse($request->input('date'))->addWeek()->format('Y-m-d');
-                break;
-            case 'month':
-                $date = Carbon::parse($request->input('date'))->addMonth()->format('Y-m-d');
-                break;
-            case 'month3':
-                $date = Carbon::parse($request->input('date'))->addMonths(3)->format('Y-m-d');
-                break;
-            case 'month6':
-                $date = Carbon::parse($request->input('date'))->addMonths(6)->format('Y-m-d');
-                break;
-            case 'year':
-                $date = Carbon::parse($request->input('date'))->addYear()->format('Y-m-d');
-                break;
-        }
         try {
+            $request->validate([
+                'car_id' => ['required', 'exists:cars,id'],
+                'date' => ['required', 'date'],
+                'reminder_cycle' => ['required',
+                    Rule::in(['week','month','year','month3','month6'])],
+            ]);
+            $date = $request->input('date');
+            switch ($request->input('reminder_cycle')) {
+                case 'week':
+                    $date = Carbon::parse($request->input('date'))->addWeek()->format('Y-m-d');
+                    break;
+                case 'month':
+                    $date = Carbon::parse($request->input('date'))->addMonth()->format('Y-m-d');
+                    break;
+                case 'month3':
+                    $date = Carbon::parse($request->input('date'))->addMonths(3)->format('Y-m-d');
+                    break;
+                case 'month6':
+                    $date = Carbon::parse($request->input('date'))->addMonths(6)->format('Y-m-d');
+                    break;
+                case 'year':
+                    $date = Carbon::parse($request->input('date'))->addYear()->format('Y-m-d');
+                    break;
+        }
             $remind = Reminders::create([
                 'name' => $request->input('title'),
                 'comment' => $request->input('text'),

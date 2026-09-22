@@ -13,8 +13,15 @@ class UserNotesController extends Controller
 {
     public function addNote(Request $request)
     {
-        $request->user()->cars()->findOrFail($request->input('car_id'));
         try {
+            $request->validate([
+                'car_id'=> [
+                    'required',
+                    'exists:cars,id',
+                ],
+                'noteTitle' => 'required,string',
+                'noteText' => 'nullable,string',
+            ]);
             $note = UserNotes::create([
                 'name' => $request->input('noteTitle'),
                 'comment' => $request->input('noteText'),
