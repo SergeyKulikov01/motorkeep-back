@@ -10,6 +10,7 @@ use App\Models\Cars;
 use App\Models\Color;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class NewCarController extends Controller
@@ -32,6 +33,7 @@ class NewCarController extends Controller
             $model = CarModel::findOrFail($request->modelId);
             $reportId = $request->user()->id . '-' . $model->name . '-' . Str::random(8);
             Cars::create([
+                'test' => 'test',
                 'user_id' => $request->user()->id,
                 'report_id' => $reportId,
                 'brand_id' => $request->brandId,
@@ -47,7 +49,8 @@ class NewCarController extends Controller
                 'mileage' => $request->mileage,
                 'comment' => $request->comment,
             ]);
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            Log::error($e->getMessage(),['text' => 'Добавление авто', 'exception' => $e]);
             return response()->json(['success' => false]);
         }
 

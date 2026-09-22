@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Models\UserNotes;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class UserNotesController extends Controller
@@ -20,7 +21,8 @@ class UserNotesController extends Controller
                 'user_id' => $request->user()->id,
                 'car_id' => $request->input('car_id'),
             ]);
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            Log::error($e->getMessage(), ['exception' => $e]);
             return response()->json(['success' => false]);
         }
 
@@ -34,7 +36,8 @@ class UserNotesController extends Controller
                 'user_id' => $request->user()->id,
                 'car_id' => $request->input('car_id'),
             ])->select(['id', 'comment', 'name'])->get();
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            Log::warning($e->getMessage(), ['exception' => $e]);
             return response()->json(['success' => false]);
         }
 
@@ -48,7 +51,8 @@ class UserNotesController extends Controller
                 'user_id' => $request->user()->id,
                 'id' => $request->input('note_id'),
             ])->select(['id', 'comment', 'name'])->delete();
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            Log::warning($e->getMessage(), ['exception' => $e]);
             return response()->json(['success' => false]);
         }
 
