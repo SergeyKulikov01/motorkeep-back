@@ -7,6 +7,8 @@ namespace App\Http\Controllers;
 use App\Models\Reminders;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class RemindersController extends Controller
 {
@@ -41,7 +43,8 @@ class RemindersController extends Controller
                 'cycle' => $request->input('reminder_cycle'),
                 'car_id' => $request->input('car_id'),
             ]);
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            Log::error($e->getMessage(),['text' => 'Добавление напоминания', 'exception' => $e]);
             return response()->json(['success' => false]);
         }
 
@@ -57,7 +60,8 @@ class RemindersController extends Controller
             ])->select(['id', 'comment', 'name', 'type', 'date_of_exec', 'cycle'])
                 ->orderByRaw('ABS(DATEDIFF(date_of_exec, ?))', [now()->toDateString()])
                 ->get();
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            Log::warning($e->getMessage(), ['text' => 'Получение напоминания', 'exception' => $e]);
             return response()->json(['success' => false]);
         }
 
@@ -71,7 +75,8 @@ class RemindersController extends Controller
                 'id' => $request->input('id'),
                 'user_id' => $request->user()->id,
             ])->delete();
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            Log::warning($e->getMessage(), ['exception' => $e]);
             return response()->json(['success' => false]);
         }
 
@@ -108,7 +113,8 @@ class RemindersController extends Controller
             }
             $remind->date_of_exec = $date;
             $remind->save();
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            Log::warning($e->getMessage(), ['text' => 'Обновление напоминания', 'exception' => $e]);
             return response()->json(['success' => false]);
         }
 

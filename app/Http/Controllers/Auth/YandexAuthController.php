@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class YandexAuthController extends Controller
 {
@@ -24,6 +25,7 @@ class YandexAuthController extends Controller
         $response = Http::withToken($request->input('access_token'), 'OAuth')->get('https://login.yandex.ru/info', ['format' => 'json']);
 
         if ($response->failed()) {
+            Log::error('Yandex Auth', ['text' => 'Не удалось подтвердить вход через Яндекс']);
             return response()->json([
                 'message' => 'Не удалось подтвердить вход через Яндекс.',
             ], 401);
@@ -32,6 +34,7 @@ class YandexAuthController extends Controller
         $profile = $response->json();
 
         if (($profile['client_id'] ?? null) !== config('services.yandex.client_id')) {
+            Log::error('Yandex Auth', ['text' => 'Токен выдан для другого приложения']);
             return response()->json([
                 'message' => 'Токен выдан для другого приложения.',
             ], 401);

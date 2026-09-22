@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CarHistoryRequest;
 use App\Services\CarHistory as CarHistoryService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class CarHistoryController extends Controller
@@ -19,6 +20,7 @@ class CarHistoryController extends Controller
             $record = $this->carHistoryService->addRecord($request->user(), $request->validated());
         }
         catch (Throwable $e) {
+            Log::error($e->getMessage(),['text' => 'Добавление истории', 'exception' => $e]);
             return response()->json(['success' => false]);
         }
 
@@ -29,6 +31,7 @@ class CarHistoryController extends Controller
         try {
             $record = $this->carHistoryService->getRecord($request->user(), (int) $request->input('car_id'),$request->input('type'));
         } catch (Throwable $e) {
+            Log::warning($e->getMessage(), ['exception' => $e]);
             return response()->json(['success' => false]);
         }
 
@@ -39,6 +42,7 @@ class CarHistoryController extends Controller
         try {
             $record = $this->carHistoryService->deleteRecord($request->user(), (int) $request->input('car_id'), (int) $request->input('id'));
         } catch (Throwable $e) {
+            Log::warning($e->getMessage(), ['exception' => $e]);
             return response()->json(['success' => false]);
         }
 

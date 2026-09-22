@@ -7,8 +7,10 @@ use App\Models\UserSettings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+use Throwable;
 
 class SettingsController extends Controller
 {
@@ -39,27 +41,39 @@ class SettingsController extends Controller
 
     public function removeUser(Request $request)
     {
-        $user = $request->user();
+        try {
+            $user = $request->user();
 
-        Auth::logout();
+            Auth::logout();
 
-        $user->delete();
+            $user->delete();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        } catch (Throwable $e) {
+            Log::error($e->getMessage(), ['text' => 'Удаление пользователя', 'exception' => $e]);
+            return response()->json(['success' => false]);
+        }
+        Log::info("Пользователь {$request->user()->id} удален", ['text' => 'Удаление пароля']);
         return response()->json(['success' => true]);
     }
     public function changePwd(Request $request)
     {
         $data = $request->validate([
             'current_password' => ['required', 'current_password'],
-            'password' => ['required','confirmed',Password::defaults()],
+            'password' => ['required', 'confirmed', Password::defaults()],
             'password_confirmation' => ['required'],
         ]);
-        $request->user()->update([
-            'password' => Hash::make($data['password']),
-        ]);
+
+        try {
+            $request->user()->update([
+                'password' => Hash::make($data['password']),
+            ]);
+        } catch (Throwable $e) {
+            Log::error($e->getMessage(), ['text' => 'Смена пароля', 'exception' => $e]);
+            return response()->json(['success' => false]);
+        }
+        Log::info("Пользователь {$request->user()->id} обновил пароль", ['text' => 'Смена пароля']);
         return response()->json(['success' => true]);
     }
     public function deleteSessions(Request $request){
@@ -81,9 +95,14 @@ class SettingsController extends Controller
             'value' => ['required'],
         ]);
 
-        UserSettings::where('user_id', Auth::id())->update([
-            $data['code'] => $data['value'],
-        ]);
+        try {
+            UserSettings::where('user_id', Auth::id())->update([
+                $data['code'] => $data['value'],
+            ]);
+        } catch (Throwable $e) {
+            Log::error($e->getMessage(),['text' => 'Установка настроек', 'exception' => $e]);
+            return response()->json(['success' => false]);
+        }
 
         return response()->json(['success' => true]);
     }

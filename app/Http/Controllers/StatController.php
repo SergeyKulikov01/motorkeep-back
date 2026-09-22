@@ -5,50 +5,56 @@ namespace App\Http\Controllers;
 use App\Models\CarHistory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class StatController extends Controller
 {
     public function getStat(Request $request)
     {
-        $period = $request->input('period', 'all');
-        $end = Carbon::now();
+        try {
+            $period = $request->input('period', 'all');
+            $end = Carbon::now();
 
-        // Границы текущего периода и «зеркального» предыдущего периода той же длины
-        switch ($period) {
-            case 'week':
-                $currentStart = $end->copy()->subWeek();
-                $previousStart = $end->copy()->subWeeks(2);
-                $previousEnd = $end->copy()->subWeek();
-                break;
-            case 'year':
-                $currentStart = $end->copy()->subYear();
-                $previousStart = $end->copy()->subYears(2);
-                $previousEnd = $end->copy()->subYear();
-                break;
-            case 'all':
-                $currentStart = $end->copy()->subYears(99);
-                $previousStart = null;
-                $previousEnd = null;
-                break;
-            case 'month':
-            default:
-                $currentStart = $end->copy()->subMonth();
-                $previousStart = $end->copy()->subMonths(2);
-                $previousEnd = $end->copy()->subMonth();
-                break;
+            // Границы текущего периода и «зеркального» предыдущего периода той же длины
+            switch ($period) {
+                case 'week':
+                    $currentStart = $end->copy()->subWeek();
+                    $previousStart = $end->copy()->subWeeks(2);
+                    $previousEnd = $end->copy()->subWeek();
+                    break;
+                case 'year':
+                    $currentStart = $end->copy()->subYear();
+                    $previousStart = $end->copy()->subYears(2);
+                    $previousEnd = $end->copy()->subYear();
+                    break;
+                case 'all':
+                    $currentStart = $end->copy()->subYears(99);
+                    $previousStart = null;
+                    $previousEnd = null;
+                    break;
+                case 'month':
+                default:
+                    $currentStart = $end->copy()->subMonth();
+                    $previousStart = $end->copy()->subMonths(2);
+                    $previousEnd = $end->copy()->subMonth();
+                    break;
+            }
+
+            $row = $this->fetchAggregatedStats($currentStart, $end, $previousStart, $previousEnd);
+
+            $data = [];
+            foreach (['allPay', 'fuel', 'service', 'buy'] as $key) {
+                $current = (float) $row->{$key.'_current'};
+                $previous = (float) $row->{$key.'_previous'};
+                $data[$key] = $current;
+                $data[$key.'Diff'] = $this->percentDiff($current, $previous);
+            }
+
+            return $data;
+        } catch (Throwable $e){
+            Log::error($e->getMessage(), ['text' => 'Получение статистики', 'exception' => $e]);
         }
-
-        $row = $this->fetchAggregatedStats($currentStart, $end, $previousStart, $previousEnd);
-
-        $data = [];
-        foreach (['allPay', 'fuel', 'service', 'buy'] as $key) {
-            $current = (float) $row->{$key.'_current'};
-            $previous = (float) $row->{$key.'_previous'};
-            $data[$key] = $current;
-            $data[$key.'Diff'] = $this->percentDiff($current, $previous);
-        }
-
-        return $data;
     }
 
     /**

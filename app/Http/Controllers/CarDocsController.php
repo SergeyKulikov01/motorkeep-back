@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\CarDocs;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class CarDocsController extends Controller
@@ -22,6 +23,7 @@ class CarDocsController extends Controller
             ]);
             return response()->json(['success' => true]);
         } catch (Throwable $e) {
+            Log::error($e->getMessage(),['text' => 'Добавление дока', 'exception' => $e]);
             return response()->json(['success' => false]);
         }
     }
@@ -33,6 +35,7 @@ class CarDocsController extends Controller
                 'user_id' => $request->user()->id,
             ])->get();
         } catch (Throwable $e) {
+            Log::warning($e->getMessage(), ['exception' => $e]);
             return response()->json(['success' => false]);
         }
 
@@ -46,6 +49,7 @@ class CarDocsController extends Controller
                 'user_id' => $request->user()->id,
             ])->delete();
         } catch (Throwable $e) {
+            Log::warning($e->getMessage(), ['exception' => $e]);
             return response()->json(['success' => false]);
         }
 

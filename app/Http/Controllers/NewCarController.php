@@ -8,6 +8,7 @@ use App\Models\BodyTypes;
 use App\Models\Cars;
 use App\Models\Color;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class NewCarController extends Controller
@@ -28,6 +29,7 @@ class NewCarController extends Controller
     {
         try {
             Cars::create([
+                'test' => 'test',
                 'user_id' => $request->user()->id,
                 'brand_id' => $request->brandId,
                 'car_model_id' => $request->modelId,
@@ -42,7 +44,8 @@ class NewCarController extends Controller
                 'mileage' => $request->mileage,
                 'comment' => $request->comment,
             ]);
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            Log::error($e->getMessage(),['text' => 'Добавление авто', 'exception' => $e]);
             return response()->json(['success' => false]);
         }
 
