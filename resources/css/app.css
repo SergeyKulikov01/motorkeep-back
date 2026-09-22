@@ -11,6 +11,7 @@
 @import "./garage.css";
 @import "./stats.css";
 @import "./settings.css";
+@import "./report.css";
 
 /* ---------- Сброс и базовые настройки ---------- */
 *,
@@ -675,6 +676,13 @@ code,
     font-weight: 500;
     color: var(--mk-ink);
     font-family: var(--mk-font-display);
+}
+
+.mk-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
 }
 
 /* ----- Запись ленты .mk-record ----- */
@@ -1511,6 +1519,7 @@ body.is-collapsed .mk-sidebar .mk-collapse span {
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 12px;
+    padding: 0 var(--mk-gutter);
 }
 
 .mk-footer__brand {

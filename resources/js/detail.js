@@ -1,4 +1,4 @@
-import { fetchJson } from './app.js';
+import { fetchJson, showStaticToast as showDetailToast } from './app.js';
 
 // =====================================================================
 // КОНСТАНТЫ / СЛОВАРИ
@@ -105,18 +105,8 @@ function formatThousands(value) {
 }
 
 // =====================================================================
-// ОБЩИЕ UI-ХЕЛПЕРЫ: ТОСТ, МОДАЛКИ
+// ОБЩИЕ UI-ХЕЛПЕРЫ: МОДАЛКИ
 // =====================================================================
-function showDetailToast(message) {
-    const toast = document.getElementById('mkToast');
-    if (!toast) return;
-    const msgEl = toast.querySelector('.mk-toast__message');
-    if (msgEl) msgEl.textContent = message;
-    toast.classList.add('show');
-    clearTimeout(window.toastTimer);
-    window.toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
-}
-
 function closeAllModals() {
     document.querySelectorAll('.mk-modal-overlay').forEach(overlay => {
         overlay.classList.remove('open');
