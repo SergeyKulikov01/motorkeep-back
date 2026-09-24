@@ -1,0 +1,138 @@
+/* ============================================================
+   Страница 404 (resources/views/errors/404.blade.php)
+   Токены, кнопки, логотип, хедер/футер лендинга, .mk-eyebrow — в app.css
+   ============================================================ */
+
+.mk-error-page {
+    flex: 1;
+    padding: 120px var(--mk-gutter) 60px;
+    background: linear-gradient(180deg, #F0F5FF 0%, var(--mk-bg) 100%);
+}
+.mk-error-page__inner {
+    max-width: var(--mk-container);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    min-height: 500px;
+}
+.mk-error-page__content { max-width: 520px; }
+
+.mk-error-page__title {
+    font-family: var(--mk-font-display);
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.mk-error-page__code {
+    font-family: var(--mk-font-display);
+    font-size: 96px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    background: linear-gradient(135deg, var(--mk-primary), var(--mk-primary-strong));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: var(--mk-primary);
+    font-variant-numeric: tabular-nums;
+}
+
+.mk-error-page__text {
+    font-size: 17px;
+    color: var(--mk-ink-2);
+    line-height: 1.6;
+    margin-bottom: 28px;
+}
+
+.mk-error-page__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 40px;
+}
+
+/* Полезные ссылки */
+.mk-error-page__links-label {
+    display: block;
+    font-size: 13px;
+    color: var(--mk-ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+.mk-error-page__links-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+.mk-error-page__links-grid a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: var(--mk-surface);
+    border-radius: var(--mk-r-sm);
+    border: 1px solid var(--mk-border);
+    color: var(--mk-ink-2);
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.15s ease;
+}
+.mk-error-page__links-grid a:hover {
+    background: var(--mk-primary-soft);
+    border-color: var(--mk-primary-soft);
+    color: var(--mk-primary);
+    transform: translateY(-1px);
+}
+.mk-error-page__links-grid a i {
+    font-size: 16px;
+    color: var(--mk-primary);
+}
+
+/* Иллюстрация */
+.mk-error-page__illustration {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.mk-error-page__illustration svg {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+}
+
+/* Адаптивность */
+@media (max-width: 1000px) {
+    .mk-error-page__inner {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 40px;
+    }
+    .mk-error-page__content {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+    .mk-error-page__actions { justify-content: center; }
+    .mk-error-page__illustration { order: -1; }
+    .mk-error-page__illustration svg { max-width: 380px; }
+}
+@media (max-width: 680px) {
+    .mk-error-page { padding: 100px var(--mk-gutter) 40px; }
+    .mk-error-page__code { font-size: 72px; }
+    .mk-error-page__title { font-size: 26px; }
+    .mk-error-page__text { font-size: 15px; }
+    .mk-error-page__links-grid { grid-template-columns: 1fr 1fr; }
+    .mk-error-page__illustration svg { max-width: 300px; }
+}
+@media (max-width: 380px) {
+    .mk-error-page__code { font-size: 60px; }
+    .mk-error-page__actions .mk-btn { width: 100%; justify-content: center; }
+    .mk-error-page__links-grid { grid-template-columns: 1fr; }
+}

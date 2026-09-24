@@ -22,34 +22,11 @@ class UserNotesTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * Вспомогательный метод: создаёт машину для пользователя со всеми
-     * обязательными справочниками (марка, модель, тип кузова).
-     */
-    private function createCar(User $user): Cars
-    {
-        $brand = Brand::create(['name' => 'Lada '.uniqid(), 'country_code' => 'RU']);
-        $model = CarModel::create(['brand_id' => $brand->id, 'name' => 'Vesta']);
-        $body = BodyTypes::create(['type' => 'sedan', 'name' => 'Седан']);
-
-        return Cars::create([
-            'user_id' => $user->id,
-            'brand_id' => $brand->id,
-            'car_model_id' => $model->id,
-            'body_type_id' => $body->id,
-            'year' => 2020,
-            'color' => 'white',
-            'engine_volume' => 1.6,
-            'transmission_type' => 'manual',
-            'mileage' => 50000,
-        ]);
-    }
-
     public function test_user_can_add_note(): void
     {
         // Arrange — готовим данные
         $user = User::factory()->create();
-        $car = $this->createCar($user);
+        $car = Cars::factory()->for($user)->create();
 
         // Act — выполняем запрос от имени пользователя
         $response = $this->actingAs($user)->postJson('/api/notes', [
@@ -72,7 +49,7 @@ class UserNotesTest extends TestCase
     {
         $me = User::factory()->create();
         $stranger = User::factory()->create();
-        $car = $this->createCar($me);
+        $car = Cars::factory()->for($me)->create();
 
         // Кладём записи в БД напрямую, минуя API
         UserNotes::create(['user_id' => $me->id, 'car_id' => $car->id, 'name' => 'Моя']);
@@ -89,7 +66,7 @@ class UserNotesTest extends TestCase
     {
         $owner = User::factory()->create();
         $hacker = User::factory()->create();
-        $car = $this->createCar($owner);
+        $car = Cars::factory()->for($owner)->create();
         $note = UserNotes::create(['user_id' => $owner->id, 'car_id' => $car->id, 'name' => 'Секрет']);
 
         $this->actingAs($hacker)->deleteJson('/api/notes', ['note_id' => $note->id]);
