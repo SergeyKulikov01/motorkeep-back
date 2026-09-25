@@ -37,7 +37,7 @@ php artisan tinker
 
 Standard Laravel structure. Routes in `routes/web.php` + `routes/auth.php`. Auth scaffolded via Laravel Breeze (Blade stack), plus a custom Yandex OAuth flow (`AuthenticatedController` → `Auth/YandexAuthController`, `users.yandex_id`).
 
-**Database**: MySQL — the app's `.env` is configured with `DB_CONNECTION=mysql` (no SQLite file is used in dev/production). `.env.example` still ships with Laravel's default SQLite skeleton (`DB_CONNECTION=sqlite`); update it to `mysql` when provisioning a new environment. Tests are the one exception: `phpunit.xml` hard-codes `DB_CONNECTION=sqlite` / `DB_DATABASE=:memory:` regardless of `.env`, so the test suite still runs against in-memory SQLite. Queue and cache are database-backed in `.env` (`QUEUE_CONNECTION=database`, `CACHE_STORE=database`); `phpunit.xml` likewise overrides these to `QUEUE_CONNECTION=sync` and `CACHE_STORE=array` for tests, so queued jobs run synchronously and cache is never persisted when testing.
+**Database**: MySQL — the app's `.env` is configured with `DB_CONNECTION=mysql` (no SQLite file is used in dev/production). `.env.example` still ships with Laravel's default SQLite skeleton (`DB_CONNECTION=sqlite`); update it to `mysql` when provisioning a new environment. Tests also run on MySQL: `phpunit.xml` hard-codes a separate remote test database (`DB_CONNECTION=mysql`, dedicated `*_test` DB/user on the hosting server) regardless of `.env`. Feature tests use `RefreshDatabase`, which drops and re-migrates that DB on every run — never point `phpunit.xml` at the dev/production database, and expect tests to need network access to the DB host. Model factories exist for `User`, `Cars`, `Brand`, `CarModel`, `Color`, `BodyTypes`. Queue and cache are database-backed in `.env` (`QUEUE_CONNECTION=database`, `CACHE_STORE=database`); `phpunit.xml` likewise overrides these to `QUEUE_CONNECTION=sync` and `CACHE_STORE=array` for tests, so queued jobs run synchronously and cache is never persisted when testing.
 
 **Web root**: The entry point is `public_html/index.php`, not `public/` — this is intentional for shared-hosting deployment. The `public_html/index.php` bootstraps from `../vendor/autoload.php` and `../bootstrap/app.php`.
 
@@ -63,9 +63,12 @@ Standard Laravel structure. Routes in `routes/web.php` + `routes/auth.php`. Auth
 #### Routes (`routes/web.php`)
 
 - `GET /api/getBrands`, `GET /api/getModels` — public, unauthenticated typeahead lookups.
-- `/api/notes`, `/api/reminders`, `/api/car-history`, `/api/car-docs`, `/api/stats` — JSON endpoints behind `auth`+`verified`, one controller per resource (`UserNotesController`, `RemindersController`, `CarHistoryController`, `CarDocsController`, `StatController`).
+- `POST /api/car`, `/api/notes`, `/api/reminders`, `/api/car-history`, `/api/car-docs`, `/api/stats` — JSON endpoints behind `auth`+`verified`, one controller per resource (`UserNotesController`, `RemindersController`, `CarHistoryController`, `CarDocsController`, `StatController`).
 - `/api/settings` (DELETE to remove the account, POST to change password), `/api/user-settings` (POST) — also behind `auth`+`verified`, all handled by `SettingsController`, which covers account deletion, password change, and notification-preference updates rather than a single resource.
 - `/dashboard`, `/dashboard/cars`, `/dashboard/stats`, `/dashboard/add`, `/dashboard/detail/{id}`, `/dashboard/settings` — the authenticated Blade-rendered app shell, each backed by its own controller (`DashboardController`, `NewCarController`, `DetailCarController`, `SettingsController`).
+- `GET /report/{id}` (`ReportController`) — currently **public** (no `auth` middleware) and just renders `pages.report.index`; add auth/ownership checks before it exposes car data.
+- `/profile` (Breeze `ProfileController`) and `/auth/yandex` + `POST /auth/yandex/callback` for Yandex OAuth.
+- Request validation lives in Form Requests under `app/Http/Requests` (e.g. `CarHistoryRequest`).
 - All authenticated (non-API) users are scoped by `auth()->id()` inside controllers — there is no global authorization layer, so new car-scoped endpoints must filter by the current user explicitly.
 
 #### Admin panel

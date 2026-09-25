@@ -26,6 +26,7 @@ Route::prefix('api')->middleware(['auth', 'verified'])->group(function () {
     Route::delete('/notes', [UserNotesController::class, 'deleteNote']);
     Route::post('/reminders', [RemindersController::class, 'addReminder']);
     Route::get('/reminders', [RemindersController::class, 'getReminder']);
+    Route::delete('/reminders', [RemindersController::class, 'deleteReminder']);
     Route::patch('/reminders', [RemindersController::class, 'updateReminder']);
     Route::post('/car-history', [CarHistoryController::class, 'addCarHistory']);
     Route::get('/car-history', [CarHistoryController::class, 'getCarHistory']);

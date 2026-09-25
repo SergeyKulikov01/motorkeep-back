@@ -404,7 +404,12 @@ function handleReminderDelete(e) {
     const params = new URLSearchParams({ id: card.dataset.id });
 
     fetchJson(`/api/reminders?${params}`, { method: 'DELETE' })
-        .then(function () {
+        .then(function (result) {
+            if (!result.data.success) {
+                showDetailToast('Не удалось удалить напоминание. Попробуйте позже.');
+                return;
+            }
+            loadReminders();
             showDetailToast('Напоминание удалено');
         })
         .catch(function () {
