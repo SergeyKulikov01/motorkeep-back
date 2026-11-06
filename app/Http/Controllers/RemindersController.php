@@ -81,15 +81,15 @@ class RemindersController extends Controller
             $request->validate([
                 'id' => ['required', 'exists:reminders,id'],
             ]);
-            $remind = Reminders::where([
+            $deleted = Reminders::where([
                 'id' => $request->input('id'),
                 'user_id' => $request->user()->id,
             ])->delete();
         } catch (Throwable $e) {
-            Log::warning($e->getMessage(), ['exception' => $e]);
+            Log::warning($e->getMessage(), ['text' => 'Удаление напоминания', 'exception' => $e]);
             return response()->json(['success' => false]);
         }
-        return response()->json(['success' => true]);
+        return response()->json(['success' => $deleted > 0]);
     }
 
     public function updateReminder(Request $request)

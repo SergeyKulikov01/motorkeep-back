@@ -19,8 +19,8 @@ class UserNotesController extends Controller
                     'required',
                     'exists:cars,id',
                 ],
-                'noteTitle' => 'required,string',
-                'noteText' => 'nullable,string',
+                'noteTitle' => 'required|string',
+                'noteText' => 'nullable|string',
             ]);
             $note = UserNotes::create([
                 'name' => $request->input('noteTitle'),

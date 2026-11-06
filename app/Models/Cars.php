@@ -2,11 +2,16 @@
 
 namespace App\Models;
 
+use Database\Factories\CarsFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Cars extends Model
 {
+    /** @use HasFactory<CarsFactory> */
+    use HasFactory;
+
     protected $fillable = [
         'user_id',
         'brand_id',
