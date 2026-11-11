@@ -21,6 +21,10 @@ function renderChange(type, diff) {
 }
 
 function getExpenses(period = 'all'){
+    let check = document.querySelector('[data-spendtype]');
+    if (!check){
+        return false;
+    }
     const params = new URLSearchParams({ period: period });
     fetchJson(`/api/stats?${params}`)
         .then(function (result) {

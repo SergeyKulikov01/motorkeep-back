@@ -34,8 +34,13 @@
         @if(count($sidebarCars) > 0)
             <div class="mk-navlabel">Автомобили</div>
         @foreach($sidebarCars as $car)
-                @php $isActive = request()->routeIs('dashboard.cardetail') && (int) request()->route('id') === $car->id; @endphp
-                <a href="{{ route('dashboard.cardetail',['id' => $car->id])  }}" class="mk-navitem {{ $isActive ? 'mk-navitem--active' : '' }}" data-tip="{{ $car->brand->name }} {{ $car->model->name }}">
+                @php
+                    $isActive = false;
+                    if (request()->route('car')){
+                        $isActive = request()->route('car')->id === $car->id;
+                    }
+                @endphp
+                <a href="{{ route('dashboard.cardetail',['car' => $car])  }}" class="mk-navitem {{ $isActive ? 'mk-navitem--active' : '' }}" data-tip="{{ $car->brand->name }} {{ $car->model->name }}">
                     <span class="mk-userchip__avatar">{{mb_substr($car->brand->name, 0, 1, 'UTF-8')}}{{mb_substr($car->model->name, 0, 1, 'UTF-8')}}</span>
                     <span class="lbl">{{$car->brand->name}} {{$car->model->name}}</span>
                 </a>

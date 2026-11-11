@@ -7,15 +7,20 @@ namespace App\Http\Controllers;
 use App\Models\CarHistory;
 use App\Models\Cars;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class DetailCarController extends Controller
 {
-    public function index(int $id)
+    public function index(Cars $car)
     {
+        Gate::authorize('view', $car);
+
+        $car->load(['brand', 'model', 'colorInfo', 'bodyInfo']);
+
         $currentYear = now()->year;
         $currentMonth = now()->month;
         $thisMonthHistory = 0;
-        $history = CarHistory::where('car_id', $id)
+        $history = CarHistory::where('car_id', $car->id)
             ->whereIn(DB::raw('YEAR(date)'), [$currentYear, $currentYear - 1])
             ->select('price','date')
             ->get();
@@ -36,11 +41,10 @@ class DetailCarController extends Controller
             $diffPercent = ($thisYearTotal - $prevYearTotal)/$prevYearTotal * 100;
         }
 
-        $car = Cars::with(['brand', 'model', 'colorInfo', 'bodyInfo'])->where('user_id', auth()->id())->where('id', $id)->firstOrFail();
         $mileagePercent = $car->mileage / 1000000 * 100;
         $data = [
             'car' => $car,
-            'id' => $id,
+            'id' => $car->id,
             'mileagePercent' => $mileagePercent,
             'TotalSpend' => $thisYearTotal,
             'diffPercent' => (int) $diffPercent,

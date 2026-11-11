@@ -6,6 +6,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CarHistoryRequest;
 use App\Services\CarHistory as CarHistoryService;
+use App\Models\CarHistory;
+use App\Models\Cars;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Throwable;
@@ -47,5 +50,9 @@ class CarHistoryController extends Controller
         }
 
         return response()->json(['success' => true]);
+    }
+    public function show(Cars $car,CarHistory $entry){
+        Gate::authorize('view',$car);
+        return $entry;
     }
 }
