@@ -27,7 +27,7 @@
             <!-- Сетка карточек -->
             <div class="mk-garage-grid">
                 @foreach ($cars as $car)
-                    <a href="{{ route('dashboard.cardetail', ['id' => $car->id]) }}" class="mk-car-card">
+                    <a href="{{ route('dashboard.cardetail', ['car' => $car]) }}" class="mk-car-card">
                         <div class="mk-car-card__media">
                             <svg viewBox="0 0 400 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                 <rect width="400" height="160" rx="12" fill="url(#carGrad-{{ $car->id }})" />

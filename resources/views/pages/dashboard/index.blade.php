@@ -139,7 +139,7 @@
 
             <div class="mk-garage-grid" id="garage-grid">
                 @foreach ($cars as $car)
-                    <a href="{{ route('dashboard.cardetail',['id' => $car->id])  }}" class="mk-garage-card">
+                    <a href="{{ route('dashboard.cardetail',['car' => $car]) }}" class="mk-garage-card">
                     <div class="mk-garage-card__media">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 72" width="120" height="72" color="currentColor" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                             <g transform="translate(38.4,14.4) scale(1.8)">

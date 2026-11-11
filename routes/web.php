@@ -30,6 +30,11 @@ Route::prefix('api')->middleware(['auth', 'verified'])->group(function () {
     Route::patch('/reminders', [RemindersController::class, 'updateReminder']);
     Route::post('/car-history', [CarHistoryController::class, 'addCarHistory']);
     Route::get('/car-history', [CarHistoryController::class, 'getCarHistory']);
+    Route::scopeBindings()->group(function () {
+        Route::apiResource('car.history', CarHistoryController::class)
+            ->parameters(['history' => 'entry'])
+            ->only('show');
+    });
     Route::delete('/car-history', [CarHistoryController::class, 'deleteCarHistory']);
     Route::post('/car-docs', [CarDocsController::class, 'addDoc']);
     Route::get('/car-docs', [CarDocsController::class, 'getDoc']);
@@ -55,7 +60,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard/cars', [DashboardController::class, 'carsList'])->name('dashboard.cars');
     Route::get('/dashboard/stats', [DashboardController::class, 'statistic'])->name('dashboard.stats');
     Route::get('/dashboard/add', [NewCarController::class, 'index'])->name('dashboard.add');
-    Route::get('/dashboard/detail/{id}', [DetailCarController::class, 'index'])->whereNumber('id')->name('dashboard.cardetail');
+    Route::get('/dashboard/detail/{car}', [DetailCarController::class, 'index'])->whereNumber('car')->name('dashboard.cardetail');
     Route::get('/dashboard/settings', [SettingsController::class, 'index'])->name('dashboard.settings');
 });
 Route::get('/report/{id}',[ReportController::class, 'index'])->name('report');
@@ -69,5 +74,9 @@ Route::get('/auth/yandex', function () {
     return view('auth.yandex');
 });
 Route::post('/auth/yandex/callback', [YandexAuthController::class, 'callback'])->name('auth.yandex.callback');
+
+Route::fallback(function () {
+    return response()->view('errors.404',[], 404);
+});
 
 require __DIR__.'/auth.php';

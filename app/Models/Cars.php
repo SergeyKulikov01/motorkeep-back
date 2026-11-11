@@ -58,6 +58,9 @@ class Cars extends Model
     {
         return $this->hasMany(CarHistory::class, 'car_id');
     }
+    public function entries(){
+        return $this->history();
+    }
 
     protected function mileageFormatted(): Attribute
     {
